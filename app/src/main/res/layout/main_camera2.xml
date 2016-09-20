@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--merge优化UI布局及标签-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--TextureView的最小AIP 14 ，现在改到最小已经是21-->
+
+    <TextureView
+        android:id="@+id/texture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        />
+    <!--布局重用-->
+    <include
+        android:id="@+id/part1"
+        layout="@layout/part_camera2"/>
+    <ViewStub
+        android:id="@+id/pic_stub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:inflatedId="@+id/pic_view_id_after_inflate"
+        android:layout="@layout/part_camera3" />
+</merge>
