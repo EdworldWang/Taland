@@ -23,6 +23,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewStub;
 import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,20 +31,19 @@ import android.widget.Toast;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.MapView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
-
-
-
 /**
- * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.navigation .
- * 摄像头相关操作文件
+ * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.arnav.basicFuction.camera2 .
  */
-public class Main extends Activity {
+public class Main extends Activity implements LocationSource,AMapLocationListener {
     private static final String TAG="Main";
     private TextureView textureView;
     //用SparseIntArray来代替hashMap，进行性能优化。
@@ -64,9 +64,17 @@ public class Main extends Activity {
     private ImageReader imageReader;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
-    //    *****************************************************************
+//    *****************************************************************
+    private AMap aMap;
+    private MapView mapView;
+//    *****************************POI keyword************************************
+    private ViewStub pic_sub;
+//    *****************************************************************
+    private OnLocationChangedListener mListener;
+    private AMapLocationClient mlocationClient;
+    private AMapLocationClientOption mLocationOption;
 
-
+    private TextView textView1;
 
 
 
@@ -78,10 +86,30 @@ public class Main extends Activity {
         textureView = (TextureView) findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
+        mapView = new MapView(this);
+//        mapView = (MapView)findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        init();
+//        View bookmarks_container_2 = findViewById(R.id.part1);
+//        bookmarks_container_2.findViewById(R.id.poiId1);
+
+        pic_sub = (ViewStub) findViewById(R.id.pic_stub);
 
     }
+    private void init(){
+        if(aMap==null){
+            aMap=mapView.getMap();
+            aMap.setLocationSource(this);// 设置定位监听
+            aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+            aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+            // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
+            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);//定位模式
+        }
+//        显示当前定位城市
+        textView1 =(TextView) findViewById(R.id.textView1);
 
-
+    }
+    
     //    定义了一个独立的监听类
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -291,6 +319,7 @@ public class Main extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        mapView.onResume();
         Log.e(TAG, "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {
@@ -307,6 +336,8 @@ public class Main extends Activity {
         closeCamera();
         stopBackgroundThread();
         super.onPause();
+        mapView.onPause();
+        deactivate();
     }
 
 
@@ -316,11 +347,85 @@ public class Main extends Activity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mapView.onDestroy();
+        if(null != mlocationClient){
+            mlocationClient.onDestroy();
+        }
     }
+
+    @Override
+    public void onLocationChanged(AMapLocation amapLocation) {
+        //此函数一直更新
+        if (mListener != null && amapLocation != null) {
+            if (amapLocation != null
+                    && amapLocation.getErrorCode() == 0) {
+                textView1.setText(amapLocation.getCity());
+                amapLocation.getLatitude();//获取纬度
+                amapLocation.getLongitude();//获取经度
+                amapLocation.getAccuracy();//获取精度信息
+//                mLocationErrText.setVisibility(View.GONE);
+                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+//                ToastUtil.show(Camera2.this, amapLocation.getAddress());//一直显示
+                Toast.makeText(Main.this, amapLocation.getAddress(), Toast.LENGTH_SHORT).show();
+                Log.e("information",amapLocation.getAddress()+amapLocation.getProvince()+ amapLocation.getCity()+amapLocation.getDistrict());
+                pic_sub.setVisibility(View.VISIBLE);
+
+            } else {
+                String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
+                Log.e("AmapErr",errText);
+//                mLocationErrText.setVisibility(View.VISIBLE);
+//                mLocationErrText.setText(errText);
+            }
+        }
+    }
+    /**
+     * 激活定位
+     */
+    @Override
+    public void activate(OnLocationChangedListener listener) {
+        mListener = listener;
+        if (mlocationClient == null) {
+            mlocationClient = new AMapLocationClient(this);
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();
+        }
+    }
+
+    /**
+     * 停止定位
+     */
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
+    }
+
+    //selfdefine function
+    public void showPlaceUi(){
+
+    }
+
+
+
 
 }

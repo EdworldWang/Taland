@@ -2,17 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.dragon.navigation">
 
+
+
+
     <!--添加对应有权限-->
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera2.full" />
+    <!--访问网络，网络定位需要上网-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!--用于访问GPS定位-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--用于读取手机当前状态-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <!--用于wifi定位-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
@@ -25,7 +34,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--地图key-->
+        <!--地图开发者key-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="ec97f824eac74ce3d4192b6e06d76f08"/>
@@ -46,6 +55,8 @@
 
         <activity android:name=".SplashActivity">
         </activity>
+        <!--定位服务-->
+        <service android:name="com.amap.api.location.APSService"></service>
     </application>
 
 </manifest>
