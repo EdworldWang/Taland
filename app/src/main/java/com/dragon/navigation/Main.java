@@ -1,7 +1,9 @@
 package com.dragon.navigation;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -17,6 +19,7 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -137,7 +140,11 @@ public class Main extends Activity implements LocationSource,AMapLocationListene
             Log.e(TAG, "onOpened");
             cameraDevice = camera;
 //            开始预览
-            createCameraPreview();
+            try{
+                createCameraPreview();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         }
         //        摄像头断开连接时的方法
         @Override
@@ -288,7 +295,10 @@ public class Main extends Activity implements LocationSource,AMapLocationListene
             imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
 //            打开摄像头，第一个参数代表要打开的摄像头，第二个参数用于监测打开摄像头的当前状态，第三个参数表示执行callback的Handler,
 //            如果程序希望在当前线程中执行callback，像下面的设置为null即可。
-            manager.openCamera(cameraId, stateCallback, null);
+            if (ActivityCompat.checkSelfPermission(this,Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                manager.openCamera(cameraId, stateCallback, null);
+            }
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
