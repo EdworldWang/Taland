@@ -109,7 +109,7 @@ public class Main extends Activity implements LocationSource,AMapLocationListene
         textView1 =(TextView) findViewById(R.id.textView1);
 
     }
-    
+
     //    定义了一个独立的监听类
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
