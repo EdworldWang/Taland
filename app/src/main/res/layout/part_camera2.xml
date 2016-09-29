@@ -70,15 +70,15 @@
         android:textSize="22sp"
         android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/btn3"
-        android:layout_alignTop="@+id/btn3"/>
+        android:layout_toStartOf="@+id/My"
+        android:layout_alignTop="@+id/My"/>
 
     <Button
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:textColor="@drawable/btn_style_01"
         android:text="我的"
-        android:id="@+id/btn3"
+        android:id="@+id/My"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:textSize="22sp"
@@ -98,7 +98,7 @@
         android:focusableInTouchMode="true"
         android:textColor="@drawable/btn_style_01"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/btn3"
+        android:layout_alignTop="@+id/My"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/btn2"/>
 

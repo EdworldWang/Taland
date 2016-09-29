@@ -38,7 +38,7 @@
         <!--地图开发者key-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="ec97f824eac74ce3d4192b6e06d76f08"/>
+            android:value="c5d452923be0f3455f2ff7e4104544ea"/>
 
         <activity android:name=".ActivitySplashScreen">
             <intent-filter>

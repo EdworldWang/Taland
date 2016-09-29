@@ -28,6 +28,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +47,8 @@ import java.util.List;
 /**
  * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.arnav.basicFuction.camera2 .
  */
-public class Main extends Activity implements LocationSource,AMapLocationListener {
+public class Main extends Activity implements View.OnClickListener, LocationSource,AMapLocationListener {
+    private ArPoiSearch mArPoiSearch;
     private static final String TAG="Main";
     private TextureView textureView;
     //用SparseIntArray来代替hashMap，进行性能优化。
@@ -76,9 +78,9 @@ public class Main extends Activity implements LocationSource,AMapLocationListene
     private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient;
     private AMapLocationClientOption mLocationOption;
-
     private TextView textView1;
-
+    private TextView btnPoiSearch;
+    private Button btnMy;
 
 
     @Override
@@ -97,6 +99,15 @@ public class Main extends Activity implements LocationSource,AMapLocationListene
 //        bookmarks_container_2.findViewById(R.id.poiId1);
 
         pic_sub = (ViewStub) findViewById(R.id.pic_stub);
+
+        mArPoiSearch = new ArPoiSearch(this,"大学","","深圳市");
+        mArPoiSearch.doSearchSearch();
+
+
+        btnMy = (Button)findViewById(R.id.My);
+        btnMy.setOnClickListener(this);
+        btnPoiSearch = (TextView)findViewById(R.id.btn_search);
+        btnPoiSearch.setOnClickListener(this);
 
     }
     private void init(){
@@ -382,7 +393,7 @@ public class Main extends Activity implements LocationSource,AMapLocationListene
 //                mLocationErrText.setVisibility(View.GONE);
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
 //                ToastUtil.show(Camera2.this, amapLocation.getAddress());//一直显示
-                Toast.makeText(Main.this, amapLocation.getAddress(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Main.this, amapLocation.getAddress(), Toast.LENGTH_SHORT).show();
                 Log.e("information",amapLocation.getAddress()+amapLocation.getProvince()+ amapLocation.getCity()+amapLocation.getDistrict());
                 pic_sub.setVisibility(View.VISIBLE);
 
@@ -430,10 +441,22 @@ public class Main extends Activity implements LocationSource,AMapLocationListene
         mlocationClient = null;
     }
 
-    //selfdefine function
-    public void showPlaceUi(){
-
+//    检测所有按键
+@Override
+public void onClick(View v)
+{
+    switch (v.getId())
+    {
+        case R.id.btn_search:
+//            ToastUtil.show(Main.this,"搜索");
+            Toast.makeText(Main.this, "搜索", Toast.LENGTH_SHORT).show();
+            break;
+        case R.id.My:
+//            ToastUtil.show(Main.this,"我的");
+            Toast.makeText(Main.this, "我的", Toast.LENGTH_SHORT).show();
+            break;
     }
+}
 
 
 
