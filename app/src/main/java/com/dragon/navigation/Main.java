@@ -6,6 +6,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -20,25 +24,30 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.ActivityCompat;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.view.ViewStub;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps.AMap;
-import com.amap.api.maps.LocationSource;
-import com.amap.api.maps.MapView;
+import com.amap.api.services.help.Inputtips;
+import com.amap.api.services.help.InputtipsQuery;
+import com.amap.api.services.help.Tip;
+import com.dragon.navigation.util.AMapUtil;
+import com.dragon.navigation.util.MyTextView;
+import com.dragon.navigation.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,9 +56,14 @@ import java.util.List;
 /**
  * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.arnav.basicFuction.camera2 .
  */
-public class Main extends Activity implements View.OnClickListener, LocationSource,AMapLocationListener {
-    private ArPoiSearch mArPoiSearch;
+public class Main extends Activity implements View.OnClickListener,SensorEventListener,
+        TextWatcher,Inputtips.InputtipsListener {
     private static final String TAG="Main";
+    private ArPoiSearch mArPoiSearch;
+    private Location mLocation;
+    private AutoCompleteTextView mSearchText;
+//    private EditText editCity;
+
     private TextureView textureView;
     //用SparseIntArray来代替hashMap，进行性能优化。
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -70,17 +84,21 @@ public class Main extends Activity implements View.OnClickListener, LocationSour
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 //    *****************************************************************
-    private AMap aMap;
-    private MapView mapView;
-//    *****************************POI keyword************************************
-    private ViewStub pic_sub;
-//    *****************************************************************
-    private OnLocationChangedListener mListener;
-    private AMapLocationClient mlocationClient;
-    private AMapLocationClientOption mLocationOption;
-    private TextView textView1;
+
+    private MyTextView mCurrentCity;
     private TextView btnPoiSearch;
     private Button btnMy;
+    private ImageView imgZnz;
+//****************************************************************
+    float currentDegree = 0f;
+    SensorManager mSensorManager;
+    private Sensor accelerometer;//加速度传感器
+    private Sensor magnetic;//地磁传感器
+
+    private float[] accelerometerValues = new float[3];
+    private float[] magneticFieldValues = new float[3];
+
+
 
 
     @Override
@@ -91,17 +109,16 @@ public class Main extends Activity implements View.OnClickListener, LocationSour
         textureView = (TextureView) findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        mapView = new MapView(this);
-//        mapView = (MapView)findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        init();
-//        View bookmarks_container_2 = findViewById(R.id.part1);
-//        bookmarks_container_2.findViewById(R.id.poiId1);
+//********************Location***************************
+        mCurrentCity=(MyTextView)findViewById(R.id.current_city);
+        mLocation = new Location(Main.this,savedInstanceState,mCurrentCity);
+        mLocation.initLoction();
 
-        pic_sub = (ViewStub) findViewById(R.id.pic_stub);
-
+//********************POI********************************
         mArPoiSearch = new ArPoiSearch(this,"大学","","深圳市");
         mArPoiSearch.doSearchSearch();
+        mArPoiSearch.getPoiResult();
+
 
 
         btnMy = (Button)findViewById(R.id.My);
@@ -109,20 +126,24 @@ public class Main extends Activity implements View.OnClickListener, LocationSour
         btnPoiSearch = (TextView)findViewById(R.id.btn_search);
         btnPoiSearch.setOnClickListener(this);
 
-    }
-    private void init(){
-        if(aMap==null){
-            aMap=mapView.getMap();
-            aMap.setLocationSource(this);// 设置定位监听
-            aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-            aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-            // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
-            aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);//定位模式
-        }
-//        显示当前定位城市
-        textView1 =(TextView) findViewById(R.id.textView1);
 
+//        ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
+        imgZnz = (ImageView)findViewById(R.id.Compass);
+
+//        ****************************************************
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+//        List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
+//        Log.e("dragon",deviceSensors+"");
+//        实例化加速度传感器
+        accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//        实例化地磁传感器
+        magnetic = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        calculateOrientation();
+//        *******************************************************
+        mSearchText = (AutoCompleteTextView) findViewById(R.id.searchText);
+        mSearchText.addTextChangedListener(this);// 添加文本输入框监听事件
     }
+
 
     //    定义了一个独立的监听类
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
@@ -143,6 +164,45 @@ public class Main extends Activity implements View.OnClickListener, LocationSour
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         }
     };
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count,
+                                  int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        String newText = s.toString().trim();
+        if (!AMapUtil.IsEmptyOrNullString(newText)) {
+            InputtipsQuery inputquery = new InputtipsQuery(newText, "");
+            Inputtips inputTips = new Inputtips(Main.this, inputquery);
+            inputTips.setInputtipsListener(this);
+            inputTips.requestInputtipsAsyn();
+        }
+    }
+    @Override
+    public void onGetInputtips(List<Tip> tipList, int rCode) {
+        if (rCode == 1000) {// 正确返回
+            List<String> listString = new ArrayList<String>();
+            for (int i = 0; i < tipList.size(); i++) {
+                listString.add(tipList.get(i).getName());
+            }
+            ArrayAdapter<String> aAdapter = new ArrayAdapter<String>(
+                    getApplicationContext(),
+                    R.layout.route_inputs, listString);
+            mSearchText.setAdapter(aAdapter);
+            aAdapter.notifyDataSetChanged();
+        } else {
+            ToastUtil.showerror(this, rCode);
+        }
+
+    }
 
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
@@ -340,7 +400,10 @@ public class Main extends Activity implements View.OnClickListener, LocationSour
     @Override
     protected void onResume() {
         super.onResume();
-        mapView.onResume();
+        //        注册监听事件
+        mSensorManager.registerListener(Main.this,accelerometer,SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(Main.this,magnetic,SensorManager.SENSOR_DELAY_GAME);
+        mLocation.onResume();
         Log.e(TAG, "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {
@@ -354,11 +417,17 @@ public class Main extends Activity implements View.OnClickListener, LocationSour
     @Override
     protected void onPause() {
         Log.e(TAG, "onPause");
+        mSensorManager.unregisterListener(this);
         closeCamera();
         stopBackgroundThread();
         super.onPause();
-        mapView.onPause();
-        deactivate();
+        mLocation.onPause();
+        mLocation.deactivate();
+    }
+    @Override
+    protected void onStop(){
+        mSensorManager.unregisterListener(this);
+        super.onStop();
     }
 
 
@@ -368,78 +437,57 @@ public class Main extends Activity implements View.OnClickListener, LocationSour
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
+        mLocation.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
-        if(null != mlocationClient){
-            mlocationClient.onDestroy();
-        }
+        mLocation.onDestroy();
     }
 
-    @Override
-    public void onLocationChanged(AMapLocation amapLocation) {
-        //此函数一直更新
-        if (mListener != null && amapLocation != null) {
-            if (amapLocation != null
-                    && amapLocation.getErrorCode() == 0) {
-                textView1.setText(amapLocation.getCity());
-                amapLocation.getLatitude();//获取纬度
-                amapLocation.getLongitude();//获取经度
-                amapLocation.getAccuracy();//获取精度信息
-//                mLocationErrText.setVisibility(View.GONE);
-                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-//                ToastUtil.show(Camera2.this, amapLocation.getAddress());//一直显示
-//                Toast.makeText(Main.this, amapLocation.getAddress(), Toast.LENGTH_SHORT).show();
-                Log.e("information",amapLocation.getAddress()+amapLocation.getProvince()+ amapLocation.getCity()+amapLocation.getDistrict());
-                pic_sub.setVisibility(View.VISIBLE);
 
-            } else {
-                String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
-                Log.e("AmapErr",errText);
-//                mLocationErrText.setVisibility(View.VISIBLE);
-//                mLocationErrText.setText(errText);
-            }
-        }
+    private float calculateOrientation(){
+//        SensorManager mSensorMgr = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+//        HandlerThread mHandlerThread = new HandlerThread("sensorThread");
+//        mHandlerThread.start();
+//        Handler handler = new Handler(mHandlerThread.getLooper());
+//        mSensorMgr.registerListener(this, mSensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+//                SensorManager.SENSOR_DELAY_FASTEST, handler);
+        float[] values = new float[3];
+        float[] R = new float[9];
+        SensorManager.getRotationMatrix(R, null, accelerometerValues,
+                magneticFieldValues);
+        SensorManager.getOrientation(R, values);
+        values[0] = (float) Math.toDegrees(values[0]);
+        return values[0];
     }
-    /**
-     * 激活定位
-     */
     @Override
-    public void activate(OnLocationChangedListener listener) {
-        mListener = listener;
-        if (mlocationClient == null) {
-            mlocationClient = new AMapLocationClient(this);
-            mLocationOption = new AMapLocationClientOption();
-            //设置定位监听
-            mlocationClient.setLocationListener(this);
-            //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            //设置定位参数
-            mlocationClient.setLocationOption(mLocationOption);
-            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-            mlocationClient.startLocation();
+    public void onSensorChanged(SensorEvent event){
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            accelerometerValues = event.values;
         }
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+            magneticFieldValues = event.values;
+        }
+        float degree = calculateOrientation();
+        RotateAnimation ra = new RotateAnimation(currentDegree,-degree, Animation.RELATIVE_TO_SELF,0.5f,
+                Animation.RELATIVE_TO_SELF,0.5f);
+
+//        int rotation = getWindowManager().getDefaultDisplay().getRotation();
+//        imgZnz.setRotate(ORIENTATIONS.get(rotation),50,50);
+        ra.setDuration(200);
+        imgZnz.startAnimation(ra);
+        currentDegree=-degree;
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor,int accuracy){
+
     }
 
-    /**
-     * 停止定位
-     */
-    @Override
-    public void deactivate() {
-        mListener = null;
-        if (mlocationClient != null) {
-            mlocationClient.stopLocation();
-            mlocationClient.onDestroy();
-        }
-        mlocationClient = null;
-    }
+
+
+
 
 //    检测所有按键
 @Override

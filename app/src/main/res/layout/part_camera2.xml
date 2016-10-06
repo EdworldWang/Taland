@@ -25,17 +25,22 @@
             android:gravity="center_vertical"
             android:weightSum="1">
 
-            <EditText
-                android:id="@+id/input_edittext"
+            <AutoCompleteTextView
+                android:id="@+id/searchText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/search_input"
                 android:background="@color/transparent"
                 android:hint="查找周边美食、酒店、公交"
-                android:textColorHint="#C0C0C0"
+                android:imeOptions="actionDone"
+                android:inputType="text|textAutoComplete"
+                android:completionThreshold="1"
+                android:dropDownVerticalOffset="1.0dip"
+                android:textColorHint="@color/darkgrey"
                 android:singleLine="true"
-                android:textColor="@color/gary"
+                android:textColor="@color/blue"
                 android:textSize="18sp"
+                android:popupBackground="@drawable/autotext"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignBottom="@+id/search_bar_layout"
@@ -64,7 +69,7 @@
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
         android:textColor="@drawable/btn_style_01"
-        android:text="商家:0"
+        android:text="商家:1"
         android:gravity="center"
         android:id="@+id/btn2"
         android:textSize="22sp"
@@ -84,8 +89,8 @@
         android:textSize="22sp"
         android:background="@android:color/transparent"/>
 
-    <TextView
-        android:id="@+id/textView1"
+    <com.dragon.navigation.util.MyTextView
+        android:id="@+id/current_city"
         android:layout_width="85dp"
         android:clickable="false"
         android:layout_height="wrap_content"
@@ -93,14 +98,58 @@
         android:singleLine="true"
         android:textSize="22sp"
         android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
         android:ellipsize="marquee"
         android:focusable="true"
+        android:scrollHorizontally="true"
         android:focusableInTouchMode="true"
-        android:textColor="@drawable/btn_style_01"
+        android:textColor="@color/blue"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/My"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/btn2"/>
+
+    <ImageView
+        android:layout_width="100dip"
+        android:layout_height="100dip"
+        android:id="@+id/Compass"
+        android:src="@drawable/znz"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/search_bar_layout"
+        android:layout_alignParentEnd="true"/>
+
+    <RelativeLayout
+        android:id="@+id/poi_searchRL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
+
+    <!--<TextView-->
+        <!--android:id="@+id/Poi1_title"-->
+        <!--android:layout_width="150px"-->
+        <!--android:layout_height="60px"-->
+        <!--android:gravity="center"-->
+        <!--android:text="dragon KFC"-->
+        <!--android:background="@color/red"-->
+        <!--android:singleLine="true"-->
+        <!--android:layout_below="@+id/Compass"-->
+        <!--android:layout_toEndOf="@+id/textView1"/>-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/Poi1_content"-->
+        <!--android:layout_width="150px"-->
+        <!--android:layout_height="60px"-->
+        <!--android:gravity="center"-->
+        <!--android:lines="2"-->
+        <!--android:ellipsize="marquee"-->
+        <!--android:marqueeRepeatLimit="marquee_forever"-->
+        <!--android:focusable="true"-->
+        <!--android:focusableInTouchMode="true"-->
+        <!--android:text="dragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFC"-->
+
+        <!--android:layout_below="@+id/Poi1_title"-->
+        <!--android:layout_alignStart="@+id/Poi1_title"/>-->
 
 
 </RelativeLayout>

@@ -80,7 +80,6 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
         query = new PoiSearch.Query(this.mKeyWord, "", this.mCityCode);
         query.setPageSize(this.mPoiItems);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
-
         poiSearch = new PoiSearch(this.mActivity, query);//兴趣点搜索
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
@@ -99,7 +98,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
                     // 取得搜索到的poiitems有多少页
                     poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
 //                    ToastUtil.show(this.mActivity,poiItems.get(0)+","+poiItems.get(1));
-                    ToastUtil.show(this.mActivity,poiItems+","+poiItems.get(1));
+//                    ToastUtil.show(this.mActivity,poiItems+","+poiItems.get(1));
                     suggestionCities = poiResult.getSearchSuggestionCitys();// 当搜索不到poiitem数据时，会返回含有搜索关键字的城市信息
                     if (poiItems != null && poiItems.size() > 0) {
                         poiOrSuggestion=1;
@@ -163,6 +162,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
     }
 
 //    下面这个方法还有问题，待解决
+//    给出解决思路：需要用到android的代理开发模式，本人能力有限，留给后面的开发者去完善（dragon）
     public PoiResult getPoiResult(){
 //        返回poi搜索结果
         if(1==poiOrSuggestion){

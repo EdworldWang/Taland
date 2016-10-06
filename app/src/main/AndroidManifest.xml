@@ -54,6 +54,9 @@
         <activity android:name=".GuideActivity">
         </activity>
 
+        <activity android:name=".Sensor">
+
+        </activity>
         <activity android:name=".SplashActivity">
         </activity>
         <!--定位服务-->
