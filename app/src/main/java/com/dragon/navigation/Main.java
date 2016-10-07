@@ -3,6 +3,7 @@ package com.dragon.navigation;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -23,6 +24,7 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -39,9 +41,11 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
@@ -61,9 +65,8 @@ public class Main extends Activity implements View.OnClickListener,SensorEventLi
     private static final String TAG="Main";
     private ArPoiSearch mArPoiSearch;
     private Location mLocation;
-    private AutoCompleteTextView mSearchText;
-//    private EditText editCity;
 
+//    private EditText editCity;
     private TextureView textureView;
     //用SparseIntArray来代替hashMap，进行性能优化。
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -84,11 +87,20 @@ public class Main extends Activity implements View.OnClickListener,SensorEventLi
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 //    *****************************************************************
-
-    private MyTextView mCurrentCity;
-    private TextView btnPoiSearch;
-    private Button btnMy;
+//    指南针
     private ImageView imgZnz;
+//    搜素关键字
+    private AutoCompleteTextView mSearchText;
+//    当前城市，自定义控件，为了获取焦点
+    private MyTextView mCurrentCity;
+// 搜索
+    private TextView btnSearch;
+//    商家
+    private TextView mMerchant;
+    private Button btnMy;
+    // 要输入的poi搜索关键字
+    private String keyWord = "";
+
 //****************************************************************
     float currentDegree = 0f;
     SensorManager mSensorManager;
@@ -97,10 +109,9 @@ public class Main extends Activity implements View.OnClickListener,SensorEventLi
 
     private float[] accelerometerValues = new float[3];
     private float[] magneticFieldValues = new float[3];
-
-
-
-
+//***********新建子线程更新UI**********************
+    private static final int UPDATE_TEXT = 1;
+    private Handler mUiHandler = new MyUiHandler();
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -111,20 +122,20 @@ public class Main extends Activity implements View.OnClickListener,SensorEventLi
         textureView.setSurfaceTextureListener(textureListener);
 //********************Location***************************
         mCurrentCity=(MyTextView)findViewById(R.id.current_city);
+        LatLonPoint lp = new LatLonPoint(0,0);
         mLocation = new Location(Main.this,savedInstanceState,mCurrentCity);
         mLocation.initLoction();
 
+//        ToastUtil.show(Main.this,mLocation.getLp());
 //********************POI********************************
-        mArPoiSearch = new ArPoiSearch(this,"大学","","深圳市");
-        mArPoiSearch.doSearchSearch();
-        mArPoiSearch.getPoiResult();
 
 
 
+//两个按键，搜索和我的监听
         btnMy = (Button)findViewById(R.id.My);
         btnMy.setOnClickListener(this);
-        btnPoiSearch = (TextView)findViewById(R.id.btn_search);
-        btnPoiSearch.setOnClickListener(this);
+        btnSearch = (TextView)findViewById(R.id.btn_search);
+        btnSearch.setOnClickListener(this);
 
 
 //        ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
@@ -142,6 +153,28 @@ public class Main extends Activity implements View.OnClickListener,SensorEventLi
 //        *******************************************************
         mSearchText = (AutoCompleteTextView) findViewById(R.id.searchText);
         mSearchText.addTextChangedListener(this);// 添加文本输入框监听事件
+        mMerchant = (TextView)findViewById(R.id.merchant);
+//以下动态加载
+    }
+
+
+
+
+
+// 定义一个内部类继承自Handler，并且覆盖handleMessage方法用于处理子线程传过来的消息
+    class MyUiHandler extends Handler{
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case UPDATE_TEXT: // 接受到消息之后，对UI控件进行修改
+                    mMerchant.setText("商家：11");
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 
 
@@ -485,7 +518,19 @@ public class Main extends Activity implements View.OnClickListener,SensorEventLi
 
     }
 
-
+    //    检测搜索关键字是否为空，不为空就开始搜索
+    public void searchButton() {
+        keyWord = AMapUtil.checkEditText(mSearchText);
+        if ("".equals(keyWord)) {
+            ToastUtil.show(this, "请输入搜索关键字");
+            return;
+        } else {
+//            默认搜索范围是深圳市，为空是全国
+            final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin);
+            mArPoiSearch = new ArPoiSearch(this,keyWord,"","深圳市",lin);
+            mArPoiSearch.doSearch();
+        }
+    }
 
 
 
@@ -497,11 +542,22 @@ public void onClick(View v)
     {
         case R.id.btn_search:
 //            ToastUtil.show(Main.this,"搜索");
-            Toast.makeText(Main.this, "搜索", Toast.LENGTH_SHORT).show();
+            searchButton();
+//            更新UI
+            new Thread(new Runnable() {
+                @Override
+                public void run() { //　新建一个线程，并新建一个Message的对象，是用Handler的对象发送这个Message
+                    Message msg = new Message();
+                    msg.what = UPDATE_TEXT; // 用户自定义的一个值，用于标识不同类型的消息
+                    mUiHandler.sendMessage(msg); // 发送消息
+                }
+            }).start();
             break;
         case R.id.My:
 //            ToastUtil.show(Main.this,"我的");
-            Toast.makeText(Main.this, "我的", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Main.this,MySetting.class);
+            startActivity(intent);
+//            Toast.makeText(Main.this, "我的", Toast.LENGTH_SHORT).show();
             break;
     }
 }

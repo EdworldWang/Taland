@@ -2,11 +2,17 @@ package com.dragon.navigation;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.widget.LinearLayout;
 
+import com.amap.api.maps.AMapUtils;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.core.SuggestionCity;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.dragon.navigation.util.NewWidget;
 import com.dragon.navigation.util.ToastUtil;
 
 import java.util.List;
@@ -16,7 +22,7 @@ import java.util.List;
  * belong to com.dragon.navigation .
  * 关于搜索的类
  */
-public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
+public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     private Activity mActivity;
     //输入搜索关键字
     private String mKeyWord;
@@ -35,6 +41,8 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
     private int mPoiItems=10;
     private int poiOrSuggestion=1;
     private PoiResult resultList;
+    private LinearLayout lin;
+    private LinearLayout.LayoutParams LP_FW;
 
     public void setActivity(Activity mActivity){
         this.mActivity = mActivity;
@@ -66,24 +74,54 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
 
     }
 
-    public ArPoiSearch(Activity activity,String mKeyWord, String mStylePoi, String mCityCode){
+    public ArPoiSearch(Activity activity,String mKeyWord, String mStylePoi, String mCityCode,LinearLayout lin){
         this.mActivity= activity;
         this.mKeyWord = mKeyWord;
         this.mStylePoi = mStylePoi;
         this.mCityCode = mCityCode;
+        this.lin = lin;
+        this.LP_FW = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+
     }
 
-    public void doSearchSearch(){
+    public void doSearch(){
         showProgressDialog();// 耗时操作前，显示进度框
         currentPage = 0;
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query = new PoiSearch.Query(this.mKeyWord, "", this.mCityCode);
         query.setPageSize(this.mPoiItems);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
+//        poiSearch.setOnPoiSearchListener(this);
+//        poiSearch.setBound(new PoiSearch.SearchBound(lp, 5000, true));
+
         poiSearch = new PoiSearch(this.mActivity, query);//兴趣点搜索
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
     }
+
+
+    private LinearLayout  generateNewWidget(String str)
+    {
+        LinearLayout layout_sub_Lin=new LinearLayout(this.mActivity);
+//        layout_sub_Lin.setBackgroundColor(Color.argb(0xff, 0x00, 0xff, 0x00));
+        layout_sub_Lin.setOrientation(LinearLayout.VERTICAL);
+        layout_sub_Lin.setPadding(5, 5, 5, 5);
+
+        NewWidget mNewWidget = new NewWidget(this.mActivity);
+        LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(600,200);
+        mNewWidget.setTitle(str);
+        mNewWidget.setContent("200m");
+        mNewWidget.setTitleBackgroundColor(Color.RED);
+        mNewWidget.setContentBackgroundColor(Color.GRAY);
+        mNewWidget.setTextSize(40);
+        mNewWidget.setTextColor(Color.GREEN);
+        mNewWidget.setLayoutParams(LP_WW);
+        layout_sub_Lin.addView(mNewWidget);
+        return  layout_sub_Lin ;
+    }
+
 
     /**
      * POI信息查询回调方法
@@ -97,8 +135,17 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
                     poiResult = result;
                     // 取得搜索到的poiitems有多少页
                     poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
+
 //                    ToastUtil.show(this.mActivity,poiItems.get(0)+","+poiItems.get(1));
-//                    ToastUtil.show(this.mActivity,poiItems+","+poiItems.get(1));
+                    LatLng var0= convertToLatLng(poiItems.get(1).getLatLonPoint());
+                    LatLng var1= convertToLatLng(poiItems.get(2).getLatLonPoint());
+                    AMapUtils.calculateLineDistance(var0, var1);
+                    lin.removeAllViews();
+                    for(int i=0;i<poiItems.size();i++) {
+                        lin.addView(generateNewWidget(poiItems.get(i) + ""), LP_FW);
+                    }
+//                    poiItems.get(1).getTitle()+","+poiItems.get(1).getSnippet()
+                    ToastUtil.show(this.mActivity,","+ AMapUtils.calculateLineDistance(var0,var1));
                     suggestionCities = poiResult.getSearchSuggestionCitys();// 当搜索不到poiitem数据时，会返回含有搜索关键字的城市信息
                     if (poiItems != null && poiItems.size() > 0) {
                         poiOrSuggestion=1;
@@ -120,6 +167,14 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
             ToastUtil.showerror(this.mActivity, rCode);
         }
 
+    }
+
+
+    /**
+     * 把LatLonPoint对象转化为LatLon对象
+     */
+    public static LatLng convertToLatLng(LatLonPoint latLonPoint) {
+        return new LatLng(latLonPoint.getLatitude(), latLonPoint.getLongitude());
     }
     /**
      * 显示进度框
@@ -147,6 +202,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener {
         // TODO Auto-generated method stub
 
     }
+
     /**
      * poi没有搜索到数据，返回一些推荐城市的信息
      */

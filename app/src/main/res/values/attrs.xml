@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="title" format="string" />
+    <attr name="content" format="string"/>
+    <attr name="textColor" format="color" />
+    <attr name="titleBackgroundColor" format="color"/>
+    <attr name="contentBackgroundColor" format="color"/>
+    <attr name="textSize" format="dimension" />
+
+    <declare-styleable name="NewWidget">
+        <attr name="title" />
+        <attr name="content"/>
+        <attr name="textColor" />
+        <attr name="textSize" />
+        <attr name="titleBackgroundColor"/>
+        <attr name="contentBackgroundColor"/>
+    </declare-styleable>
+</resources>

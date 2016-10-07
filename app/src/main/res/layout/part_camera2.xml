@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/part_camera2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal" >
@@ -16,7 +17,7 @@
         android:orientation="horizontal" >
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
@@ -65,13 +66,21 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/list_Lin"
+        android:orientation="vertical"
+        android:layout_below="@+id/search_bar_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
     <TextView
+        android:id="@+id/merchant"
         android:layout_width="@dimen/button_width"
         android:layout_height="wrap_content"
-        android:textColor="@drawable/btn_style_01"
+        android:textColor="@color/blue"
         android:text="商家:1"
         android:gravity="center"
-        android:id="@+id/btn2"
         android:textSize="22sp"
         android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
@@ -107,7 +116,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/My"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/btn2"/>
+        android:layout_toStartOf="@+id/merchant"/>
 
     <ImageView
         android:layout_width="100dip"
@@ -117,39 +126,5 @@
         android:background="@android:color/transparent"
         android:layout_below="@+id/search_bar_layout"
         android:layout_alignParentEnd="true"/>
-
-    <RelativeLayout
-        android:id="@+id/poi_searchRL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </RelativeLayout>
-
-    <!--<TextView-->
-        <!--android:id="@+id/Poi1_title"-->
-        <!--android:layout_width="150px"-->
-        <!--android:layout_height="60px"-->
-        <!--android:gravity="center"-->
-        <!--android:text="dragon KFC"-->
-        <!--android:background="@color/red"-->
-        <!--android:singleLine="true"-->
-        <!--android:layout_below="@+id/Compass"-->
-        <!--android:layout_toEndOf="@+id/textView1"/>-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/Poi1_content"-->
-        <!--android:layout_width="150px"-->
-        <!--android:layout_height="60px"-->
-        <!--android:gravity="center"-->
-        <!--android:lines="2"-->
-        <!--android:ellipsize="marquee"-->
-        <!--android:marqueeRepeatLimit="marquee_forever"-->
-        <!--android:focusable="true"-->
-        <!--android:focusableInTouchMode="true"-->
-        <!--android:text="dragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFCdragon KFC"-->
-
-        <!--android:layout_below="@+id/Poi1_title"-->
-        <!--android:layout_alignStart="@+id/Poi1_title"/>-->
-
 
 </RelativeLayout>
