@@ -43,6 +43,8 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     private PoiResult resultList;
     private LinearLayout lin;
     private LinearLayout.LayoutParams LP_FW;
+    private float distance;
+    public static LatLng here;
 
     public void setActivity(Activity mActivity){
         this.mActivity = mActivity;
@@ -92,17 +94,18 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query = new PoiSearch.Query(this.mKeyWord, "", this.mCityCode);
         query.setPageSize(this.mPoiItems);// 设置每页最多返回多少条poiitem
-        query.setPageNum(currentPage);// 设置查第一页
+        query.setPageNum(currentPage);// 设置查第一页);//设置查询页码
 //        poiSearch.setOnPoiSearchListener(this);
 //        poiSearch.setBound(new PoiSearch.SearchBound(lp, 5000, true));
 
         poiSearch = new PoiSearch(this.mActivity, query);//兴趣点搜索
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
+
     }
 
 
-    private LinearLayout  generateNewWidget(String str)
+    private LinearLayout  generateNewWidget(String str,float distance)
     {
         LinearLayout layout_sub_Lin=new LinearLayout(this.mActivity);
 //        layout_sub_Lin.setBackgroundColor(Color.argb(0xff, 0x00, 0xff, 0x00));
@@ -112,7 +115,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         NewWidget mNewWidget = new NewWidget(this.mActivity);
         LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(600,200);
         mNewWidget.setTitle(str);
-        mNewWidget.setContent("200m");
+        mNewWidget.setContent(distance+"m");
         mNewWidget.setTitleBackgroundColor(Color.RED);
         mNewWidget.setContentBackgroundColor(Color.GRAY);
         mNewWidget.setTextSize(40);
@@ -137,15 +140,17 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                     poiItems = poiResult.getPois();// 取得第一页的poiitem数据，页数从数字0开始
 
 //                    ToastUtil.show(this.mActivity,poiItems.get(0)+","+poiItems.get(1));
-                    LatLng var0= convertToLatLng(poiItems.get(1).getLatLonPoint());
-                    LatLng var1= convertToLatLng(poiItems.get(2).getLatLonPoint());
-                    AMapUtils.calculateLineDistance(var0, var1);
+                //    LatLng var0= convertToLatLng(poiItems.get(1).getLatLonPoint());
+                //    LatLng var1= convertToLatLng(poiItems.get(2).getLatLonPoint());
+
                     lin.removeAllViews();
                     for(int i=0;i<poiItems.size();i++) {
-                        lin.addView(generateNewWidget(poiItems.get(i) + ""), LP_FW);
+                        LatLng var0= convertToLatLng(poiItems.get(i).getLatLonPoint());
+                        distance=AMapUtils.calculateLineDistance(var0, here);
+                        lin.addView(generateNewWidget((poiItems.get(i) + ""),distance), LP_FW);
                     }
 //                    poiItems.get(1).getTitle()+","+poiItems.get(1).getSnippet()
-                    ToastUtil.show(this.mActivity,","+ AMapUtils.calculateLineDistance(var0,var1));
+                   // ToastUtil.show(this.mActivity,","+ AMapUtils.calculateLineDistance(var0,var1));
                     suggestionCities = poiResult.getSearchSuggestionCitys();// 当搜索不到poiitem数据时，会返回含有搜索关键字的城市信息
                     if (poiItems != null && poiItems.size() > 0) {
                         poiOrSuggestion=1;

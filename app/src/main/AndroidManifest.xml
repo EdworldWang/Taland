@@ -38,7 +38,7 @@
         <!--地图开发者key-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="c5d452923be0f3455f2ff7e4104544ea"/>
+            android:value="ac5668645b366fbaf9b23ba03d57a4d4"/>
 
         <activity android:name=".ActivitySplashScreen">
             <intent-filter>
@@ -59,7 +59,11 @@
 
         </activity>
         <!--定位服务-->
-        <service android:name="com.amap.api.location.APSService"></service>
+        <service android:name="com.amap.api.location.APSService"></service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>
