@@ -15,22 +15,20 @@ public class Data {
             -1, 0, 0, 0,
             0, 0, -1.0f, 0,
             0, 0, 4000, 1};
-    public static float degree;
+    public static int degree;
     public static boolean getfirstdegree=false;
-    public static float firstdegree;
+    public static int firstdegree;
     public static int predegree;
     public static boolean modelDrawed=false;
-    public static float getMoveX(float degree){
 
-        float disdegee=degree-firstdegree;
-        if(disdegee>180){
-            disdegee=360-disdegee;
-        }
-        if(disdegee<-180){
-            disdegee=360+disdegee;
-        }
-        float X=(float) (2000/90*disdegee);
-        return X;
+
+    public static int movedistance=1500;
+    public static int alreadymove=0;
+    public static int getDistance(){
+        movedistance=50*(degree-firstdegree);
+        return movedistance;
     }
+
+
 
 }

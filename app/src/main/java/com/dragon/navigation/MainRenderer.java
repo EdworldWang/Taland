@@ -5,6 +5,8 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
+
+import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.use.CubeObject;
 import com.dragon.navigation.use.CubeShaders;
@@ -166,11 +168,29 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         GLES20.glFrontFace(GLES20.GL_CCW); // Back camera
 
         float[] modelViewMatrix= Data.modelViewMatrix.clone();
-        modelViewMatrix[13]=Data.getMoveX(Data.degree);
+
+
+              Data.getDistance();
+               int speed=Control.CalMovespeed();
+        if(Control.moveanimation==true){
+                if (Data.alreadymove < Data.movedistance) {
+                    Data.alreadymove += speed;
+                    modelViewMatrix[13] = Data.alreadymove;
+                }
+                if(Data.alreadymove>Data.movedistance){
+
+                    Data.alreadymove -= speed;
+                    modelViewMatrix[13] = Data.alreadymove;
+                }
+               if(Data.alreadymove==Data.movedistance) {
+                   modelViewMatrix[13] = Data.alreadymove;
+               }
+        }
+
         Matrix.scaleM(modelViewMatrix, 0, 400f,
                 200f, 1.0f);
-        drawModel(mCubeObject, modelViewMatrix, "lanshou", true);
-        Data.modelDrawed=true;
+     //   drawModel(mCubeObject, modelViewMatrix, "lanshou", true);
+     //   Data.modelDrawed=true;
     }
 
 

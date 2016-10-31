@@ -119,7 +119,7 @@ public class Texture
         v.buildDrawingCache();
         v.layout(0, 0, v.getMeasuredWidth(),
                 v.getMeasuredHeight());
-        v.setVisibility(View.INVISIBLE);
+       // v.setVisibility(View.INVISIBLE);
         Bitmap bitmap = v.getDrawingCache();
         Bitmap bitmap2 = Bitmap.createBitmap(bitmap);
         saveBmp(bitmap2,"opengl"+".png");
