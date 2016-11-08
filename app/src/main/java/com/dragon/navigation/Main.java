@@ -23,12 +23,12 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
 import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -39,6 +39,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
@@ -66,6 +67,7 @@ import com.dragon.navigation.util.BlankRender;
 import com.dragon.navigation.util.MyTextView;
 import com.dragon.navigation.util.NewWidget;
 import com.dragon.navigation.util.ToastUtil;
+import com.dragon.navigation.util.scrollerlayout;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -143,7 +145,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private float[] accelerometerValues = new float[3];
     private float[] magneticFieldValues = new float[3];
     private float[] motion = new float[3];
-    private float[] gravity = new float[3];
+    private float[] gravity = new float[3];//低通滤波后的重力
+    private float[] linear_acceleration=new float[3];//不含重力的手机加速度
     //***********新建子线程更新UI**********************
     private static final int UPDATE_TEXT = 1;
     private Handler mUiHandler = new MyUiHandler();
@@ -153,13 +156,20 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
      */
     private GoogleApiClient client;
     private TextView mydegree;
-    private  RelativeLayout layout_sub_Lin;
+    private  scrollerlayout layout_sub_Lin;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_camera2);
+        Log.i("dcdv","dvdvd");
         textureView = (TextureView) findViewById(R.id.texture);
+      //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
+
+     initnewview();
+
+        LinearLayout BlankLayout = (LinearLayout) View.inflate(this, R.layout.blanklayout,
+                null);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
 //********************Location***************************
@@ -172,16 +182,16 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 null);
         mydegree = (TextView)happy.findViewById(R.id.degree);
         mydegree.setText("");
-        mydegree.setTextColor(this.getResources().getColor(R.color.red));
 
-        LinearLayout BlankLayout = (LinearLayout) View.inflate(this, R.layout.blanklayout,
-                null);
+
         BlankLayout.setVisibility(View.VISIBLE);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(360, 600);
-        layoutParams.setMargins(200,250,0,0);
+       /* LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(360, 600);
+        layoutParams.setMargins(200,250,0,0);*/
         // buttonattack.setLayoutParams(layoutParams);
-        layoutParams.gravity= Gravity.LEFT;
-        BlankLayout.addView(happy,layoutParams);
+       // layoutParams.gravity= Gravity.LEFT;
+        BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        happy.setPadding(200,100,0,0);
         addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         BlankLayout.bringToFront();
@@ -190,7 +200,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         mTextures = new Vector<Texture>();
         loadTextures();
-        initApplicationAR();
 
 //两个按键，搜索和我的监听
         btnMy = (Button) findViewById(R.id.My);
@@ -226,6 +235,49 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         Thread mThread = new Thread(myRunnable);
         mThread.start();
+    }
+    public void initnewview(){
+       /* ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
+        View wen1=(View) myviewstub.inflate();
+        NewWidget wen=(NewWidget)findViewById(R.id.newwidget1);
+        // LayoutInflater inflater = LayoutInflater.from(this);
+        if(wen==null){
+            Log.i("fdf","fdfsdfsdfdsfds");
+        }
+    //    LinearLayout.LayoutParams LP_wen = new LinearLayout.LayoutParams(200, 150);
+        wen.setTitle("gg");
+        wen.setContent("bb");
+        wen.setTitleBackgroundColor(Color.RED);
+        wen.setContentBackgroundColor(Color.GRAY);
+        wen.setTextSize(40);
+        wen.setTextColor(Color.GREEN);
+
+     //   wen.setLayoutParams(LP_wen);
+        wen.smoothScrollBy(-100,-100,20000);*/
+        scrollerlayout paper=new scrollerlayout(this);
+        RelativeLayout orange = (RelativeLayout) View.inflate(this, R.layout.moveanywhere,
+                null);
+        ViewStub tess=(ViewStub)orange.findViewById(R.id.wang);
+        View wen2=(View) tess.inflate();
+        NewWidget wen1=(NewWidget)orange.findViewById(R.id.newwidget1);
+
+        wen1.setTitle("fvfbf");
+        wen1.setContent("bb");
+        wen1.setTitleBackgroundColor(Color.RED);
+        wen1.setContentBackgroundColor(Color.GRAY);
+        wen1.setTextSize(40);
+        wen1.setTextColor(Color.GREEN);
+        LinearLayout.LayoutParams LP_wen = new LinearLayout.LayoutParams(200, 150);
+        wen1.setLayoutParams(LP_wen);
+        Log.i("hhh",((ViewGroup)wen1.getParent()).toString());
+        LinearLayout liang=(LinearLayout)orange.findViewById(R.id.liang);
+        liang.removeView(wen1);
+       // ((ViewGroup)wen1.getParent()).removeView(wen1);
+        paper.addView(wen1);
+        addContentView(paper,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        paper.smoothScrollTo(-1000,-1000,20000);
+
     }
 
     @Override
@@ -537,8 +589,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     protected void onResume() {
         super.onResume();
         //        注册监听事件
-        mSensorManager.registerListener(Main.this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-        mSensorManager.registerListener(Main.this, magnetic, SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(Main.this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(Main.this, magnetic, SensorManager.SENSOR_DELAY_UI);
         mLocation.onResume();
         Log.e(TAG, "onResume");
         startBackgroundThread();
@@ -635,25 +687,31 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             gravitySmoother.put(event.values);
             gravitySmoother.getSmoothed(accelerometerValues, SMOOTHING);
+
+            final float alpha=0.8f;
+
+            for(int i=0;i<3;i++){
+                gravity[i]=alpha*gravity[i]+(1-alpha)*accelerometerValues[i];
+                linear_acceleration[i]=accelerometerValues[i]-gravity[i];
+            }
+
+
+
         }
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             magneticFieldSmoother.put(event.values);
             magneticFieldSmoother.getSmoothed(magneticFieldValues, SMOOTHING);
         }
         int degree = (int)calculateOrientation();
-    mydegree.setText("degree"+Data.predegree);
+
         RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
 
-       /* Log.i("x=",String.valueOf(accelerometerValues[0]));
-        Log.i("y=",String.valueOf(accelerometerValues[1]));
-        Log.i("z=",String.valueOf(accelerometerValues[2]));
-        Log.i("MaxRange",""+event.sensor.getMaximumRange());*/
         if (Data.getfirstdegree == false && Data.modelDrawed == true) {
             Data.firstdegree = -degree;
             Data.getfirstdegree = true;
         }
-        Data.predegree=(int)(currentDegree-Data.firstdegree);//度数差
+        Data.predegree=(currentDegree-Data.firstdegree);//度数差
         TranslateAnimation ta = new TranslateAnimation(0, Data.predegree*15, 0,0);
        // mNewWidget.scrollTo(Data.predegree*15,0);
 //        int rotation = getWindowManager().getDefaultDisplay().getRotation();
@@ -720,14 +778,20 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
             while (true) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(500);
                 }catch (InterruptedException e){
 
                 }
                 int degree=(int)calculateOrientation();
 
                     Data.degree=-degree;
-                layout_sub_Lin.scrollTo(Data.predegree*15,0);
+               /* layout_sub_Lin.offsetLeftAndRight(Data.predegree*15);*/
+                //layout_sub_Lin.scrollTo(Data.predegree*15,0);
+
+                Message message2 = new Message();
+                message2.what = 2;
+                handler.sendMessage(message2);
+
                 if (Control.displayPoi == false) {
                     Message message = new Message();
                     message.what = 1;
@@ -754,28 +818,29 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 case 1:
                     Control.displayPoi = true;
                     break;
+                case 2:
+                    mydegree.setText("predegree="+Data.predegree+"\n"+
+                            "gravity[0]="+gravity[0]+"\n"+
+                            "gravity[1]"+gravity[1]+"\n"+
+                            "gravity[2]"+gravity[2]+"\n"+
+                            "accelerometerValues[0]="+accelerometerValues[0]+"\n"+
+                            "accelerometerValues[1]"+accelerometerValues[1]+"\n"+
+                            "accelerometerValues[2]"+accelerometerValues[2]+"\n"+
+                            " linear_acceleration[0]"+ linear_acceleration[0]+"\n"+
+                            " linear_acceleration[1]"+ linear_acceleration[1]+"\n"+
+                            " linear_acceleration[2]"+ linear_acceleration[2]+"\n"+
+                            "mNewWidget X="+mNewWidget.getX()+" Y="+mNewWidget.getY()+"\n"+
+                            "Curr X="+mNewWidget.mScroller.getCurrX()+" Y="+mNewWidget.mScroller.getCurrY()+"\n"+
+                            "FinalX="+mNewWidget.mScroller.getFinalX()+" Y="+mNewWidget.mScroller.getFinalY()+"\n"+
+                            "OFFSET     "+mNewWidget.mScroller.isFinished()
+                    );
+                    break;
             }
             super.handleMessage(msg);
         }
 
     };
 
-    private void initApplicationAR() {
-        // Create OpenGL ES view:
-        int depthSize = 16;
-        int stencilSize = 0;
-        boolean translucent = true;
-
-        mGlView = new SampleApplicationGLView(this);
-        mGlView.init(translucent, depthSize, stencilSize);
-        mGlView.setZOrderOnTop(true);
-        mRenderer = new MainRenderer(this);
-        mGlView.setRenderer(mRenderer);
-        mRenderer.setTextures(mTextures);
-        addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-
-    }
 
     private void loadTextures() {
 
@@ -792,13 +857,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         saveScreenShot(bitmap2,"hou"+".png");*/
 
         mNewWidget = new NewWidget(this);
-        layout_sub_Lin = new RelativeLayout(this);
+        layout_sub_Lin = new scrollerlayout(this);
 //        layout_sub_Lin.setBackgroundColor(Color.argb(0xff, 0x00, 0xff, 0x00));
 
         RelativeLayout hh=new RelativeLayout(this);
-
         LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(200, 150);
-        hh.setPadding(440,885, 0, 0);
         mNewWidget.setTitle("蓝瘦");
         mNewWidget.setContent("香菇");
         mNewWidget.setTitleBackgroundColor(Color.RED);
@@ -808,12 +871,17 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mNewWidget.setLayoutParams(LP_WW);
         layout_sub_Lin.setVisibility(View.VISIBLE);
         hh.addView(mNewWidget);
+        hh.setPadding(440,885,0,0);
 
         layout_sub_Lin.addView(hh);
         addContentView(layout_sub_Lin, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         layout_sub_Lin.bringToFront();
-        mTextures.add(Texture.loadTextureFromView(layout_sub_Lin, "lanshou"));
+      //  mTextures.add(Texture.loadTextureFromView(layout_sub_Lin, "lanshou"));
+        layout_sub_Lin.smoothScrollBy(250,1000,50000);
+
+
+
     }
 
 

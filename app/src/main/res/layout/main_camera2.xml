@@ -24,4 +24,11 @@
         android:layout_centerInParent="true"
         android:inflatedId="@+id/pic_view_id_after_inflate"
         android:layout="@layout/part_camera3" />
+    <ViewStub
+        android:id="@+id/lanshouqian"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:inflatedId="@+id/lanshouhou"
+        android:layout="@layout/newwidget" />
 </merge>

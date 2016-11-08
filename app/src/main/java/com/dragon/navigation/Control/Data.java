@@ -18,7 +18,7 @@ public class Data {
     public static int degree;
     public static boolean getfirstdegree=false;
     public static int firstdegree;
-    public static int predegree;
+    public static float predegree;
     public static boolean modelDrawed=false;
 
 
