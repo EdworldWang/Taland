@@ -1,5 +1,7 @@
 package com.dragon.navigation.Control;
 
+import android.location.Location;
+
 /**
  * Created by EdwardPC on 2016/10/13.
  */
@@ -17,18 +19,16 @@ public class Data {
             0, 0, 4000, 1};
     public static int degree;
     public static boolean getfirstdegree=false;
-    public static int firstdegree;
+    public static float firstdegree;
     public static float predegree;
     public static boolean modelDrawed=false;
 
 
-    public static int movedistance=1500;
+    public static float movedistance;
     public static int alreadymove=0;
-    public static int getDistance(){
-        movedistance=50*(degree-firstdegree);
-        return movedistance;
-    }
 
-
+    public static Location locationdes;
+    public static Location locationhere;
+    public static float bearing;
 
 }

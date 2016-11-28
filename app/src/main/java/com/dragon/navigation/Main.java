@@ -21,6 +21,7 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.location.Location;
 import android.media.ImageReader;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,12 +54,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
+import com.dragon.navigation.Control.Util;
 import com.dragon.navigation.use.DataSmoother;
 import com.dragon.navigation.use.SampleApplicationGLView;
 import com.dragon.navigation.use.Texture;
@@ -85,7 +88,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         TextWatcher, Inputtips.InputtipsListener {
     private static final String TAG = "Main";
     private ArPoiSearch mArPoiSearch;
-    private Location mLocation;
+   private MLocation mLocation;
     private Vector<Texture> mTextures;
     private SampleApplicationGLView mGlView;
     private MainRenderer mRenderer;
@@ -139,9 +142,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     SensorManager mSensorManager;
     private Sensor accelerometer;//加速度传感器
     private Sensor magnetic;//地磁传感器
+    scrollerlayout paper;
 
-
-
+    NewWidget wen1;
     private float[] accelerometerValues = new float[3];
     private float[] magneticFieldValues = new float[3];
     private float[] motion = new float[3];
@@ -150,6 +153,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     //***********新建子线程更新UI**********************
     private static final int UPDATE_TEXT = 1;
     private Handler mUiHandler = new MyUiHandler();
+    private scrollerlayout[] layoutarray=new scrollerlayout[10];
+    private NewWidget[]  widgetarray=new NewWidget[10];
+
+    private Location Locationdes;
+    private Location Locationhere;
+    private float currentAzimuth = UNKNOWN_AZIMUTH;
+    public final static float UNKNOWN_AZIMUTH = Float.NaN;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -162,12 +172,19 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_camera2);
-        Log.i("dcdv","dvdvd");
         textureView = (TextureView) findViewById(R.id.texture);
       //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
 
-     initnewview();
-
+        Data.locationdes=new Location("des");
+        Data.locationdes.setLongitude(0);
+        Data.locationdes.setLatitude(0);
+        Data.locationhere=new Location("des");
+        Data.locationhere.setLongitude(0);
+        Data.locationhere.setLatitude(0);
+        ArPoiSearch.here=new LatLng(0,0);
+    // initnewview();
+        Locationdes=new Location("des");
+        Locationhere=new Location("here");
         LinearLayout BlankLayout = (LinearLayout) View.inflate(this, R.layout.blanklayout,
                 null);
         assert textureView != null;
@@ -175,31 +192,28 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //********************Location***************************
         mCurrentCity = (MyTextView) findViewById(R.id.current_city);
         LatLonPoint lp = new LatLonPoint(0, 0);
-        mLocation = new Location(Main.this, savedInstanceState, mCurrentCity);
-        mLocation.initLoction();
+      mLocation = new MLocation(Main.this, savedInstanceState, mCurrentCity);
+      mLocation.initLoction();
 
         LinearLayout happy = (LinearLayout) View.inflate(this, R.layout.succees,
                 null);
         mydegree = (TextView)happy.findViewById(R.id.degree);
         mydegree.setText("");
+        mydegree.setTextColor(Color.RED);
 
 
         BlankLayout.setVisibility(View.VISIBLE);
-       /* LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(360, 600);
-        layoutParams.setMargins(200,250,0,0);*/
-        // buttonattack.setLayoutParams(layoutParams);
-       // layoutParams.gravity= Gravity.LEFT;
         BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        happy.setPadding(200,100,0,0);
-        addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        BlankLayout.bringToFront();
+        happy.setPadding(200,80,0,0);
+     addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+         ViewGroup.LayoutParams.MATCH_PARENT));
+      BlankLayout.bringToFront();
 //        ToastUtil.show(Main.this,mLocation.getLp());
 //********************POI********************************
 
         mTextures = new Vector<Texture>();
-        loadTextures();
+       // loadTextures();
 
 //两个按键，搜索和我的监听
         btnMy = (Button) findViewById(R.id.My);
@@ -208,7 +222,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         btnSearch.setOnClickListener(this);
 
 
-//        ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
+    //ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
         imgZnz = (ImageView) findViewById(R.id.Compass);
         imgZnz.setAlpha(0.2f);
 //        ****************************************************
@@ -237,29 +251,28 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mThread.start();
     }
     public void initnewview(){
-       /* ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
-        View wen1=(View) myviewstub.inflate();
-        NewWidget wen=(NewWidget)findViewById(R.id.newwidget1);
-        // LayoutInflater inflater = LayoutInflater.from(this);
-        if(wen==null){
-            Log.i("fdf","fdfsdfsdfdsfds");
+        for(int i=0;i<10;i++){
+            layoutarray[i]=new scrollerlayout(this);
+         //  layoutarray[i].addView(widgetarray[i]);
         }
-    //    LinearLayout.LayoutParams LP_wen = new LinearLayout.LayoutParams(200, 150);
-        wen.setTitle("gg");
-        wen.setContent("bb");
-        wen.setTitleBackgroundColor(Color.RED);
-        wen.setContentBackgroundColor(Color.GRAY);
-        wen.setTextSize(40);
-        wen.setTextColor(Color.GREEN);
-
-     //   wen.setLayoutParams(LP_wen);
-        wen.smoothScrollBy(-100,-100,20000);*/
-        scrollerlayout paper=new scrollerlayout(this);
+        LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(150, 200);
+        for(int i=0;i<10;i++){
+            widgetarray[i]=new NewWidget(this);
+            widgetarray[i].setContent("Hello");
+            widgetarray[i].setContentBackgroundColor(Color.WHITE);
+            widgetarray[i].setTitle("第"+i+"号");
+            widgetarray[i].setTitleBackgroundColor(Color.RED);
+            widgetarray[i].setTextSize(40);
+            widgetarray[i].setTextColor(Color.BLACK);
+            widgetarray[i].setLayoutParams(blue);
+            layoutarray[i].addView(widgetarray[i]);
+        }
+        /*paper=new scrollerlayout(this);
         RelativeLayout orange = (RelativeLayout) View.inflate(this, R.layout.moveanywhere,
                 null);
         ViewStub tess=(ViewStub)orange.findViewById(R.id.wang);
         View wen2=(View) tess.inflate();
-        NewWidget wen1=(NewWidget)orange.findViewById(R.id.newwidget1);
+        wen1=(NewWidget)orange.findViewById(R.id.newwidget1);
 
         wen1.setTitle("fvfbf");
         wen1.setContent("bb");
@@ -267,16 +280,31 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         wen1.setContentBackgroundColor(Color.GRAY);
         wen1.setTextSize(40);
         wen1.setTextColor(Color.GREEN);
-        LinearLayout.LayoutParams LP_wen = new LinearLayout.LayoutParams(200, 150);
+
         wen1.setLayoutParams(LP_wen);
         Log.i("hhh",((ViewGroup)wen1.getParent()).toString());
         LinearLayout liang=(LinearLayout)orange.findViewById(R.id.liang);
         liang.removeView(wen1);
        // ((ViewGroup)wen1.getParent()).removeView(wen1);
         paper.addView(wen1);
+        wen1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                    paper.smoothScrollBy(500,500,20000);
+            }
+        });
         addContentView(paper,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));*/
+        widgetarray[0].setDestination(100);
+        addContentView(layoutarray[0], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        paper.smoothScrollTo(-1000,-1000,20000);
+        layoutarray[0].smoothScrollBy(-500,-500,2000);
+            widgetarray[0].setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    layoutarray[0].smoothScrollBy(500,500,2000);
+                }
+
+            });
+
 
     }
 
@@ -591,7 +619,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         //        注册监听事件
         mSensorManager.registerListener(Main.this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(Main.this, magnetic, SensorManager.SENSOR_DELAY_UI);
-        mLocation.onResume();
+     mLocation.onResume();
         Log.e(TAG, "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {
@@ -623,8 +651,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         gravitySmoother.clear();
         magneticFieldSmoother.clear();
-        mLocation.onPause();
-        mLocation.deactivate();
+     mLocation.onPause();
+     mLocation.deactivate();
     }
 
     @Override
@@ -656,13 +684,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mLocation.onSaveInstanceState(outState);
+    //    mLocation.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLocation.onDestroy();
+   //     mLocation.onDestroy();
     }
 
 
@@ -675,44 +703,40 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //                SensorManager.SENSOR_DELAY_FASTEST, handler);
         float[] values = new float[3];
         float[] R = new float[9];
+        final float inclinationMat[] = new float[9];
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);
         SensorManager.getOrientation(R, values);
+        currentAzimuth = RAD_TO_DEGREE * values[0];
         values[0] = (float) Math.toDegrees(values[0]);
+
+
         return values[0];
     }
-
+    private static final float RAD_TO_DEGREE = (float) (360 / (2 * Math.PI));
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            gravitySmoother.put(event.values);
+          /*  gravitySmoother.put(event.values);
             gravitySmoother.getSmoothed(accelerometerValues, SMOOTHING);
-
+*/
+            accelerometerValues=event.values;
             final float alpha=0.8f;
-
             for(int i=0;i<3;i++){
                 gravity[i]=alpha*gravity[i]+(1-alpha)*accelerometerValues[i];
                 linear_acceleration[i]=accelerometerValues[i]-gravity[i];
             }
-
-
-
         }
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            magneticFieldSmoother.put(event.values);
-            magneticFieldSmoother.getSmoothed(magneticFieldValues, SMOOTHING);
+           /* magneticFieldSmoother.put(event.values);
+            magneticFieldSmoother.getSmoothed(magneticFieldValues, SMOOTHING);*/
+            magneticFieldValues=event.values;
         }
         int degree = (int)calculateOrientation();
 
         RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
 
-        if (Data.getfirstdegree == false && Data.modelDrawed == true) {
-            Data.firstdegree = -degree;
-            Data.getfirstdegree = true;
-        }
-        Data.predegree=(currentDegree-Data.firstdegree);//度数差
-        TranslateAnimation ta = new TranslateAnimation(0, Data.predegree*15, 0,0);
        // mNewWidget.scrollTo(Data.predegree*15,0);
 //        int rotation = getWindowManager().getDefaultDisplay().getRotation();
 //        imgZnz.setRotate(ORIENTATIONS.get(rotation),50,50);
@@ -753,6 +777,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         switch (v.getId()) {
             case R.id.btn_search:
 //            ToastUtil.show(Main.this,"搜索");
+                Control.choosedestination=false;
                 searchButton();
 //            更新UI
                 new Thread(new Runnable() {
@@ -770,6 +795,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 startActivity(intent);
 //            Toast.makeText(Main.this, "我的", Toast.LENGTH_SHORT).show();
                 break;
+
         }
     }
 
@@ -779,12 +805,17 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             while (true) {
                 try {
                     Thread.sleep(500);
+                    if (Control.displayPoi == false) {
+                        Message message = new Message();
+                        message.what = 1;
+                        handler.sendMessage(message);
+                    }
+
                 }catch (InterruptedException e){
 
                 }
-                int degree=(int)calculateOrientation();
-
-                    Data.degree=-degree;
+                float degree=-calculateOrientation();
+                Data.predegree=degree;
                /* layout_sub_Lin.offsetLeftAndRight(Data.predegree*15);*/
                 //layout_sub_Lin.scrollTo(Data.predegree*15,0);
 
@@ -792,11 +823,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 message2.what = 2;
                 handler.sendMessage(message2);
 
-                if (Control.displayPoi == false) {
-                    Message message = new Message();
-                    message.what = 1;
-                    handler.sendMessage(message);
-                }
+
             }
         }
 
@@ -816,10 +843,36 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
+                    if(Control.geifirstData==false){
+                     /*   float degree=-calculateOrientation();
+                        float disdegree=degree-widgetarray[0].getDestination();
+                        //若为正数，说明度数比目标大，目标图向左移动，
+                        // 手机向左移动，度数变为负数，减少，图像向右移动
+                        Data.movedistance=-24*disdegree;
+                        layoutarray[0].smoothScrollBy((int)Data.movedistance,0,500);
+                        Data.predegree=degree;
+                        Data.firstdegree=degree;
+                        Control.geifirstData=true;*/
+                    }
                     Control.displayPoi = true;
+
                     break;
                 case 2:
-                    mydegree.setText("predegree="+Data.predegree+"\n"+
+                    Locationhere.setLatitude(ArPoiSearch.here.latitude);
+                    Locationhere.setLongitude(ArPoiSearch.here.longitude);
+                    Locationdes.setLatitude(Data.locationdes.getLatitude());
+                    Locationdes.setLongitude(Data.locationdes.getLongitude());
+                    final float startBearing = Locationdes.bearingTo(Locationhere);
+                    Data.bearing = Util.positiveModulo(startBearing - currentAzimuth,
+                            360);
+                    mydegree.setText("bearing="+Data.bearing+"\n"+
+                    "des latitude="+Data.locationdes.getLatitude()+"\n"+
+                    "des longitude="+Data.locationdes.getLongitude()+"\n"+
+                        "here latitude="+Data.locationhere.getLatitude()+"\n"+
+                       "here longitude="+Data.locationhere.getLongitude()+"\n");
+                   /* mydegree.setText("Data.movedistance="+Data.movedistance+"\n"+
+                            "predegree="+Data.predegree+"\n"+
+                            "firstdegree="+Data.firstdegree+"\n"+
                             "gravity[0]="+gravity[0]+"\n"+
                             "gravity[1]"+gravity[1]+"\n"+
                             "gravity[2]"+gravity[2]+"\n"+
@@ -829,11 +882,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                             " linear_acceleration[0]"+ linear_acceleration[0]+"\n"+
                             " linear_acceleration[1]"+ linear_acceleration[1]+"\n"+
                             " linear_acceleration[2]"+ linear_acceleration[2]+"\n"+
-                            "mNewWidget X="+mNewWidget.getX()+" Y="+mNewWidget.getY()+"\n"+
-                            "Curr X="+mNewWidget.mScroller.getCurrX()+" Y="+mNewWidget.mScroller.getCurrY()+"\n"+
-                            "FinalX="+mNewWidget.mScroller.getFinalX()+" Y="+mNewWidget.mScroller.getFinalY()+"\n"+
-                            "OFFSET     "+mNewWidget.mScroller.isFinished()
-                    );
+                            "widgetarray[0].getX()"+widgetarray[0].getX()+"\n"+
+                            "widgetarray[0].getY()"+widgetarray[0].getY()+"\n"+
+                            "widgetarray[0].destionation"+widgetarray[0].getDestination()+"\n"
+
+               );*/
                     break;
             }
             super.handleMessage(msg);
@@ -843,23 +896,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
     private void loadTextures() {
-
-
-     /*   gg.setVisibility(View.INVISIBLE);*/
-
-    /*    happy.setDrawingCacheEnabled(true);
-        happy.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED), View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        happy.buildDrawingCache();
-        happy.layout(0, 0, happy.getMeasuredWidth(),
-                happy.getMeasuredHeight());
-        Bitmap bitmap = happy.getDrawingCache();
-        Bitmap bitmap2 = Bitmap.createBitmap(bitmap);
-        saveScreenShot(bitmap2,"hou"+".png");*/
-
         mNewWidget = new NewWidget(this);
-        layout_sub_Lin = new scrollerlayout(this);
 //        layout_sub_Lin.setBackgroundColor(Color.argb(0xff, 0x00, 0xff, 0x00));
-
+        paper=new scrollerlayout(this);
         RelativeLayout hh=new RelativeLayout(this);
         LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(200, 150);
         mNewWidget.setTitle("蓝瘦");
@@ -869,17 +908,26 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mNewWidget.setTextSize(40);
         mNewWidget.setTextColor(Color.GREEN);
         mNewWidget.setLayoutParams(LP_WW);
-        layout_sub_Lin.setVisibility(View.VISIBLE);
-        hh.addView(mNewWidget);
-        hh.setPadding(440,885,0,0);
+        paper.setVisibility(View.VISIBLE);
+     //   hh.addView(mNewWidget);
+      //  hh.setPadding(440,885,0,0);
 
-        layout_sub_Lin.addView(hh);
-        addContentView(layout_sub_Lin, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        paper.addView(mNewWidget);
+        paper.setPadding(540,500,0,0);
+        addContentView(paper, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        layout_sub_Lin.bringToFront();
-      //  mTextures.add(Texture.loadTextureFromView(layout_sub_Lin, "lanshou"));
-        layout_sub_Lin.smoothScrollBy(250,1000,50000);
 
+       // layoutarray[0].bringToFront();
+        mNewWidget.setContent(String.valueOf(layoutarray[0].getId()));
+        //这里不能对layoutarray[0]进行点击事件监听
+        mNewWidget.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                paper.smoothScrollBy(-500,-500,10000);
+            }
+        });
+      //  mTextures.add(Texture.loadTextureFromView(layout_sub_Lin, "lanshou"));
+
+      //  layout_sub_Lin.smoothScrollBy(500,1000,20000);
 
 
     }

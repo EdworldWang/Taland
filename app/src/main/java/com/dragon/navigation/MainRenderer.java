@@ -170,22 +170,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         float[] modelViewMatrix= Data.modelViewMatrix.clone();
 
 
-              Data.getDistance();
-               int speed=Control.CalMovespeed();
-        if(Control.moveanimation==true){
-                if (Data.alreadymove < Data.movedistance) {
-                    Data.alreadymove += speed;
-                    modelViewMatrix[13] = Data.alreadymove;
-                }
-                if(Data.alreadymove>Data.movedistance){
 
-                    Data.alreadymove -= speed;
-                    modelViewMatrix[13] = Data.alreadymove;
-                }
-               if(Data.alreadymove==Data.movedistance) {
-                   modelViewMatrix[13] = Data.alreadymove;
-               }
-        }
 
         Matrix.scaleM(modelViewMatrix, 0, 400f,
                 200f, 1.0f);

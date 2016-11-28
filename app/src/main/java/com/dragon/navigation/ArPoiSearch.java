@@ -2,7 +2,9 @@ package com.dragon.navigation;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.amap.api.maps.AMapUtils;
@@ -12,6 +14,8 @@ import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.core.SuggestionCity;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.dragon.navigation.Control.Control;
+import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.util.NewWidget;
 import com.dragon.navigation.util.ToastUtil;
 
@@ -45,7 +49,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     private LinearLayout.LayoutParams LP_FW;
     private float distance;
     public static LatLng here;
-
+//在location处被赋值
     public void setActivity(Activity mActivity){
         this.mActivity = mActivity;
     }
@@ -99,6 +103,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 //        poiSearch.setBound(new PoiSearch.SearchBound(lp, 5000, true));
 
         poiSearch = new PoiSearch(this.mActivity, query);//兴趣点搜索
+        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(here.latitude,here.longitude),1000));
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
 
@@ -110,10 +115,10 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         LinearLayout layout_sub_Lin=new LinearLayout(this.mActivity);
 //        layout_sub_Lin.setBackgroundColor(Color.argb(0xff, 0x00, 0xff, 0x00));
         layout_sub_Lin.setOrientation(LinearLayout.VERTICAL);
-        layout_sub_Lin.setPadding(5, 5, 5, 5);
+     //   layout_sub_Lin.setPadding(5, 5, 5, 5);
 
         NewWidget mNewWidget = new NewWidget(this.mActivity);
-        LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(600,200);
+        LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(450,200);
         mNewWidget.setTitle(str);
         mNewWidget.setContent(distance+"m");
         mNewWidget.setTitleBackgroundColor(Color.RED);
@@ -148,6 +153,11 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         LatLng var0= convertToLatLng(poiItems.get(i).getLatLonPoint());
                         distance=AMapUtils.calculateLineDistance(var0, here);
                         lin.addView(generateNewWidget((poiItems.get(i) + ""),distance), LP_FW);
+                        if(Control.choosedestination==false) {
+                            Data.locationdes.setLongitude(var0.longitude);
+                            Data.locationdes.setLatitude(var0.latitude);
+                            Control.choosedestination=true;
+                        }
                     }
 //                    poiItems.get(1).getTitle()+","+poiItems.get(1).getSnippet()
                    // ToastUtil.show(this.mActivity,","+ AMapUtils.calculateLineDistance(var0,var1));

@@ -6,7 +6,6 @@
     <color name="white"> #FFFFFF</color>
     <color name="red"> #FF0000</color>
     <color name="f850_default_blue">#0079ff</color>
-
     <drawable name="transparent">#00000000</drawable>
     <color name="transparent">#00000000</color>
 
