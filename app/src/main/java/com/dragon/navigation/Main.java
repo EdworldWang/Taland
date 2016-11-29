@@ -50,6 +50,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,14 +60,18 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
+import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.Control.Util;
+import com.dragon.navigation.Model.TravelingEntity;
 import com.dragon.navigation.use.DataSmoother;
 import com.dragon.navigation.use.SampleApplicationGLView;
 import com.dragon.navigation.use.Texture;
 import com.dragon.navigation.util.AMapUtil;
 import com.dragon.navigation.util.BlankRender;
+import com.dragon.navigation.util.DensityUtil;
+import com.dragon.navigation.util.ModelUtil;
 import com.dragon.navigation.util.MyTextView;
 import com.dragon.navigation.util.NewWidget;
 import com.dragon.navigation.util.ToastUtil;
@@ -80,6 +85,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.Vector;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.arnav.basicFuction.camera2 .
@@ -167,14 +175,33 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private GoogleApiClient client;
     private TextView mydegree;
     private  scrollerlayout layout_sub_Lin;
+
+
+
+    private List<TravelingEntity> travelingList = new ArrayList<>(); // ListView数据
+    private TravelingAdapter mAdapter; // 主页数据
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main_camera2);
+
+        ButterKnife.bind(this);
         textureView = (TextureView) findViewById(R.id.texture);
       //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
 
+        travelingList = ModelUtil.getTravelingData();
+        mAdapter = new TravelingAdapter(this, travelingList);
+        ListView smoothListView=(ListView) findViewById(R.id.listView);
+        if (mAdapter==null||smoothListView==null){
+            for(int i=0;i<5;i++) {
+                Log.i("fdsfsdf", "dfsdfsd");
+            }
+        }
+       smoothListView.setAdapter(mAdapter);
+        if (mAdapter==null){
+            Log.i("fdsfsdf","dfsdfsd");
+        }
         Data.locationdes=new Location("des");
         Data.locationdes.setLongitude(0);
         Data.locationdes.setLatitude(0);
@@ -206,8 +233,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         happy.setPadding(200,80,0,0);
-     addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-         ViewGroup.LayoutParams.MATCH_PARENT));
+   //  addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+    //     ViewGroup.LayoutParams.MATCH_PARENT));
       BlankLayout.bringToFront();
 //        ToastUtil.show(Main.this,mLocation.getLp());
 //********************POI********************************
@@ -931,6 +958,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
     }
-
+    private void fillAdapter(List<TravelingEntity> list) {
+            mAdapter.setData(list);
+        }
 
 }
