@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/ll_root_view"
+    android:id="@+id/searchpoi_root_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="180dp"
+    android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical">
@@ -10,45 +10,55 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:background="@drawable/ripple_item_clicked"
             android:padding="10dp">
 
             <ImageView
-                android:id="@+id/iv_image"
-                android:layout_width="80dp"
+                android:id="@+id/poi_image"
+                android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_launcher"/>
 
             <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
+                android:id="@+id/poi_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@id/iv_image"
+                android:layout_alignTop="@id/poi_image"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/iv_image"
+                android:layout_toRightOf="@id/poi_image"
                 android:ellipsize="end"
                 android:gravity="top|start"
                 android:lineSpacingExtra="2dp"
                 android:maxLines="2"
                 android:paddingBottom="6dp"
-                android:background="@android:color/transparent"
                 android:text="标题"
                 android:textColor="@color/font_black_0"
                 android:textSize="15sp"/>
-
             <TextView
-                android:id="@+id/tv_rank"
+                android:id="@+id/poi_dis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_title"
+                android:layout_alignTop="@id/poi_name"
+                android:layout_alignBottom="@id/poi_name"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/iv_image"
-                android:text="排名：23"
-                android:background="@android:color/transparent"
+                android:layout_toRightOf="@id/poi_name"
+                android:text="距离"
                 android:textColor="@color/font_black_5"
                 android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/poi_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/poi_name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/poi_image"
+                android:text="描述"
+                android:textColor="@color/font_black_5"
+                android:textSize="15sp"
+                android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
     <View

@@ -4,22 +4,36 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
 import com.amap.api.services.core.SuggestionCity;
+import com.amap.api.services.poisearch.IndoorData;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.dragon.navigation.Adapter.SearchpoiAdapter;
+import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
+import com.dragon.navigation.Function.ResGeoCoding;
+import com.dragon.navigation.Model.SearchpoiEntity;
+import com.dragon.navigation.Model.TravelingEntity;
 import com.dragon.navigation.util.NewWidget;
 import com.dragon.navigation.util.ToastUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * This file created by dragon on 2016/9/20 15:46,
@@ -95,6 +109,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     public void doSearch(){
         showProgressDialog();// 耗时操作前，显示进度框
         currentPage = 0;
+        ButterKnife.bind(this.mActivity);
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query = new PoiSearch.Query(this.mKeyWord, "", this.mCityCode);
         query.setPageSize(this.mPoiItems);// 设置每页最多返回多少条poiitem
@@ -118,7 +133,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
      //   layout_sub_Lin.setPadding(5, 5, 5, 5);
 
         NewWidget mNewWidget = new NewWidget(this.mActivity);
-        LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(450,200);
+        LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(800,200);
         mNewWidget.setTitle(str);
         mNewWidget.setContent(distance+"m");
         mNewWidget.setTitleBackgroundColor(Color.RED);
@@ -147,18 +162,36 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 //                    ToastUtil.show(this.mActivity,poiItems.get(0)+","+poiItems.get(1));
                 //    LatLng var0= convertToLatLng(poiItems.get(1).getLatLonPoint());
                 //    LatLng var1= convertToLatLng(poiItems.get(2).getLatLonPoint());
-
                     lin.removeAllViews();
+
+                    List<SearchpoiEntity> SearchpoiList = new ArrayList<>(); // ListView数据
+                   SearchpoiAdapter mAdapter; // 主页数据
+                    String poiname;
+                    String poides;
+                    String poidis;
                     for(int i=0;i<poiItems.size();i++) {
+
                         LatLng var0= convertToLatLng(poiItems.get(i).getLatLonPoint());
                         distance=AMapUtils.calculateLineDistance(var0, here);
-                        lin.addView(generateNewWidget((poiItems.get(i) + ""),distance), LP_FW);
+                      lin.addView(generateNewWidget((poiItems.get(i)+" "),distance), LP_FW);
                         if(Control.choosedestination==false) {
                             Data.locationdes.setLongitude(var0.longitude);
                             Data.locationdes.setLatitude(var0.latitude);
                             Control.choosedestination=true;
                         }
+                        ResGeoCoding resserver=new ResGeoCoding(this.mActivity);
+                        resserver.doSearch(poiItems.get(i).getLatLonPoint());
+                        SearchpoiList.add(new SearchpoiEntity(poiItems.get(i).toString(),
+                                resserver.getDescription(),poiItems.get(i).getDistance()));
+
+
                     }
+                   mAdapter = new SearchpoiAdapter(this.mActivity, SearchpoiList);
+              ListView listView=new ListView(this.mActivity);
+                    listView.setAdapter(mAdapter);
+
+
+                 lin.addView(listView,LP_FW);
 //                    poiItems.get(1).getTitle()+","+poiItems.get(1).getSnippet()
                    // ToastUtil.show(this.mActivity,","+ AMapUtils.calculateLineDistance(var0,var1));
                     suggestionCities = poiResult.getSearchSuggestionCitys();// 当搜索不到poiitem数据时，会返回含有搜索关键字的城市信息
@@ -183,6 +216,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         }
 
     }
+
 
 
     /**

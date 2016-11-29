@@ -192,16 +192,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         travelingList = ModelUtil.getTravelingData();
         mAdapter = new TravelingAdapter(this, travelingList);
-        ListView smoothListView=(ListView) findViewById(R.id.listView);
-        if (mAdapter==null||smoothListView==null){
-            for(int i=0;i<5;i++) {
-                Log.i("fdsfsdf", "dfsdfsd");
-            }
-        }
-       smoothListView.setAdapter(mAdapter);
-        if (mAdapter==null){
-            Log.i("fdsfsdf","dfsdfsd");
-        }
+
         Data.locationdes=new Location("des");
         Data.locationdes.setLongitude(0);
         Data.locationdes.setLatitude(0);
@@ -233,8 +224,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
         happy.setPadding(200,80,0,0);
-   //  addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-    //     ViewGroup.LayoutParams.MATCH_PARENT));
+    addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+       ViewGroup.LayoutParams.MATCH_PARENT));
       BlankLayout.bringToFront();
 //        ToastUtil.show(Main.this,mLocation.getLp());
 //********************POI********************************

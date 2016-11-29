@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class TravelingEntity implements Serializable, Comparable<TravelingEntity> {
 
+
     private String type; // 风景、动物、植物、建筑
     private String title; // 标题
     private String from; // 来源
@@ -19,6 +20,8 @@ public class TravelingEntity implements Serializable, Comparable<TravelingEntity
 
     public TravelingEntity() {
     }
+
+
 
     public TravelingEntity(String type, String title, String from, int rank, String image_url) {
         this.type = type;

@@ -103,10 +103,11 @@ public class MLocation implements LocationSource,AMapLocationListener {
                 }
                 flagCurrentLocation=false;
 //                Toast.makeText(this.mActivity, amapLocation.getCity(), Toast.LENGTH_SHORT).show();
-                Log.e("information",amapLocation.getAddress()+amapLocation.getProvince()+ amapLocation.getCity()+amapLocation.getDistrict());
+                Log.e("information","Aoi name"+amapLocation.getAoiName()+"address"+amapLocation.getAddress()+amapLocation.getProvince()+ amapLocation.getCity()+amapLocation.getDistrict());
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr",errText);
+
             }
         }
     }
