@@ -5,15 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--TextureView的最小AIP 14 ，现在改到最小已经是21-->
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="360dp"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:fadingEdge="none"
-        android:overScrollMode="never"
-        android:scrollbars="none"/>
+
     <TextureView
         android:id="@+id/texture"
         android:layout_width="match_parent"

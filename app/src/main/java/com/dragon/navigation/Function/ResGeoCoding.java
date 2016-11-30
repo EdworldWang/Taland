@@ -34,9 +34,7 @@ public class ResGeoCoding implements GeocodeSearch.OnGeocodeSearchListener {
                if(result != null && result.getRegeocodeAddress()!=null
                        &&result.getRegeocodeAddress().getFormatAddress()!=null){
                     addressName = result.getRegeocodeAddress().getFormatAddress()+"附近";
-                   for(int i=0;i<5;i++){
                        Log.i("dfd",addressName);
-                   }
                }else{
                    Log.i("dfd","null");
                }

@@ -82,7 +82,6 @@ public class SearchpoiAdapter extends BaseListAdapter<SearchpoiEntity> {
         if (convertView != null && convertView instanceof LinearLayout) {
             holder = (ViewHolder) convertView.getTag();
         } else {
-
             convertView = mInflater.inflate(R.layout.item_searchpoi, null);
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
@@ -92,7 +91,7 @@ public class SearchpoiAdapter extends BaseListAdapter<SearchpoiEntity> {
         holder.searchpoi_root_view.setVisibility(View.VISIBLE);
         holder.poiname.setText(entity.getPoiName());
         holder.poides.setText(entity.getPoiDes());
-        holder.poidis.setText(entity.getDistance());
+        holder.poidis.setText(String.valueOf(entity.getDistance()));
         //mImageManager.loadUrlImage(entity.getImage_url(), holder.poiImage);
 
         return convertView;

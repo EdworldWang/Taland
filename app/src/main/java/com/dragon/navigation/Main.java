@@ -74,6 +74,7 @@ import com.dragon.navigation.util.DensityUtil;
 import com.dragon.navigation.util.ModelUtil;
 import com.dragon.navigation.util.MyTextView;
 import com.dragon.navigation.util.NewWidget;
+import com.dragon.navigation.util.Servicetype;
 import com.dragon.navigation.util.ToastUtil;
 import com.dragon.navigation.util.scrollerlayout;
 import com.google.android.gms.appindexing.Action;
@@ -268,63 +269,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         Thread mThread = new Thread(myRunnable);
         mThread.start();
     }
-    public void initnewview(){
-        for(int i=0;i<10;i++){
-            layoutarray[i]=new scrollerlayout(this);
-         //  layoutarray[i].addView(widgetarray[i]);
-        }
-        LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(150, 200);
-        for(int i=0;i<10;i++){
-            widgetarray[i]=new NewWidget(this);
-            widgetarray[i].setContent("Hello");
-            widgetarray[i].setContentBackgroundColor(Color.WHITE);
-            widgetarray[i].setTitle("第"+i+"号");
-            widgetarray[i].setTitleBackgroundColor(Color.RED);
-            widgetarray[i].setTextSize(40);
-            widgetarray[i].setTextColor(Color.BLACK);
-            widgetarray[i].setLayoutParams(blue);
-            layoutarray[i].addView(widgetarray[i]);
-        }
-        /*paper=new scrollerlayout(this);
-        RelativeLayout orange = (RelativeLayout) View.inflate(this, R.layout.moveanywhere,
-                null);
-        ViewStub tess=(ViewStub)orange.findViewById(R.id.wang);
-        View wen2=(View) tess.inflate();
-        wen1=(NewWidget)orange.findViewById(R.id.newwidget1);
 
-        wen1.setTitle("fvfbf");
-        wen1.setContent("bb");
-        wen1.setTitleBackgroundColor(Color.RED);
-        wen1.setContentBackgroundColor(Color.GRAY);
-        wen1.setTextSize(40);
-        wen1.setTextColor(Color.GREEN);
-
-        wen1.setLayoutParams(LP_wen);
-        Log.i("hhh",((ViewGroup)wen1.getParent()).toString());
-        LinearLayout liang=(LinearLayout)orange.findViewById(R.id.liang);
-        liang.removeView(wen1);
-       // ((ViewGroup)wen1.getParent()).removeView(wen1);
-        paper.addView(wen1);
-        wen1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                    paper.smoothScrollBy(500,500,20000);
-            }
-        });
-        addContentView(paper,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));*/
-        widgetarray[0].setDestination(100);
-        addContentView(layoutarray[0], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        layoutarray[0].smoothScrollBy(-500,-500,2000);
-            widgetarray[0].setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    layoutarray[0].smoothScrollBy(500,500,2000);
-                }
-
-            });
-
-
-    }
 
     @Override
     public void onStart() {
@@ -784,6 +729,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //            默认搜索范围是深圳市，为空是全国
             final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin);
             mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin);
+            mArPoiSearch.setSearchtype(Servicetype.searchbound);
             mArPoiSearch.doSearch();
         }
     }
@@ -816,6 +762,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         }
     }
+
+
+
 
     private Runnable myRunnable = new Runnable() {
         public void run() {
@@ -887,7 +836,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     "des latitude="+Data.locationdes.getLatitude()+"\n"+
                     "des longitude="+Data.locationdes.getLongitude()+"\n"+
                         "here latitude="+Data.locationhere.getLatitude()+"\n"+
-                       "here longitude="+Data.locationhere.getLongitude()+"\n");
+                       "here longitude="+Data.locationhere.getLongitude()+"\n"+
+                    "size="+ArPoiSearch.size);
                    /* mydegree.setText("Data.movedistance="+Data.movedistance+"\n"+
                             "predegree="+Data.predegree+"\n"+
                             "firstdegree="+Data.firstdegree+"\n"+
