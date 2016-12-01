@@ -135,7 +135,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 //        poiSearch.setBound(new PoiSearch.SearchBound(lp, 5000, true));
 
         poiSearch = new PoiSearch(this.mActivity, query);//兴趣点搜索
-        poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(here.latitude,here.longitude),1000));
+      poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(here.latitude,here.longitude),1000));
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
 
@@ -210,7 +210,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         ResGeoCoding resserver=new ResGeoCoding(this.mActivity);
                         resserver.doSearch(poiItems.get(i).getLatLonPoint());
                         SearchpoiList.add(new SearchpoiEntity(poiItems.get(i).toString(),
-                                resserver.getDescription(),poiItems.get(i).getDistance()));
+                                poiItems.get(i).getTypeDes(),poiItems.get(i).getDistance()));
 
 
                     }
@@ -277,15 +277,16 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 
         for(int i=0;i<size;i++){
             LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(
-                    200+20*SearchpoiList.get(i).getPoiName().length(), 150);
+                    200+30*SearchpoiList.get(i).getPoiName().length(), 150);
            widgetarray[i]=new NewWidget(this.mActivity);
             widgetarray[i].setContent(String.valueOf(SearchpoiList.get(i).getDistance()));
-            widgetarray[i].setContentBackgroundColor(R.color.halftransparent);
+            widgetarray[i].setContentBackgroundColor(R.color.red);
             widgetarray[i].setTitle(SearchpoiList.get(i).getPoiName());
             widgetarray[i].setTitleBackgroundColor(R.color.ivory);
             widgetarray[i].setTextSize(40);
             widgetarray[i].setTextColor(Color.WHITE);
             widgetarray[i].setLayoutParams(blue);
+            widgetarray[i].setId(i);
             layoutarray[i].addView(widgetarray[i]);
             Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
             mActivity.addContentView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -298,8 +299,8 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         public class OnScrollerClick implements View.OnClickListener{
             public void onClick(View v){
                 int id=v.getId();
-                for (int i=0;i<layoutarray.length;i++){
-                    if(layoutarray[i].getId()==id){
+                for (int i=0;i<widgetarray.length;i++){
+                    if(widgetarray[i].getId()==id){
                         layoutarray[i].smoothScrollBy(500,500,2000);
                     }
                 }

@@ -56,6 +56,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.NavigateArrow;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
@@ -65,11 +66,12 @@ import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.Control.Util;
 import com.dragon.navigation.Model.TravelingEntity;
+import com.dragon.navigation.View.Mytestview;
+import com.dragon.navigation.View.NavigatorView;
 import com.dragon.navigation.use.DataSmoother;
 import com.dragon.navigation.use.SampleApplicationGLView;
 import com.dragon.navigation.use.Texture;
 import com.dragon.navigation.util.AMapUtil;
-import com.dragon.navigation.util.BlankRender;
 import com.dragon.navigation.util.DensityUtil;
 import com.dragon.navigation.util.ModelUtil;
 import com.dragon.navigation.util.MyTextView;
@@ -105,7 +107,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private TextureView textureView;
     //用SparseIntArray来代替hashMap，进行性能优化。
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-
+    private  NavigatorView testview;
     private NewWidget mNewWidget;
     private static final int NUM_SMOOTH_SAMPLES = 4;
     private static final DataSmoother.Smoothing SMOOTHING = DataSmoother.Smoothing.AVERAGE;
@@ -202,6 +204,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         Data.locationhere.setLatitude(0);
         ArPoiSearch.here=new LatLng(0,0);
     // initnewview();
+        testview=new NavigatorView(this);
+        addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         Locationdes=new Location("des");
         Locationhere=new Location("here");
         LinearLayout BlankLayout = (LinearLayout) View.inflate(this, R.layout.blanklayout,
@@ -220,6 +225,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mydegree.setText("");
         mydegree.setTextColor(Color.RED);
 
+        Mytestview nine=new Mytestview(this);
+        addContentView(nine, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+             ViewGroup.LayoutParams.WRAP_CONTENT));
 
         BlankLayout.setVisibility(View.VISIBLE);
         BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -262,8 +270,12 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
+/*
 
-
+        ArPoiSearch Arnear=new ArPoiSearch(this);
+                Arnear.setSearchtype(Servicetype.searchnear_view);
+        Arnear.doSearch();
+*/
 
 
         Thread mThread = new Thread(myRunnable);
@@ -832,6 +844,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     final float startBearing = Locationdes.bearingTo(Locationhere);
                     Data.bearing = Util.positiveModulo(startBearing - currentAzimuth,
                             360);
+                    testview.setBearing(Data.bearing);
                     mydegree.setText("bearing="+Data.bearing+"\n"+
                     "des latitude="+Data.locationdes.getLatitude()+"\n"+
                     "des longitude="+Data.locationdes.getLongitude()+"\n"+

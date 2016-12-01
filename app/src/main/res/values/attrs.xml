@@ -15,4 +15,13 @@
         <attr name="titleBackgroundColor"/>
         <attr name="contentBackgroundColor"/>
     </declare-styleable>
+
+    <declare-styleable name="Mycircleview">
+        <attr name="title" />
+        <attr name="content"/>
+        <attr name="textColor" />
+        <attr name="textSize" />
+        <attr name="titleBackgroundColor"/>
+        <attr name="contentBackgroundColor"/>
+    </declare-styleable>
 </resources>
