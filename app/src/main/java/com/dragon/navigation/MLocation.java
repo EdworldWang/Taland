@@ -3,6 +3,7 @@ package com.dragon.navigation;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -12,8 +13,10 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.LatLng;
+import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.util.MyTextView;
+import com.dragon.navigation.util.Servicetype;
 
 /**
  * This file created by dragon on 2016/9/29 20:55,
@@ -103,7 +106,14 @@ public class MLocation implements LocationSource,AMapLocationListener {
                 }
                 flagCurrentLocation=false;
 //                Toast.makeText(this.mActivity, amapLocation.getCity(), Toast.LENGTH_SHORT).show();
-                Log.e("information","Aoi name"+amapLocation.getAoiName()+"address"+amapLocation.getAddress()+amapLocation.getProvince()+ amapLocation.getCity()+amapLocation.getDistrict());
+                if(Control.onlyonce==false) {
+                    Log.e("information", "Aoi name" + amapLocation.getAoiName() + "address" + amapLocation.getAddress() + amapLocation.getProvince() + amapLocation.getCity() + amapLocation.getDistrict());
+                    ArPoiSearch Arnear = new ArPoiSearch(this.mActivity, "", "餐饮服务", "深圳市", new LinearLayout(this.mActivity));
+                    Arnear.setSearchtype(Servicetype.searchbound);
+                    Arnear.doSearch();
+                    Control.onlyonce=true;
+                }
+
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr",errText);

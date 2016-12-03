@@ -4,15 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/snow">
+    <!--"注释，下面的Relativelayout ripple_item-clicked直接影响到listview的透明程度"-->
     <LinearLayout
         android:id="@+id/leftview"
         android:layout_width="0dp"
         android:layout_weight="4"
         android:layout_height="wrap_content"
-        android:background="@color/transparent"
         android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -37,7 +38,6 @@
                 android:gravity="top|start"
                 android:lineSpacingExtra="2dp"
                 android:maxLines="1"
-                android:paddingBottom="6dp"
                 android:text="标题"
                 android:textColor="@color/font_black_0"
                 android:textSize="15sp"/>
@@ -48,11 +48,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/poi_name"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
                 android:layout_toRightOf="@id/poi_image"
                 android:text="描述"
+                android:ellipsize="middle"
+                android:maxLines="2"
                 android:textColor="@color/font_black_5"
-                android:textSize="15sp"
+                android:textSize="13sp"
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
@@ -66,7 +68,6 @@
         android:layout_width="50dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:background="@color/transparent"
         android:orientation="vertical">
         <TextView
             android:id="@+id/poi_dis"

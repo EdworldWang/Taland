@@ -1,6 +1,7 @@
 package com.dragon.navigation.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -92,6 +93,18 @@ public class SearchpoiAdapter extends BaseListAdapter<SearchpoiEntity> {
         holder.poiname.setText(entity.getPoiName());
         holder.poides.setText(entity.getPoiDes());
         holder.poidis.setText(String.valueOf(entity.getDistance()));
+        String Maintype = entity.getPoiType().substring(0,4);
+        //前四个字，（0，3），不包括3，故应为（0，4）
+        Log.i("ds",Maintype);
+        switch (Maintype){
+           case "餐饮服务":
+                holder.poiImage.setImageResource(R.drawable.ar_meishi);
+               break;
+            case "商务住宅":
+                holder.poiImage.setImageResource(R.drawable.zhuzhai);
+                break;
+        }
+
         //mImageManager.loadUrlImage(entity.getImage_url(), holder.poiImage);
 
         return convertView;

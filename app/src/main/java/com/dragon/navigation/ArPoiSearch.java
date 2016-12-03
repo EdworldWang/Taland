@@ -132,36 +132,17 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         query.setPageSize(this.mPoiItems);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页);//设置查询页码
 //        poiSearch.setOnPoiSearchListener(this);
-//        poiSearch.setBound(new PoiSearch.SearchBound(lp, 5000, true));
+
 
         poiSearch = new PoiSearch(this.mActivity, query);//兴趣点搜索
-      poiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(here.latitude,here.longitude),1000));
+        if(this.searchtype==Servicetype.searchbound) {
+            poiSearch.setBound(new PoiSearch.SearchBound(
+                    new LatLonPoint(here.latitude,here.longitude),1000));
+        }
         poiSearch.setOnPoiSearchListener(this);
         poiSearch.searchPOIAsyn();
 
     }
-
-
-    private LinearLayout  generateNewWidget(String str,float distance)
-    {
-        LinearLayout layout_sub_Lin=new LinearLayout(this.mActivity);
-//        layout_sub_Lin.setBackgroundColor(Color.argb(0xff, 0x00, 0xff, 0x00));
-        layout_sub_Lin.setOrientation(LinearLayout.VERTICAL);
-     //   layout_sub_Lin.setPadding(5, 5, 5, 5);
-
-        NewWidget mNewWidget = new NewWidget(this.mActivity);
-        LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(800,200);
-        mNewWidget.setTitle(str);
-        mNewWidget.setContent(distance+"m");
-        mNewWidget.setTitleBackgroundColor(Color.RED);
-        mNewWidget.setContentBackgroundColor(Color.GRAY);
-        mNewWidget.setTextSize(40);
-        mNewWidget.setTextColor(Color.GREEN);
-        mNewWidget.setLayoutParams(LP_WW);
-        layout_sub_Lin.addView(mNewWidget);
-        return  layout_sub_Lin ;
-    }
-
 
 
     public class OnListItemClick implements AdapterView.OnItemClickListener{
@@ -202,16 +183,24 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         LatLng var0= convertToLatLng(poiItems.get(i).getLatLonPoint());
                         distance=AMapUtils.calculateLineDistance(var0, here);
                     //  lin.addView(generateNewWidget((poiItems.get(i)+" "),distance), LP_FW);
-                        if(Control.choosedestination==false) {
+                      /*  if(Control.choosedestination==false) {
                             Data.locationdes.setLongitude(var0.longitude);
                             Data.locationdes.setLatitude(var0.latitude);
                             Control.choosedestination=true;
-                        }
+                        }*/
                         ResGeoCoding resserver=new ResGeoCoding(this.mActivity);
                         resserver.doSearch(poiItems.get(i).getLatLonPoint());
-                        SearchpoiList.add(new SearchpoiEntity(poiItems.get(i).toString(),
-                                poiItems.get(i).getTypeDes(),poiItems.get(i).getDistance()));
-
+                     /*   SearchpoiList.add(new SearchpoiEntity(poiItems.get(i).toString(),
+                                poiItems.get(i).getTypeDes(),poiItems.get(i).getDistance()));*/
+                        PoiItem MyResult=poiItems.get(i);
+                        SearchpoiList.add(new SearchpoiEntity(MyResult.toString(),
+                                MyResult.getTypeDes(),(int)distance,
+                                MyResult.getSnippet()!=null?MyResult.getAdName()+MyResult.getSnippet()
+                                        :MyResult.getAdName()+MyResult.getBusinessArea()+MyResult.getDirection(),var0));
+                        //snippet 片段，即poi点的详细位置数据，需要加上区地址好点
+                        // 有时会返回为空，设置时，若为空则设置为其区地址
+                        //之前才用poiItems.get(i).getdistance()，返回值会出现-1的情况，
+                        //原因是距离过大。所以采用自己计算
 
                     }
                     //如果服务类型为
@@ -264,12 +253,6 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 
     public void initnewview(int size){
         this.size=size;
-        for (int i=0;i<5;i++) {
-            Log.i("fgfg", size + "");
-        }
-        if(size==0){
-            return;
-        }
         for(int i=0;i<size;i++){
             layoutarray[i]=new scrollerlayout(this.mActivity);
             //  layoutarray[i].addView(widgetarray[i]);
@@ -287,6 +270,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
             widgetarray[i].setTextColor(Color.WHITE);
             widgetarray[i].setLayoutParams(blue);
             widgetarray[i].setId(i);
+            widgetarray[i].setmType(SearchpoiList.get(i).getPoiDes());
             layoutarray[i].addView(widgetarray[i]);
             Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
             mActivity.addContentView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -301,40 +285,16 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                 int id=v.getId();
                 for (int i=0;i<widgetarray.length;i++){
                     if(widgetarray[i].getId()==id){
+                      /*  widgetarray[i].setTitle(widgetarray[i].getmType());
+                        widgetarray[i].invalidate();*/
+                        //widget做的改变需要用incalidate()才会改变
+                        //解释了之前为什么settitle没有改变的原因
                         layoutarray[i].smoothScrollBy(500,500,2000);
                     }
                 }
             }
         }
 
-
-        /*paper=new scrollerlayout(this);
-        RelativeLayout orange = (RelativeLayout) View.inflate(this, R.layout.moveanywhere,
-                null);
-        ViewStub tess=(ViewStub)orange.findViewById(R.id.wang);
-        View wen2=(View) tess.inflate();
-        wen1=(NewWidget)orange.findViewById(R.id.newwidget1);
-
-        wen1.setTitle("fvfbf");
-        wen1.setContent("bb");
-        wen1.setTitleBackgroundColor(Color.RED);
-        wen1.setContentBackgroundColor(Color.GRAY);
-        wen1.setTextSize(40);
-        wen1.setTextColor(Color.GREEN);
-
-        wen1.setLayoutParams(LP_wen);
-        Log.i("hhh",((ViewGroup)wen1.getParent()).toString());
-        LinearLayout liang=(LinearLayout)orange.findViewById(R.id.liang);
-        liang.removeView(wen1);
-       // ((ViewGroup)wen1.getParent()).removeView(wen1);
-        paper.addView(wen1);
-        wen1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                    paper.smoothScrollBy(500,500,20000);
-            }
-        });
-        addContentView(paper,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));*/
 
 
 

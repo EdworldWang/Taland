@@ -119,11 +119,10 @@
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/merchant"/>
 
-    <ImageView
+    <com.dragon.navigation.View.Compassview
         android:layout_width="150dip"
         android:layout_height="150dip"
         android:id="@+id/Compass"
-        android:src="@drawable/direction"
         android:background="@android:color/transparent"
         android:layout_below="@+id/search_bar_layout"
         android:layout_alignParentEnd="true"/>

@@ -1,5 +1,6 @@
 package com.dragon.navigation.View;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import com.dragon.navigation.R;
 
@@ -21,6 +23,7 @@ public class Mytestview extends View {
         private static final float DEGREES_UNIT = 360 / mN; //正N边形每个角  360/mN能整除
         private int Reccolor;
         private int Cirlecolor;
+    private float Rotatedegree=0;
         public Mytestview(Context context) {
             this(context, null);
         }
@@ -68,12 +71,19 @@ public class Mytestview extends View {
             //该方法用于设置画笔的空心线宽。该方法在矩形、圆形等图形上有明显的效果。
             //对直线无效
 
+
             float d = (float) (2 * mR * Math.sin(Math.toRadians(DEGREES_UNIT / 2)));
             float c = mCy - mR;
             float y = (d * d + mCy * mCy - c * c - mR * mR) / (2 * (mCy - c));
             float x = (float) (mCx + Math.sqrt(-1 * c * c + 2 * c * y + d * d - y * y));
             //每次画两条线，一条连接圆心（mCx,mCy）和圆心正上方的角点（mCx,c)
             //一条直线为圆心正上方的角点（mCx,c)跟右边的角点（x,y)
+
+
+
+            canvas.rotate(Rotatedegree,mCx,mCy);//add to test0
+
+
             canvas.rotate(DEGREES_UNIT/2,mCx,mCy);
             for (int i = 0; i < mN; i++) {
                 canvas.save();
@@ -86,12 +96,9 @@ public class Mytestview extends View {
             // 跟原来的形状无区别，修改为DEGREES_UNIT /2就好了
             //之后如果需要绘制除圆形外的其他矩形的话需要将角度旋转回去
 
-
             //rotate后面设置的是旋转中心，如果不填则相对屏幕左上角进行旋转
             //并且rotate不会对之前所画的东西进行旋转，比起画布的旋转来说这里更像是一个人位置的移动
             //而观众观察视图的视角并不会改变
-
-            //mPaint.setColor(0x9b0b0101);
 
             //下面加上Reclinewidth/2,是为了消除出来的一点边界
             canvas.drawCircle(mCx,mCy,mR/3,mPaint);
@@ -99,6 +106,15 @@ public class Mytestview extends View {
             canvas.drawCircle(mCx,mCy,mR+Reclinewidth/2,mPaint);
 
             canvas.rotate(-DEGREES_UNIT/2,mCx,mCy);
+
+            if(poinum!=0) {
+                for (int i = 0;i<poinum;i++){
+
+                }
+            }
+
+            canvas.rotate(-Rotatedegree,mCx,mCy);
+            //以上为需要旋转的部分，下面为不旋转的部分
             RectF rect = new RectF(mCx-mR,mCy-mR,mCx+mR,mCy+mR);
             //drawArc(rect,0,90,true,paint)
             // 弧线所使用的矩形区域大小,开始角度,扫过的角度,是否使用中心
@@ -115,5 +131,20 @@ public class Mytestview extends View {
             每一次在前一次基础上进行了旋转。save是入栈，restore是出栈。*/
             //并不会保存截图，而是保存了canvas的状态，保存旋转0度的情况，这里若把旋转的*i去掉
             //相应的canvas.save()和restore()也可以去掉。
+            mPaint.setColor(0x9b0b0101);
+            canvas.drawCircle(mCx,mCy,mR,mPaint);
         }
+    public void doRotatetaAnim(float currentdegree,float todegree){
+        ValueAnimator animator = ValueAnimator.ofFloat(currentdegree,todegree);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Rotatedegree = (float)animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        animator.setDuration(200);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
+    }
 }

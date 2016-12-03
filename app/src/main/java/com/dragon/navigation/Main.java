@@ -1,6 +1,7 @@
 package com.dragon.navigation;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -135,7 +136,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private HandlerThread mBackgroundThread;
     //    *****************************************************************
 //    指南针
-    private ImageView imgZnz;
+    private Mytestview viewaround;
     //    搜素关键字
     private AutoCompleteTextView mSearchText;
     //    当前城市，自定义控件，为了获取焦点
@@ -225,14 +226,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mydegree.setText("");
         mydegree.setTextColor(Color.RED);
 
-        Mytestview nine=new Mytestview(this);
+       /* Mytestview nine=new Mytestview(this);
         addContentView(nine, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-             ViewGroup.LayoutParams.WRAP_CONTENT));
+             ViewGroup.LayoutParams.WRAP_CONTENT));*/
 
         BlankLayout.setVisibility(View.VISIBLE);
         BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        happy.setPadding(200,80,0,0);
+        happy.setPadding(200,580,0,0);
     addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
        ViewGroup.LayoutParams.MATCH_PARENT));
       BlankLayout.bringToFront();
@@ -250,8 +251,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
     //ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
-        imgZnz = (ImageView) findViewById(R.id.Compass);
-        imgZnz.setAlpha(0.2f);
+        viewaround = (Mytestview) findViewById(R.id.Compass);
+      //imgZnz.setAlpha(0.2f);
+
 //        ****************************************************
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 //        List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
@@ -270,12 +272,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-/*
 
-        ArPoiSearch Arnear=new ArPoiSearch(this);
-                Arnear.setSearchtype(Servicetype.searchnear_view);
-        Arnear.doSearch();
-*/
 
 
         Thread mThread = new Thread(myRunnable);
@@ -301,6 +298,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 Uri.parse("android-app://com.dragon.navigation/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+
     }
 
 
@@ -702,6 +700,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 linear_acceleration[i]=accelerometerValues[i]-gravity[i];
             }
         }
+
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
            /* magneticFieldSmoother.put(event.values);
             magneticFieldSmoother.getSmoothed(magneticFieldValues, SMOOTHING);*/
@@ -714,11 +713,18 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
        // mNewWidget.scrollTo(Data.predegree*15,0);
 //        int rotation = getWindowManager().getDefaultDisplay().getRotation();
-//        imgZnz.setRotate(ORIENTATIONS.get(rotation),50,50);
+ //      imgZnz.setRotate(ORIENTATIONS.get(rotation),50,50);
         ra.setDuration(200);
       //  layout_sub_Lin.startAnimation(ta);
 
-        imgZnz.startAnimation(ra);
+     /*   viewaround.startAnimation(ra);
+        currentDegree = -degree;
+*/
+
+
+        viewaround.doRotatetaAnim(currentDegree, -degree);
+        //自定义动画类animator来达到部分控件的旋转和
+        //指向那部分不变
         currentDegree = -degree;
 
 
@@ -741,7 +747,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //            默认搜索范围是深圳市，为空是全国
             final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin);
             mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin);
-            mArPoiSearch.setSearchtype(Servicetype.searchbound);
+            mArPoiSearch.setSearchtype(Servicetype.searchnear_view);
             mArPoiSearch.doSearch();
         }
     }
@@ -876,42 +882,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     };
 
 
-    private void loadTextures() {
-        mNewWidget = new NewWidget(this);
-//        layout_sub_Lin.setBackgroundColor(Color.argb(0xff, 0x00, 0xff, 0x00));
-        paper=new scrollerlayout(this);
-        RelativeLayout hh=new RelativeLayout(this);
-        LinearLayout.LayoutParams LP_WW = new LinearLayout.LayoutParams(200, 150);
-        mNewWidget.setTitle("蓝瘦");
-        mNewWidget.setContent("香菇");
-        mNewWidget.setTitleBackgroundColor(Color.RED);
-        mNewWidget.setContentBackgroundColor(Color.GRAY);
-        mNewWidget.setTextSize(40);
-        mNewWidget.setTextColor(Color.GREEN);
-        mNewWidget.setLayoutParams(LP_WW);
-        paper.setVisibility(View.VISIBLE);
-     //   hh.addView(mNewWidget);
-      //  hh.setPadding(440,885,0,0);
 
-        paper.addView(mNewWidget);
-        paper.setPadding(540,500,0,0);
-        addContentView(paper, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-
-       // layoutarray[0].bringToFront();
-        mNewWidget.setContent(String.valueOf(layoutarray[0].getId()));
-        //这里不能对layoutarray[0]进行点击事件监听
-        mNewWidget.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                paper.smoothScrollBy(-500,-500,10000);
-            }
-        });
-      //  mTextures.add(Texture.loadTextureFromView(layout_sub_Lin, "lanshou"));
-
-      //  layout_sub_Lin.smoothScrollBy(500,1000,20000);
-
-
-    }
     private void fillAdapter(List<TravelingEntity> list) {
             mAdapter.setData(list);
         }

@@ -9,6 +9,6 @@ public class Control {
     public static boolean movefastest=true;
     public static boolean geifirstData=false;
 
-
+    public static boolean onlyonce=false;
     public static boolean choosedestination=false;
 }
