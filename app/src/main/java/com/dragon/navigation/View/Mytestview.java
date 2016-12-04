@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
+import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.R;
 
 /**
@@ -59,7 +60,8 @@ public class Mytestview extends View {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             mR=200;//单位为dip换成dp会好点
-
+            //这是半径大小
+            //跟后面的distance进行换算，500即500以上
             mPaint.setColor(0xffffffff);
             //如果只是简单的调用R.color里面的颜色的话会出现大多数颜色都是蓝色的情况，
             // 原因是R.color里面的颜色大多都是GBA,并没有A,故需要设置A值
@@ -107,11 +109,7 @@ public class Mytestview extends View {
 
             canvas.rotate(-DEGREES_UNIT/2,mCx,mCy);
 
-            if(poinum!=0) {
-                for (int i = 0;i<poinum;i++){
 
-                }
-            }
 
             canvas.rotate(-Rotatedegree,mCx,mCy);
             //以上为需要旋转的部分，下面为不旋转的部分
@@ -133,6 +131,42 @@ public class Mytestview extends View {
             //相应的canvas.save()和restore()也可以去掉。
             mPaint.setColor(0x9b0b0101);
             canvas.drawCircle(mCx,mCy,mR,mPaint);
+
+            canvas.rotate(Rotatedegree,mCx,mCy);
+            if(Data.poinum!=0) {
+                mPaint.setStyle(Paint.Style.FILL);
+                mPaint.setStrokeWidth(2.5f);
+                mPaint.setColor(0xffffffff);
+                float drawDistance=0;
+                for (int i = 0;i<10;i++){
+                    canvas.save();
+                    //各个地方旋转的时候要注意旋转的中心设置
+                    canvas.rotate(Data.AroundpoiList.get(i).getFirstbearing(),mCx,mCy);
+                    float distance=Data.AroundpoiList.get(i).getDistance();
+                    if(distance>=500){
+                        drawDistance=198;
+                    }else{
+                        drawDistance=(Data.AroundpoiList.get(i).getDistance()/2.5f);
+                    }
+                    canvas.drawCircle(mCx,mCy-drawDistance,4,mPaint);
+
+                }
+                //单独画这个点,若在上面先画则会使得后面画的白点盖住了红点，达不到优先展示
+                if(Data.IsSelectArround) {
+                    canvas.save();
+                    canvas.rotate(Data.AroundpoiList.get(Data.SelectArroundId).getFirstbearing(), mCx, mCy);
+                    float distance = Data.AroundpoiList.get(Data.SelectArroundId).getDistance();
+                    if (distance >= 500) {
+                        drawDistance = 198;
+                    } else {
+                        drawDistance = (Data.AroundpoiList.get(Data.SelectArroundId).getDistance() / 2.5f);
+                    }
+                    mPaint.setColor(0xffff0000);
+                    canvas.drawCircle(mCx, mCy - drawDistance, 4, mPaint);
+                    canvas.restore();
+                }
+            }
+            canvas.rotate(-Rotatedegree,mCx,mCy);
         }
     public void doRotatetaAnim(float currentdegree,float todegree){
         ValueAnimator animator = ValueAnimator.ofFloat(currentdegree,todegree);

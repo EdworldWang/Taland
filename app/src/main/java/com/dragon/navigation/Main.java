@@ -680,7 +680,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);
         SensorManager.getOrientation(R, values);
-        currentAzimuth = RAD_TO_DEGREE * values[0];
+        Data.currentAzimuth = RAD_TO_DEGREE * values[0];
         values[0] = (float) Math.toDegrees(values[0]);
 
 
@@ -746,6 +746,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         } else {
 //            默认搜索范围是深圳市，为空是全国
             final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin);
+            Data.SearchpoiList.clear();
             mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin);
             mArPoiSearch.setSearchtype(Servicetype.searchnear_view);
             mArPoiSearch.doSearch();
@@ -783,7 +784,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
 
-
+//用于请求searcharround服务和刷新服务右上角的界面
     private Runnable myRunnable = new Runnable() {
         public void run() {
 

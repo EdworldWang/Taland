@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.dragon.navigation.Adapter.SearchpoiAdapter;
 import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
+import com.dragon.navigation.Control.Util;
 import com.dragon.navigation.Function.ResGeoCoding;
 import com.dragon.navigation.Model.SearchpoiEntity;
 import com.dragon.navigation.Model.TravelingEntity;
@@ -64,8 +66,8 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     private float distance;
     public static LatLng here;
 
-    private List<SearchpoiEntity> SearchpoiList = new ArrayList<>();
-    // ListView数据  用于存放搜索出来的结果
+   // private List<SearchpoiEntity> SearchpoiList = new ArrayList<>();
+    // ListView数据  用于存放搜索出来的结果,把数据用于Data里面
     private ListView listView;
     private SearchpoiAdapter mAdapter;
     public static int size;
@@ -149,7 +151,8 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             SearchpoiEntity SelectedEntity=mAdapter.getItem(position);
-            Log.i("ArPoiSearch",SelectedEntity.getPoiName()+"   "+SelectedEntity.getDistance());
+            Log.i("ArPoiSearch",SelectedEntity.getPoiName()+"   "+SelectedEntity.getDistance()+
+            "   "+SelectedEntity.getFirstbearing());
 
         }
     }
@@ -173,55 +176,61 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                 //    LatLng var0= convertToLatLng(poiItems.get(1).getLatLonPoint());
                 //    LatLng var1= convertToLatLng(poiItems.get(2).getLatLonPoint());
                     lin.removeAllViews();
+                    if(searchtype==Servicetype.searchbound) {
+                        for (int i = 0; i < poiItems.size(); i++) {
+                            LatLng var0 = convertToLatLng(poiItems.get(i).getLatLonPoint());
+                            ResGeoCoding resserver = new ResGeoCoding(this.mActivity);
+                            resserver.doSearch(poiItems.get(i).getLatLonPoint());
+                             /*   SearchpoiList.add(new SearchpoiEntity(poiItems.get(i).toString(),
+                                        poiItems.get(i).getTypeDes(),poiItems.get(i).getDistance()));*/
+                            PoiItem MyResult = poiItems.get(i);
+                            distance = AMapUtils.calculateLineDistance(var0, here);
+                            float mybearing = Util.getBearing(convertToLocation(MyResult.toString(),MyResult.getLatLonPoint()));
+                            Data.AroundpoiList.add(new SearchpoiEntity(MyResult.toString(),
+                                    MyResult.getTypeDes(), (int) distance,mybearing,
+                                    MyResult.getSnippet() != null ? MyResult.getAdName() + MyResult.getSnippet()
+                                            : MyResult.getAdName() + MyResult.getBusinessArea() + MyResult.getDirection(), var0));
+                            //snippet 片段，即poi点的详细位置数据，需要加上区地址好点
+                            // 有时会返回为空，设置时，若为空则设置为其区地址
+                            //之前才用poiItems.get(i).getdistance()，返回值会出现-1的情况，
+                            //原因是距离过大。所以采用自己计算
 
-                    // 主页数据
-                    String poiname;
-                    String poides;
-                    String poidis;
-                    for(int i=0;i<poiItems.size();i++) {
-
-                        LatLng var0= convertToLatLng(poiItems.get(i).getLatLonPoint());
-                        distance=AMapUtils.calculateLineDistance(var0, here);
-                    //  lin.addView(generateNewWidget((poiItems.get(i)+" "),distance), LP_FW);
-                      /*  if(Control.choosedestination==false) {
-                            Data.locationdes.setLongitude(var0.longitude);
-                            Data.locationdes.setLatitude(var0.latitude);
-                            Control.choosedestination=true;
-                        }*/
-                        ResGeoCoding resserver=new ResGeoCoding(this.mActivity);
-                        resserver.doSearch(poiItems.get(i).getLatLonPoint());
-                     /*   SearchpoiList.add(new SearchpoiEntity(poiItems.get(i).toString(),
-                                poiItems.get(i).getTypeDes(),poiItems.get(i).getDistance()));*/
-                        PoiItem MyResult=poiItems.get(i);
-                        SearchpoiList.add(new SearchpoiEntity(MyResult.toString(),
-                                MyResult.getTypeDes(),(int)distance,
-                                MyResult.getSnippet()!=null?MyResult.getAdName()+MyResult.getSnippet()
-                                        :MyResult.getAdName()+MyResult.getBusinessArea()+MyResult.getDirection(),var0));
-                        //snippet 片段，即poi点的详细位置数据，需要加上区地址好点
-                        // 有时会返回为空，设置时，若为空则设置为其区地址
-                        //之前才用poiItems.get(i).getdistance()，返回值会出现-1的情况，
-                        //原因是距离过大。所以采用自己计算
-
-                    }
-                    //如果服务类型为
-                    if (searchtype==Servicetype.searchbound){
-                            //简单的搜素周边的功能，用于动态图的移动
+                        }
+                        Data.poinum=poiItems.size();
                         lin.removeAllViews();
                         initnewview(poiItems.size());
+                    }else if(searchtype==Servicetype.searchnear_view) {
+                        for (int i = 0; i < poiItems.size(); i++) {
+                            LatLng var0 = convertToLatLng(poiItems.get(i).getLatLonPoint());
+                            ResGeoCoding resserver = new ResGeoCoding(this.mActivity);
+                            resserver.doSearch(poiItems.get(i).getLatLonPoint());
+                            PoiItem MyResult = poiItems.get(i);
+                            distance = AMapUtils.calculateLineDistance(var0, here);
+                            float mybearing = Util.getBearing(convertToLocation(MyResult.toString(),MyResult.getLatLonPoint()));
+                            Data.SearchpoiList.add(new SearchpoiEntity(MyResult.toString(),
+                                    MyResult.getTypeDes(), (int) distance,mybearing,
+                                    MyResult.getSnippet() != null ? MyResult.getAdName() + MyResult.getSnippet()
+                                            : MyResult.getAdName() + MyResult.getBusinessArea() + MyResult.getDirection(), var0));
+                            //snippet 片段，即poi点的详细位置数据，需要加上区地址好点
+                            // 有时会返回为空，设置时，若为空则设置为其区地址
+                            //之前才用poiItems.get(i).getdistance()，返回值会出现-1的情况，
+                            //原因是距离过大。所以采用自己计算
 
-                    }else{
-                        if(searchtype==Servicetype.searchnear_view) {
-                            mAdapter = new SearchpoiAdapter(this.mActivity, SearchpoiList);
-                            LinearLayout father = (LinearLayout) View.inflate(this.mActivity, R.layout.searchlistview,
-                                    null);
-                            listView = (ListView) father.findViewById(R.id.listView);
-                            father.removeView(listView);
-                            listView.setAdapter(mAdapter);
-                            listView.setVisibility(View.VISIBLE);
-                            listView.setOnItemClickListener(new OnListItemClick());
-                            lin.addView(listView, LP_FW);
+
+
                         }
+                        mAdapter = new SearchpoiAdapter(this.mActivity, Data.SearchpoiList);
+                        LinearLayout father = (LinearLayout) View.inflate(this.mActivity, R.layout.searchlistview,
+                                null);
+                        listView = (ListView) father.findViewById(R.id.listView);
+                        father.removeView(listView);
+                        listView.setAdapter(mAdapter);
+                        listView.setVisibility(View.VISIBLE);
+                        listView.setOnItemClickListener(new OnListItemClick());
+                        lin.addView(listView, LP_FW);
                     }
+
+
 
 
 
@@ -260,17 +269,17 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 
         for(int i=0;i<size;i++){
             LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(
-                    200+30*SearchpoiList.get(i).getPoiName().length(), 150);
+                    200+30*Data.AroundpoiList.get(i).getPoiName().length(), 150);
            widgetarray[i]=new NewWidget(this.mActivity);
-            widgetarray[i].setContent(String.valueOf(SearchpoiList.get(i).getDistance()));
+            widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
             widgetarray[i].setContentBackgroundColor(R.color.red);
-            widgetarray[i].setTitle(SearchpoiList.get(i).getPoiName());
+            widgetarray[i].setTitle(Data.AroundpoiList.get(i).getPoiName());
             widgetarray[i].setTitleBackgroundColor(R.color.ivory);
             widgetarray[i].setTextSize(40);
             widgetarray[i].setTextColor(Color.WHITE);
             widgetarray[i].setLayoutParams(blue);
             widgetarray[i].setId(i);
-            widgetarray[i].setmType(SearchpoiList.get(i).getPoiDes());
+            widgetarray[i].setmType(Data.AroundpoiList.get(i).getPoiDes());
             layoutarray[i].addView(widgetarray[i]);
             Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
             mActivity.addContentView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -289,6 +298,10 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         widgetarray[i].invalidate();*/
                         //widget做的改变需要用incalidate()才会改变
                         //解释了之前为什么settitle没有改变的原因
+                        Data.SelectArroundId=i;
+                        Data.IsSelectArround=true;
+                        widgetarray[i].setTitle(String.valueOf(Data.AroundpoiList.get(i).getFirstbearing()));
+                        widgetarray[i].invalidate();
                         layoutarray[i].smoothScrollBy(500,500,2000);
                     }
                 }
@@ -305,6 +318,13 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
      */
     public static LatLng convertToLatLng(LatLonPoint latLonPoint) {
         return new LatLng(latLonPoint.getLatitude(), latLonPoint.getLongitude());
+    }
+
+    public static Location convertToLocation(String name,LatLonPoint latLonPoint){
+        Location arroundlocation = new Location(name);
+        arroundlocation.setLatitude(latLonPoint.getLatitude());
+        arroundlocation.setLongitude(latLonPoint.getLongitude());
+        return arroundlocation;
     }
     /**
      * 显示进度框

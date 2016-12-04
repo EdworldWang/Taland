@@ -19,16 +19,24 @@ public class SearchpoiEntity {
     private boolean isNoData = false;
     private int height;
 
-    public SearchpoiEntity(String poiName,String poiType,int distance,String poiDes,LatLng myLatlng) {
+    public SearchpoiEntity(String poiName,String poiType,int distance,float firstbearing,String poiDes,LatLng myLatlng) {
             this.poiName=poiName;
             this.poiType=poiType;
             this.distance=distance;
+        this.firstbearing=firstbearing;
             this.poiDes=poiDes;
             this.myLatlng=myLatlng;
     }
     public SearchpoiEntity() {
     }
 
+    public void setFirstbearing(float firstbearing) {
+        this.firstbearing = firstbearing;
+    }
+
+    public float getFirstbearing() {
+        return firstbearing;
+    }
 
     public String getPoiType() {
         return poiType;

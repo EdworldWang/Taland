@@ -2,6 +2,11 @@ package com.dragon.navigation.Control;
 
 import android.location.Location;
 
+import com.dragon.navigation.Model.SearchpoiEntity;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by EdwardPC on 2016/10/13.
  */
@@ -31,4 +36,12 @@ public class Data {
     public static Location locationhere;
     public static float bearing;
 
+    public static float currentAzimuth=0;
+
+   public static List<SearchpoiEntity> AroundpoiList = new ArrayList<>();
+    public static int poinum=0;
+    public static List<SearchpoiEntity> SearchpoiList = new ArrayList<>();
+
+    public static int SelectArroundId=-1;//默认不被选择
+    public static boolean IsSelectArround=false;
 }
