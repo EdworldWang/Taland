@@ -1,6 +1,7 @@
 package com.dragon.navigation.Model;
 
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.services.core.LatLonPoint;
 
 /**
  * Created by EdwardPC on 2016/11/29.
@@ -10,7 +11,7 @@ public class SearchpoiEntity {
     private String poiDes;
     private int distance;
     private String poiType;
-    private LatLng myLatlng;
+    private LatLonPoint myLatLonPoint;
     private float firstbearing;
     //只要知道初始的bearing就好，后面的bearing不用计算，
     // 根据当前的转向旋转而变化就好，moveview的移动也是这样
@@ -19,15 +20,23 @@ public class SearchpoiEntity {
     private boolean isNoData = false;
     private int height;
 
-    public SearchpoiEntity(String poiName,String poiType,int distance,float firstbearing,String poiDes,LatLng myLatlng) {
+    public SearchpoiEntity(String poiName, String poiType, int distance, float firstbearing, String poiDes, LatLonPoint myLatLonPoint) {
             this.poiName=poiName;
             this.poiType=poiType;
             this.distance=distance;
         this.firstbearing=firstbearing;
             this.poiDes=poiDes;
-            this.myLatlng=myLatlng;
+            this.myLatLonPoint=myLatLonPoint;
     }
     public SearchpoiEntity() {
+    }
+
+    public LatLonPoint getMyLatLonPoint() {
+        return myLatLonPoint;
+    }
+
+    public void setMyLatLonPoint(LatLonPoint myLatLonPoint) {
+        this.myLatLonPoint = myLatLonPoint;
     }
 
     public void setFirstbearing(float firstbearing) {

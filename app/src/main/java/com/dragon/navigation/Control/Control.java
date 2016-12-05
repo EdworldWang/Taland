@@ -9,6 +9,9 @@ public class Control {
     public static boolean movefastest=true;
     public static boolean geifirstData=false;
 
+    public static boolean finishLocation=false;
     public static boolean onlyonce=false;
     public static boolean choosedestination=false;
+
+    public static boolean candrawview=true;
 }

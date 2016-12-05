@@ -20,12 +20,14 @@ import com.amap.api.services.core.SuggestionCity;
 import com.amap.api.services.poisearch.IndoorData;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.amap.api.services.route.RouteSearch;
 import com.dragon.navigation.Adapter.SearchpoiAdapter;
 import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.Control.Util;
 import com.dragon.navigation.Function.ResGeoCoding;
+import com.dragon.navigation.Function.Routedesign;
 import com.dragon.navigation.Model.SearchpoiEntity;
 import com.dragon.navigation.Model.TravelingEntity;
 import com.dragon.navigation.util.NewWidget;
@@ -117,10 +119,14 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         this.lin = lin;
         this.LP_FW = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-
     }
 
+    public ArPoiSearch(Activity activity,String mKeyWord, String mStylePoi, String mCityCode){
+        this.mActivity= activity;
+        this.mKeyWord = mKeyWord;
+        this.mStylePoi = mStylePoi;
+        this.mCityCode = mCityCode;
+    }
     public void setSearchtype(Servicetype searchtype) {
         this.searchtype = searchtype;
     }
@@ -130,7 +136,9 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         currentPage = 0;
         ButterKnife.bind(this.mActivity);
         // 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
-        query = new PoiSearch.Query(this.mKeyWord, "", this.mCityCode);
+     //query = new PoiSearch.Query(this.mKeyWord, "", this.mCityCode);
+        //搜索类型不应该为“”
+          query = new PoiSearch.Query(this.mKeyWord, mStylePoi, this.mCityCode);
         query.setPageSize(this.mPoiItems);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页);//设置查询页码
 //        poiSearch.setOnPoiSearchListener(this);
@@ -189,7 +197,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                             Data.AroundpoiList.add(new SearchpoiEntity(MyResult.toString(),
                                     MyResult.getTypeDes(), (int) distance,mybearing,
                                     MyResult.getSnippet() != null ? MyResult.getAdName() + MyResult.getSnippet()
-                                            : MyResult.getAdName() + MyResult.getBusinessArea() + MyResult.getDirection(), var0));
+                                            : MyResult.getAdName() + MyResult.getBusinessArea() + MyResult.getDirection(), poiItems.get(i).getLatLonPoint()));
                             //snippet 片段，即poi点的详细位置数据，需要加上区地址好点
                             // 有时会返回为空，设置时，若为空则设置为其区地址
                             //之前才用poiItems.get(i).getdistance()，返回值会出现-1的情况，
@@ -210,7 +218,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                             Data.SearchpoiList.add(new SearchpoiEntity(MyResult.toString(),
                                     MyResult.getTypeDes(), (int) distance,mybearing,
                                     MyResult.getSnippet() != null ? MyResult.getAdName() + MyResult.getSnippet()
-                                            : MyResult.getAdName() + MyResult.getBusinessArea() + MyResult.getDirection(), var0));
+                                            : MyResult.getAdName() + MyResult.getBusinessArea() + MyResult.getDirection(), MyResult.getLatLonPoint()));
                             //snippet 片段，即poi点的详细位置数据，需要加上区地址好点
                             // 有时会返回为空，设置时，若为空则设置为其区地址
                             //之前才用poiItems.get(i).getdistance()，返回值会出现-1的情况，
@@ -303,6 +311,10 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         widgetarray[i].setTitle(String.valueOf(Data.AroundpoiList.get(i).getFirstbearing()));
                         widgetarray[i].invalidate();
                         layoutarray[i].smoothScrollBy(500,500,2000);
+                        Routedesign myroute=new Routedesign(mActivity);
+                        RouteSearch.FromAndTo fromAndTo=new RouteSearch.FromAndTo(Data.AroundpoiList.get(i).getMyLatLonPoint(),
+                                new LatLonPoint(here.latitude,here.longitude));//出错了，都设置成经度
+                        myroute.dodesign(fromAndTo,0);
                     }
                 }
             }

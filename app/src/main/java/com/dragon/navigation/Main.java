@@ -62,6 +62,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
+import com.amap.api.services.route.RouteSearch;
 import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
@@ -134,6 +135,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private ImageReader imageReader;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+    private Activity myactivity;
     //    *****************************************************************
 //    指南针
     private Mytestview viewaround;
@@ -197,6 +199,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         travelingList = ModelUtil.getTravelingData();
         mAdapter = new TravelingAdapter(this, travelingList);
 
+        myactivity=this;
         Data.locationdes=new Location("des");
         Data.locationdes.setLongitude(0);
         Data.locationdes.setLatitude(0);
@@ -277,6 +280,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         Thread mThread = new Thread(myRunnable);
         mThread.start();
+        RouteSearch routeSearch = new RouteSearch(this);
     }
 
 
@@ -721,10 +725,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         currentDegree = -degree;
 */
 
-
-        viewaround.doRotatetaAnim(currentDegree, -degree);
-        //自定义动画类animator来达到部分控件的旋转和
-        //指向那部分不变
+        if(Control.candrawview==true) {
+            viewaround.doRotatetaAnim(currentDegree, -degree);
+            //自定义动画类animator来达到部分控件的旋转和
+            //指向那部分不变
+        }
         currentDegree = -degree;
 
 
@@ -790,12 +795,20 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
             while (true) {
                 try {
-                    Thread.sleep(500);
-                    if (Control.displayPoi == false) {
+
+                    Thread.sleep(10000);
+                   /* if (Control.finishLocation==true) {
+                        Control.candrawview=false;
+                      Data.AroundpoiList.clear();
+                        ArPoiSearch Arnear = new ArPoiSearch( Main.this, "", "餐饮服务", "深圳市");
+                        Arnear.setSearchtype(Servicetype.searchbound);
+                        Arnear.doSearch();
                         Message message = new Message();
                         message.what = 1;
                         handler.sendMessage(message);
-                    }
+
+                    }*/
+
 
                 }catch (InterruptedException e){
 

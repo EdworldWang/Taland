@@ -59,6 +59,7 @@ public class Mytestview extends View {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
+
             mR=200;//单位为dip换成dp会好点
             //这是半径大小
             //跟后面的distance进行换算，500即500以上
@@ -138,7 +139,7 @@ public class Mytestview extends View {
                 mPaint.setStrokeWidth(2.5f);
                 mPaint.setColor(0xffffffff);
                 float drawDistance=0;
-                for (int i = 0;i<10;i++){
+                for (int i = 0;i<Data.AroundpoiList.size();i++){
                     canvas.save();
                     //各个地方旋转的时候要注意旋转的中心设置
                     canvas.rotate(Data.AroundpoiList.get(i).getFirstbearing(),mCx,mCy);

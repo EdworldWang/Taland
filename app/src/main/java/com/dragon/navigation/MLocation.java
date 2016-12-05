@@ -106,13 +106,14 @@ public class MLocation implements LocationSource,AMapLocationListener {
                 }
                 flagCurrentLocation=false;
 //                Toast.makeText(this.mActivity, amapLocation.getCity(), Toast.LENGTH_SHORT).show();
-           /*     if(Control.onlyonce==false) {
+                 if( Control.finishLocation==false) {
                     Log.e("information", "Aoi name" + amapLocation.getAoiName() + "address" + amapLocation.getAddress() + amapLocation.getProvince() + amapLocation.getCity() + amapLocation.getDistrict());
                     ArPoiSearch Arnear = new ArPoiSearch(this.mActivity, "", "餐饮服务", "深圳市", new LinearLayout(this.mActivity));
                     Arnear.setSearchtype(Servicetype.searchbound);
                     Arnear.doSearch();
-                    Control.onlyonce=true;
-                }*/
+                    Control.finishLocation=true;
+                }
+
 
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
