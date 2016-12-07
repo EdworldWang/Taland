@@ -8,12 +8,18 @@ import android.util.Log;
 
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
+import com.dragon.navigation.use.ArrowObject;
+import com.dragon.navigation.use.Banana;
 import com.dragon.navigation.use.CubeObject;
 import com.dragon.navigation.use.CubeShaders;
 import com.dragon.navigation.use.LoadingDialogHandler;
 import com.dragon.navigation.use.MeshObject;
+import com.dragon.navigation.use.MyArrow;
+import com.dragon.navigation.use.MyCube;
 import com.dragon.navigation.use.SampleUtils;
 import com.dragon.navigation.use.Texture;
+import com.dragon.orientationProvider.OrientationProvider;
+import com.dragon.representation.Quaternion;
 
 import java.util.Vector;
 
@@ -43,7 +49,10 @@ public class MainRenderer implements GLSurfaceView.Renderer {
     private int texSampler2DHandle;
 
     private CubeObject mCubeObject;
-
+    private MyCube     myCube;
+    private ArrowObject mArrowObject;
+    private Banana mBanana;
+    private MyArrow drawmy;
     private float kBuildingScale = 12.0f;
 
     private GLSurfaceView.Renderer mRenderer;
@@ -62,12 +71,14 @@ public class MainRenderer implements GLSurfaceView.Renderer {
     private int mViewHeight = 0;
     private int picturenum = 0;
     private boolean LeaveTrack = false;
-
+    private OrientationProvider orientationProvider = null;
     public MainRenderer(Main activity) {
         Log.i(LOGTAG, "creat a ImageTargetRenderer");
         mActivity = activity;
     }
-
+    public void setOrientationProvider(OrientationProvider orientationProvider) {
+        this.orientationProvider = orientationProvider;
+    }
 
     // Called to draw the current frame.
     @Override
@@ -79,6 +90,14 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 //            saveScreenShot(0, 0, mViewWidth, mViewHeight, "ImageTarget"+picturenum+".png");
 //            ImageTargets.ScreenShot=false;
 //        }
+            // All Orientation providers deliver Quaternion as well as rotation matrix.
+            // Use your favourite representation:
+
+            // Get the rotation from the current orientationProvider as rotation matrix
+            //gl.glMultMatrixf(orientationProvider.getRotationMatrix().getMatrix(), 0);
+
+            // Get the rotation from the current orientationProvider as quaternion
+
     }
 
 
@@ -106,6 +125,10 @@ public class MainRenderer implements GLSurfaceView.Renderer {
     // Function for initializing the renderer.
     private void initRendering() {
         mCubeObject = new CubeObject();
+        myCube = new MyCube();
+        mArrowObject = new ArrowObject();
+        drawmy=new MyArrow();
+//        mBanana = new Banana(mActivity.getResources().getAssets());
         Log.i(LOGTAG, "initRendering");
 
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0f);
@@ -138,8 +161,8 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         // // 获取指向着色器中vertexPosition的index
         vertexHandle = GLES20.glGetAttribLocation(shaderProgramID,
                 "vertexPosition");//attribute vec4 vertexPosition
-        normalHandle = GLES20.glGetAttribLocation(shaderProgramID,
-                "vertexNormal");//attribute vec4 vertexNormal
+  // normalHandle = GLES20.glGetAttribLocation(shaderProgramID,
+   //    "vertexNormal");//attribute vec4 vertexNormal
         textureCoordHandle = GLES20.glGetAttribLocation(shaderProgramID,
                 "vertexTexCoord");//attribute vec2 vertexTexCoord
         mvpMatrixHandle = GLES20.glGetUniformLocation(shaderProgramID,
@@ -157,10 +180,12 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         //清除颜色缓冲和深度缓冲
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
         // Set the viewport
 
         GLES20.glViewport(0, -63, 1080, 1920);
-
+     //   GLES20.GL_SHADER_TYPE = GLES20.
         // handle face culling, we need to detect if we are using reflection
         // to determine the direction of the culling
         GLES20.glEnable(GLES20.GL_CULL_FACE);
@@ -168,13 +193,20 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         GLES20.glFrontFace(GLES20.GL_CCW); // Back camera
 
         float[] modelViewMatrix= Data.modelViewMatrix.clone();
+        float[] modelViewMatrix2= Data.modelViewMatrix.clone();
 
 
 
-
-        Matrix.scaleM(modelViewMatrix, 0, 400f,
-                200f, 1.0f);
-     //   drawModel(mCubeObject, modelViewMatrix, "lanshou", true);
+        Matrix.scaleM(modelViewMatrix, 0, 250f,
+              250f,500f);
+        Quaternion q = orientationProvider.getQuaternion();
+         Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
+        drawModel(drawmy, modelViewMatrix, "1", true);
+        modelViewMatrix2[12]=-500.0f;
+        Matrix.scaleM(modelViewMatrix2, 0, 100f,
+                100f,1f);
+        Matrix.rotateM(modelViewMatrix2,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
+        drawModel(myCube, modelViewMatrix2, "znz", false);
      //   Data.modelDrawed=true;
     }
 
@@ -190,7 +222,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 
 
 
-        public void drawModel(MeshObject model, float[] modelViewMatrixonlyread, String TextureName, Boolean leaveTrack){
+        public void drawModel(MeshObject model, float[] modelViewMatrixonlyread, String TextureName, Boolean IsArray){
             float modelViewMatrix[]=modelViewMatrixonlyread.clone();
             int textureIndex=(int) Texture.TextureMap.get(TextureName);
             //Output("draw teapot",modelViewMatrix);
@@ -205,15 +237,15 @@ public class MainRenderer implements GLSurfaceView.Renderer {
             //变量类型为vec4(x,y,z,1)，这里是3的缘故，
             // 表示(x,y,z)后面那个比例系数1不用
             SampleUtils.checkGLError("vert");
-            GLES20.glVertexAttribPointer(normalHandle, 3, GLES20.GL_FLOAT,
-                    false, 0, model.getNormals());
+     //   GLES20.glVertexAttribPointer(normalHandle, 3, GLES20.GL_FLOAT,
+      //         false, 0, model.getNormals());
             GLES20.glVertexAttribPointer(textureCoordHandle, 2,
                     GLES20.GL_FLOAT, false, 0, model.getTexCoords());
             SampleUtils.checkGLError("coord");
             //启用或者禁用顶点属性数组，下面为启用
             GLES20.glEnableVertexAttribArray(vertexHandle);
             SampleUtils.checkGLError("vd");
-            GLES20.glEnableVertexAttribArray(normalHandle);
+     //   GLES20.glEnableVertexAttribArray(normalHandle);
             // SampleUtils.checkGLError("nd");//这里出错
             GLES20.glEnableVertexAttribArray(textureCoordHandle);
             // activate texture 0, bind it, and pass to shader
@@ -232,24 +264,32 @@ public class MainRenderer implements GLSurfaceView.Renderer {
             GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                     modelViewProjection, 0);
             // finally draw the teapot
-            GLES20.glDrawElements(GLES20.GL_TRIANGLES,
+    /*   GLES20.glDrawElements(GLES20.GL_TRIANGLES,
                    model.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
-                    model.getIndices());
+                    model.getIndices());*/
+            //glDrawArray(GL_POLYGON, index,nvert), 这是在OpenGL下绘制一个多边形的方法, 第三个参数是点数目, 第二个是当前多边形点的索引(标号),  该函数会从数组中找到第index个点, 向后找到nvert个, 用这些点来点点依次相连绘制成多边形,
+            if(IsArray==true) {
+            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, model.getNumObjectVertex());
+        }else{
+            GLES20.glDrawElements(GLES20.GL_TRIANGLES,
+                    model.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
+                    model.getIndices());;
+        }
             //以上无标记处无错误
             // disable the enabled arrays
             GLES20.glDisableVertexAttribArray(vertexHandle);
-            GLES20.glDisableVertexAttribArray(normalHandle);
+     //  GLES20.glDisableVertexAttribArray(normalHandle);
             GLES20.glDisableVertexAttribArray(textureCoordHandle);
             //   } else {
             SampleUtils.checkGLError("Render Frame");
             GLES20.glDisable(GLES20.GL_DEPTH_TEST);
         }
-        public void Output(String word,float MatrixData[]){
+      /*  public void Output(String word,float MatrixData[]){
             Log.i(LOGTAG,word);
             for (int i = 0; i < 16; i += 4) {
                 Log.i(LOGTAG, MatrixData[i] + "   " + MatrixData[i + 1] + "   "
                         + MatrixData[i + 2] + "   " + MatrixData[i + 3] + "   ");
             }
-        }
+        }*/
     }
 

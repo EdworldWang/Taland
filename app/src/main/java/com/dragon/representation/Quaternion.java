@@ -528,9 +528,7 @@ public class Quaternion extends Vector4f {
             output.points[0] = ((float) (this.points[0] * ratioA + bufferQuat.points[0] * ratioB));
             output.points[1] = ((float) (this.points[1] * ratioA + bufferQuat.points[1] * ratioB));
             output.points[2] = ((float) (this.points[2] * ratioA + bufferQuat.points[2] * ratioB));
-
             //}
         }
     }
-
 }

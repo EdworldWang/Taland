@@ -17,7 +17,7 @@ public class CubeObject extends MeshObject
     // Data for drawing the 3D plane as overlay
     private static final double cubeVertices[]  = { 
             -1.00f, -1.00f, 1.00f, // front
-            1.00f, -1.00f, 1.00f, 
+            1.00f, -1.00f, 1.00f,
             1.00f, 1.00f, 1.00f,
             -1.00f, 1.00f, 1.00f,
                 

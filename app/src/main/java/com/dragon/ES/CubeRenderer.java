@@ -1,12 +1,13 @@
 package com.dragon.ES;
 
+import android.opengl.GLSurfaceView;
+
+
+import com.dragon.orientationProvider.OrientationProvider;
+import com.dragon.representation.Quaternion;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import org.hitlabnz.sensor_fusion_demo.orientationProvider.OrientationProvider;
-import org.hitlabnz.sensor_fusion_demo.representation.Quaternion;
-
-import android.opengl.GLSurfaceView;
 
 /**
  * Class that implements the rendering of a cube with the current rotation of the device that is provided by a

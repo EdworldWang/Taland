@@ -28,7 +28,15 @@ public class Cube {
      * Initialises a new instance of the cube
      */
     public Cube() {
-        final float vertices[] = { -1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1, -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, };
+        final float vertices[] = {
+                -1, -1, -1,
+                1, -1, -1,
+                1, 1, -1,
+                -1, 1, -1,
+                -1, -1, 1,
+                1, -1, 1,
+                1, 1, 1,
+                -1, 1, 1, };
 
         final float colors[] = { 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0,
                 1, 1, 1, };

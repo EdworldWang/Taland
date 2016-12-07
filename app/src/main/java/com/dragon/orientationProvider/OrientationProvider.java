@@ -3,16 +3,17 @@
  */
 package com.dragon.orientationProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.hitlabnz.sensor_fusion_demo.representation.EulerAngles;
-import org.hitlabnz.sensor_fusion_demo.representation.Matrixf4x4;
-import org.hitlabnz.sensor_fusion_demo.representation.Quaternion;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+
+
+import com.dragon.representation.EulerAngles;
+import com.dragon.representation.Matrixf4x4;
+import com.dragon.representation.Quaternion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Classes implementing this interface provide an orientation of the device

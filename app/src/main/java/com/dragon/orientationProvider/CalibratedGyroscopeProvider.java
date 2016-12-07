@@ -1,10 +1,11 @@
 package com.dragon.orientationProvider;
 
-import org.hitlabnz.sensor_fusion_demo.representation.Quaternion;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+
+import com.dragon.representation.Quaternion;
+
 
 /**
  * The orientation provider that delivers the relative orientation from the {@link Sensor#TYPE_GYROSCOPE

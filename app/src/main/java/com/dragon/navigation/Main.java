@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.PixelFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -81,6 +82,9 @@ import com.dragon.navigation.util.NewWidget;
 import com.dragon.navigation.util.Servicetype;
 import com.dragon.navigation.util.ToastUtil;
 import com.dragon.navigation.util.scrollerlayout;
+import com.dragon.orientationProvider.AccelerometerCompassProvider;
+import com.dragon.orientationProvider.GravityCompassProvider;
+import com.dragon.orientationProvider.OrientationProvider;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -174,6 +178,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private Location Locationhere;
     private float currentAzimuth = UNKNOWN_AZIMUTH;
     public final static float UNKNOWN_AZIMUTH = Float.NaN;
+
+
+    private OrientationProvider currentOrientationProvider;
+    private GravityCompassProvider currentGravityCompassProvider;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -244,7 +252,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //********************POI********************************
 
         mTextures = new Vector<Texture>();
-       // loadTextures();
+         loadTextures();
 
 //两个按键，搜索和我的监听
         btnMy = (Button) findViewById(R.id.My);
@@ -281,6 +289,31 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         Thread mThread = new Thread(myRunnable);
         mThread.start();
         RouteSearch routeSearch = new RouteSearch(this);
+
+
+        initAR();
+    }
+
+    public void initAR(){
+        currentOrientationProvider = new GravityCompassProvider((SensorManager) this.getSystemService(
+                this.SENSOR_SERVICE));
+        // Create OpenGL ES view:
+        int depthSize = 16;
+        int stencilSize = 0;
+        boolean translucent = true;
+
+        mGlView = new SampleApplicationGLView(this);
+        mGlView.init(translucent, depthSize, stencilSize);
+
+        mRenderer = new MainRenderer(this);
+        mRenderer.setOrientationProvider(currentOrientationProvider);
+        mRenderer.setTextures(mTextures);
+        mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        mGlView.setZOrderOnTop(true);
+        mGlView.setRenderer(mRenderer);
+        mGlView.bringToFront();
+        addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
 
@@ -616,6 +649,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
             mGlView.onResume();
         }
+        currentOrientationProvider.start();
     }
 
     @Override
@@ -630,6 +664,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         magneticFieldSmoother.clear();
      mLocation.onPause();
      mLocation.deactivate();
+        currentOrientationProvider.stop();
     }
 
     @Override
@@ -668,6 +703,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     protected void onDestroy() {
         super.onDestroy();
    //     mLocation.onDestroy();
+        mTextures.clear();
+        mTextures = null;
     }
 
 
@@ -724,7 +761,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
      /*   viewaround.startAnimation(ra);
         currentDegree = -degree;
 */
-
         if(Control.candrawview==true) {
             viewaround.doRotatetaAnim(currentDegree, -degree);
             //自定义动画类animator来达到部分控件的旋转和
@@ -900,5 +936,17 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private void fillAdapter(List<TravelingEntity> list) {
             mAdapter.setData(list);
         }
+
+    private void loadTextures() {
+        mTextures.add(Texture.loadTextureFromApk("Collect/icebird.jpg", getAssets(),
+                "icebird"));
+        mTextures.add(Texture.loadTextureFromApk("TextureTeapotRed.png", getAssets(),
+                "Red"));
+        mTextures.add(Texture.loadTextureFromApk("znz.png", getAssets(),
+                "znz"));
+        mTextures.add(Texture.loadTextureFromApk("1.png", getAssets(),
+                "1"));
+    }
+
 
 }
