@@ -7,8 +7,8 @@ package com.dragon.representation;
  * 
  * <p>
  * Quaternions allow for elegant descriptions of 3D rotations, interpolations as well as extrapolations and compared to
- * Euler angles, they don't suffer from gimbal lock. Interpolations between two Quaternions are called SLERP (Spherical
- * Linear Interpolation).
+ * Euler angles(欧拉角), they don't suffer from gimbal lock（万向节锁）. Interpolations between two Quaternions are called SLERP (Spherical
+ * Linear Interpolation)（球形插值.
  * </p>
  * 
  * <p>
@@ -22,6 +22,7 @@ public class Quaternion extends Vector4f {
 
     /**
      * A randomly generated UID to make the Quaternion object serialisable.
+     * 一个随机生成的UID 可序列化 的四元数对象
      */
     private static final long serialVersionUID = -7148812599404359073L;
 

@@ -1,16 +1,22 @@
 package com.dragon.navigation;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.LatLng;
@@ -183,8 +189,9 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 //                    ToastUtil.show(this.mActivity,poiItems.get(0)+","+poiItems.get(1));
                 //    LatLng var0= convertToLatLng(poiItems.get(1).getLatLonPoint());
                 //    LatLng var1= convertToLatLng(poiItems.get(2).getLatLonPoint());
-                    lin.removeAllViews();
+                    /*lin.removeAllViews();*/
                     if(searchtype==Servicetype.searchbound) {
+                        Log.i("fdd","我来了"+"数据为"+poiItems.size());
                         for (int i = 0; i < poiItems.size(); i++) {
                             LatLng var0 = convertToLatLng(poiItems.get(i).getLatLonPoint());
                             ResGeoCoding resserver = new ResGeoCoding(this.mActivity);
@@ -206,7 +213,13 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         }
                         Data.poinum=poiItems.size();
                         lin.removeAllViews();
-                        initnewview(poiItems.size());
+                        FragmentManager fm = mActivity.getFragmentManager();
+                        FragmentTransaction transaction = fm.beginTransaction();
+                        fragmentone mWeixin = new fragmentone();
+                        //下面的参数可以缺省
+                        transaction.add(R.id.fragments, mWeixin,"yourname");
+                        transaction.commit();
+                       // initnewview(poiItems.size());
                     }else if(searchtype==Servicetype.searchnear_view) {
                         for (int i = 0; i < poiItems.size(); i++) {
                             LatLng var0 = convertToLatLng(poiItems.get(i).getLatLonPoint());
@@ -269,17 +282,29 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     }
 
     public void initnewview(int size){
+        FragmentManager fm = mActivity.getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+      TextView ucan= (TextView) fm.findFragmentByTag("yourname").
+                getView().findViewById(R.id.www);
+        ucan.setText("woailuo");
+        ucan.invalidate();
+        FrameLayout isee= (FrameLayout) fm.findFragmentByTag("yourname").
+                getView().findViewById(R.id.contentwidget);
         this.size=size;
+        FrameLayout ican=(FrameLayout)View.inflate(this.mActivity, R.layout.blanklayout,
+                null);
+        ican.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
         for(int i=0;i<size;i++){
             layoutarray[i]=new scrollerlayout(this.mActivity);
             //  layoutarray[i].addView(widgetarray[i]);
         }
-
         for(int i=0;i<size;i++){
             LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(
                     200+30*Data.AroundpoiList.get(i).getPoiName().length(), 150);
            widgetarray[i]=new NewWidget(this.mActivity);
-            widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
+          //  widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
+            widgetarray[i].setContent(size+"");
             widgetarray[i].setContentBackgroundColor(R.color.red);
             widgetarray[i].setTitle(Data.AroundpoiList.get(i).getPoiName());
             widgetarray[i].setTitleBackgroundColor(R.color.ivory);
@@ -289,13 +314,20 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
             widgetarray[i].setId(i);
             widgetarray[i].setmType(Data.AroundpoiList.get(i).getPoiDes());
             layoutarray[i].addView(widgetarray[i]);
-            Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
-            mActivity.addContentView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+         //   Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
+            isee.addView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
-            layoutarray[i].smoothScrollBy(-500,-500,2000);
+           layoutarray[i].smoothScrollBy(-500,-500,2000);
             widgetarray[i].setOnClickListener(new OnScrollerClick());
 
         }
+        TextureView textureView=new TextureView(this.mActivity);
+        ican.addView(textureView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+     //mActivity.addContentView(ucan, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+         //      ViewGroup.LayoutParams.MATCH_PARENT));
+
+            //ican.bringToFront();
     }
         public class OnScrollerClick implements View.OnClickListener{
             public void onClick(View v){
@@ -307,10 +339,10 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         //widget做的改变需要用incalidate()才会改变
                         //解释了之前为什么settitle没有改变的原因
                         Data.SelectArroundId=i;
-                        Data.IsSelectArround=true;
+                 Data.IsSelectArround=true;
                         widgetarray[i].setTitle(String.valueOf(Data.AroundpoiList.get(i).getFirstbearing()));
                         widgetarray[i].invalidate();
-                        layoutarray[i].smoothScrollBy(500,500,2000);
+                        layoutarray[i].smoothScrollBy(-500,-500,2000);
                         Routedesign myroute=new Routedesign(mActivity);
                         RouteSearch.FromAndTo fromAndTo=new RouteSearch.FromAndTo(Data.AroundpoiList.get(i).getMyLatLonPoint(),
                                 new LatLonPoint(here.latitude,here.longitude));//出错了，都设置成经度

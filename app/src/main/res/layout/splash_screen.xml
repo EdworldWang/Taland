@@ -51,8 +51,10 @@
 		        android:src="@drawable/logo"
 		        android:contentDescription="@string/splash_screen_description"
 		        />
-		    
-        </RelativeLayout>
+
+
+
+		</RelativeLayout>
 	    
 	</LinearLayout>
 

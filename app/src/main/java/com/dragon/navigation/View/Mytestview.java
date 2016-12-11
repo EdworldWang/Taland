@@ -153,9 +153,9 @@ public class Mytestview extends View {
 
                 }
                 //单独画这个点,若在上面先画则会使得后面画的白点盖住了红点，达不到优先展示
-                if(Data.IsSelectArround) {
+              /*  if(Data.IsSelectArround) {
                     canvas.save();
-                    canvas.rotate(Data.AroundpoiList.get(Data.SelectArroundId).getFirstbearing(), mCx, mCy);
+                     canvas.rotate(Data.AroundpoiList.get(Data.SelectArroundId).getFirstbearing(), mCx, mCy);
                     float distance = Data.AroundpoiList.get(Data.SelectArroundId).getDistance();
                     if (distance >= 500) {
                         drawDistance = 198;
@@ -165,7 +165,7 @@ public class Mytestview extends View {
                     mPaint.setColor(0xffff0000);
                     canvas.drawCircle(mCx, mCy - drawDistance, 4, mPaint);
                     canvas.restore();
-                }
+                }*/
             }
             canvas.rotate(-Rotatedegree,mCx,mCy);
         }

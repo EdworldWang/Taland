@@ -38,10 +38,10 @@ public class Data {
 
     public static float currentAzimuth=0;
 
-   public static List<SearchpoiEntity> AroundpoiList = new ArrayList<>();
+   public static volatile List<SearchpoiEntity> AroundpoiList = new ArrayList<>();
     public static int poinum=0;
     public static List<SearchpoiEntity> SearchpoiList = new ArrayList<>();
 
-    public static int SelectArroundId=-1;//默认不被选择
+    public static volatile int SelectArroundId=-1;//默认不被选择
     public static boolean IsSelectArround=false;
 }

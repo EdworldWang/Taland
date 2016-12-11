@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal" >
+    <LinearLayout
+        android:id="@+id/fragments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        ></LinearLayout>
 
     <RelativeLayout
         android:id="@+id/search_bar_layout"
@@ -119,7 +125,7 @@
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/merchant"/>
 
-    <com.dragon.navigation.View.Compassview
+    <com.dragon.navigation.View.Mytestview
         android:layout_width="150dip"
         android:layout_height="150dip"
         android:id="@+id/Compass"

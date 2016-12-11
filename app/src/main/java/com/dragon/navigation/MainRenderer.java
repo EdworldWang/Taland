@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.amap.api.services.a.q;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.use.ArrowObject;
@@ -199,6 +200,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 
         Matrix.scaleM(modelViewMatrix, 0, 250f,
               250f,500f);
+
         Quaternion q = orientationProvider.getQuaternion();
          Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
         drawModel(drawmy, modelViewMatrix, "1", true);
@@ -207,9 +209,15 @@ public class MainRenderer implements GLSurfaceView.Renderer {
                 100f,1f);
         Matrix.rotateM(modelViewMatrix2,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
         drawModel(myCube, modelViewMatrix2, "znz", false);
+      //  Log.i("thanks",q.getW()+"       "+q.getX()+"    "+q.getY()+"    "+q.getZ());
+        /*for(int i=0;i<4;i++) {
+            Log.i("hh", q.getMatrix4x4().matrix[4*i+0] + "   "+
+                    q.getMatrix4x4().matrix[4*i+1] + "   "+
+                    q.getMatrix4x4().matrix[4*i+2] + "   "+
+                    q.getMatrix4x4().matrix[4*i+3] + "   ");
+        }*/
      //   Data.modelDrawed=true;
     }
-
 
 
 

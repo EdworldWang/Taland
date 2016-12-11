@@ -3,6 +3,8 @@ package com.dragon.navigation;
 import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -50,6 +52,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,6 +62,7 @@ import android.widget.Toast;
 
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.NavigateArrow;
+import com.amap.api.maps.model.Text;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
@@ -221,7 +225,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         Locationdes=new Location("des");
         Locationhere=new Location("here");
-        LinearLayout BlankLayout = (LinearLayout) View.inflate(this, R.layout.blanklayout,
+        FrameLayout BlankLayout = (FrameLayout) View.inflate(this, R.layout.blanklayout,
                 null);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -292,7 +296,32 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
         initAR();
+    //   setDefaultFragment();
+
+
+      /*  mydegree.setText(hhh.getWidth()+" "+hhh.getHeight()+"  "+hhh.getParent()+
+                "\n"+layoutarray[1].getWidth()+" "+layoutarray[1].getHeight());*/
     }
+    private void setDefaultFragment()
+    {
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction transaction = fm.beginTransaction();
+        fragmentone mWeixin = new fragmentone();
+        //下面的参数可以缺省
+        transaction.add(R.id.fragments, mWeixin,"yourname");
+        transaction.commit();
+  /*      mydegree.setText();*/
+     /*   mytext.setTextColor(0xffff0000);
+        mytext.setText(mytext.getParent().toString());*/
+     /*   FrameLayout ucan= (FrameLayout)fm.findFragmentByTag("yourname").
+                getView().findViewById(R.id.contentwidget);*/
+        TextView textView=new TextView(this);
+        textView.setText("oijgoijgifgksd");
+      //  ucan.addView(ucan,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        //        ViewGroup.LayoutParams.MATCH_PARENT));
+
+    }
+
 
     public void initAR(){
         currentOrientationProvider = new GravityCompassProvider((SensorManager) this.getSystemService(
@@ -314,6 +343,30 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mGlView.bringToFront();
         addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
+
+
+      /*  layoutarray[1]=new scrollerlayout(this);
+        widgetarray[1]=new NewWidget(this);
+        LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(250, 150);
+        widgetarray[1].setLayoutParams(blue);
+        widgetarray[1].setContent(" ");
+        widgetarray[1].setContentBackgroundColor(R.color.red);
+        widgetarray[1].setTitle("cdsvd");
+        widgetarray[1].setTitleBackgroundColor(R.color.ivory);
+        widgetarray[1].setTextSize(40);
+        widgetarray[1].setTextColor(Color.WHITE);
+       // layoutarray[1].addView(widgetarray[1]);
+        RelativeLayout  gg = (RelativeLayout) View.inflate(this, R.layout.blanklayout,
+                null);
+        gg.addView( widgetarray[1], new ViewGroup.LayoutParams(200,150));
+        widgetarray[1].scrollTo(-500,-500);
+        TextView open=new TextView(this);
+        open.setText("open open");
+        gg.addView(open,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        addContentView(gg,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        gg.bringToFront();*/
     }
 
 
@@ -718,6 +771,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         float[] values = new float[3];
         float[] R = new float[9];
         final float inclinationMat[] = new float[9];
+      /*  SensorManager.getRotationMatrix(R, null, accelerometerValues,
+                magneticFieldValues);*/
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);
         SensorManager.getOrientation(R, values);
@@ -761,16 +816,16 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
      /*   viewaround.startAnimation(ra);
         currentDegree = -degree;
 */
-        if(Control.candrawview==true) {
+       /* if(Control.candrawview==true) {*/
             viewaround.doRotatetaAnim(currentDegree, -degree);
             //自定义动画类animator来达到部分控件的旋转和
             //指向那部分不变
-        }
+
         currentDegree = -degree;
 
 
 
-
+     //  Log.i("ddd","alive");
     }
 
     @Override
@@ -828,22 +883,20 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //用于请求searcharround服务和刷新服务右上角的界面
     private Runnable myRunnable = new Runnable() {
         public void run() {
-
             while (true) {
                 try {
-
+                        Log.i("runnable","hhh");
                     Thread.sleep(10000);
-                   /* if (Control.finishLocation==true) {
                         Control.candrawview=false;
                       Data.AroundpoiList.clear();
                         ArPoiSearch Arnear = new ArPoiSearch( Main.this, "", "餐饮服务", "深圳市");
                         Arnear.setSearchtype(Servicetype.searchbound);
                         Arnear.doSearch();
+                        Log.i("runnable","WHAT HAPPEN");
                         Message message = new Message();
                         message.what = 1;
                         handler.sendMessage(message);
 
-                    }*/
 
 
                 }catch (InterruptedException e){
@@ -901,12 +954,12 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     Data.bearing = Util.positiveModulo(startBearing - currentAzimuth,
                             360);
                     testview.setBearing(Data.bearing);
-                    mydegree.setText("bearing="+Data.bearing+"\n"+
+                  /*  mydegree.setText("bearing="+Data.bearing+"\n"+
                     "des latitude="+Data.locationdes.getLatitude()+"\n"+
                     "des longitude="+Data.locationdes.getLongitude()+"\n"+
                         "here latitude="+Data.locationhere.getLatitude()+"\n"+
                        "here longitude="+Data.locationhere.getLongitude()+"\n"+
-                    "size="+ArPoiSearch.size);
+                    "size="+ArPoiSearch.size);*/
                    /* mydegree.setText("Data.movedistance="+Data.movedistance+"\n"+
                             "predegree="+Data.predegree+"\n"+
                             "firstdegree="+Data.firstdegree+"\n"+

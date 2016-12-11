@@ -13,6 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         />
+
     <!--布局重用-->
     <include
         android:id="@+id/part1"
