@@ -4,6 +4,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 
+import com.dragon.navigation.Control.Data;
+
 /**
  * The orientation provider that delivers the current orientation from the {@link Sensor#TYPE_GRAVITY
  * Gravity} and {@link Sensor#TYPE_MAGNETIC_FIELD Compass}.
@@ -49,10 +51,14 @@ public class GravityCompassProvider extends OrientationProvider {
 
         if (magnitudeValues != null && gravityValues != null) {
             float[] i = new float[16];
-
+            float[] values = new float[3];
             // Fuse gravity-sensor (virtual sensor) with compass
             SensorManager.getRotationMatrix(currentOrientationRotationMatrix.matrix, i, gravityValues, magnitudeValues);
             // Transform rotation matrix to quaternion
+            SensorManager.getOrientation(currentOrientationRotationMatrix.matrix, values);
+            for(int j=0;j<3;j++){
+                Data.q[j]=(float)Math.toDegrees(values[j]);
+            }
             currentOrientationQuaternion.setRowMajor(currentOrientationRotationMatrix.matrix);
         }
     }

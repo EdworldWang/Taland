@@ -88,6 +88,7 @@ import com.dragon.navigation.util.ToastUtil;
 import com.dragon.navigation.util.scrollerlayout;
 import com.dragon.orientationProvider.AccelerometerCompassProvider;
 import com.dragon.orientationProvider.GravityCompassProvider;
+import com.dragon.orientationProvider.ImprovedOrientationSensor2Provider;
 import com.dragon.orientationProvider.OrientationProvider;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -185,6 +186,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
     private OrientationProvider currentOrientationProvider;
+    private OrientationProvider currentOrientationProvider2;
+    private ImprovedOrientationSensor2Provider currentImproved2;
     private GravityCompassProvider currentGravityCompassProvider;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -248,7 +251,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         BlankLayout.setVisibility(View.VISIBLE);
         BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-        happy.setPadding(200,580,0,0);
+        happy.setPadding(200,100,0,0);
     addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
        ViewGroup.LayoutParams.MATCH_PARENT));
       BlankLayout.bringToFront();
@@ -325,6 +328,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
     public void initAR(){
         currentOrientationProvider = new GravityCompassProvider((SensorManager) this.getSystemService(
+                this.SENSOR_SERVICE));
+        currentOrientationProvider2 = new ImprovedOrientationSensor2Provider((SensorManager) this.getSystemService(
                 this.SENSOR_SERVICE));
         // Create OpenGL ES view:
         int depthSize = 16;
@@ -703,6 +708,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             mGlView.onResume();
         }
         currentOrientationProvider.start();
+        currentOrientationProvider2.start();
     }
 
     @Override
@@ -718,6 +724,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
      mLocation.onPause();
      mLocation.deactivate();
         currentOrientationProvider.stop();
+        currentOrientationProvider2.stop();
     }
 
     @Override
@@ -776,13 +783,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);
         SensorManager.getOrientation(R, values);
-        for(int i=0;i<9;i+=3){
+    /*    for(int i=0;i<9;i+=3){
             Log.i("R",R[i]+"    "+R[i+1]+"    "+R[i+2]);
         }
-            Log.i("values",values[0]+"    "+values[1]+"    "+values[2]);
+            Log.i("values",values[0]+"    "+values[1]+"    "+values[2]);*/
         Data.currentAzimuth = RAD_TO_DEGREE * values[0];
         values[0] = (float) Math.toDegrees(values[0]);
         Data.yangle=(float) Math.toDegrees(values[1]);
+        Data.toyangle=(float) Math.toDegrees(values[1]);
         Data.xangle=(float) Math.toDegrees(values[2]);
 
         return values[0];
@@ -795,11 +803,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             gravitySmoother.getSmoothed(accelerometerValues, SMOOTHING);
 */
             accelerometerValues=event.values;
-            final float alpha=0.8f;
-            for(int i=0;i<3;i++){
-                gravity[i]=alpha*gravity[i]+(1-alpha)*accelerometerValues[i];
-                linear_acceleration[i]=accelerometerValues[i]-gravity[i];
-            }
         }
 
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
@@ -809,13 +812,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         }
         int degree = (int)calculateOrientation();
 
-        RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
+     //   RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f,
+      //          Animation.RELATIVE_TO_SELF, 0.5f);
 
        // mNewWidget.scrollTo(Data.predegree*15,0);
 //        int rotation = getWindowManager().getDefaultDisplay().getRotation();
  //      imgZnz.setRotate(ORIENTATIONS.get(rotation),50,50);
-        ra.setDuration(200);
+     //   ra.setDuration(200);
       //  layout_sub_Lin.startAnimation(ta);
 
      /*   viewaround.startAnimation(ra);
@@ -825,9 +828,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
             //自定义动画类animator来达到部分控件的旋转和
             //指向那部分不变
-
+        Data.currentAzimuth=currentDegree;
             viewaround.doRotatetaAnim(currentDegree, -degree);
             currentDegree = -degree;
+            Data.currentAzimuth=currentDegree;
+            Data.todegree=currentDegree;
 
 
      //  Log.i("ddd","alive");
@@ -954,8 +959,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     Data.bearing = Util.positiveModulo(startBearing - currentAzimuth,
                             360);
                     mydegree.setText("selectid"+Data.SelectArroundId+"\n"+
+                            "Data.currentdegree="+Data.currentAzimuth+"\n"+
                     "yangle="+Data.yangle+"\n"+
-                    "xangle="+Data.xangle);
+                    "xangle="+Data.xangle+"\n"+
+                    "q"+Data.q[0]+" "+Data.q[1]+"   "+Data.q[2]+"\n"+
+                    "x="+Data.x+"   y="+Data.y);
                   //  testview.setBearing(Data.bearing);
                   /*  mydegree.setText("bearing="+Data.bearing+"\n"+
                     "des latitude="+Data.locationdes.getLatitude()+"\n"+

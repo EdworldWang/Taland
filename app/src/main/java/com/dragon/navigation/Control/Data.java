@@ -36,7 +36,7 @@ public class Data {
     public static Location locationhere;
     public static float bearing;
 
-    public static float currentAzimuth=0;
+
 
    public static volatile List<SearchpoiEntity> AroundpoiList = new ArrayList<>();
     public static int poinum=0;
@@ -45,6 +45,15 @@ public class Data {
     public static volatile int SelectArroundId=-1;//默认不被选择
     public static boolean IsSelectArround=false;
 
+ public static float currentAzimuth=0;
+ public static float todegree=0;
+
     public static float yangle=0;
+ public static float toyangle=0;
     public static float xangle=0;
+ public static float q[]=new float[3];
+
+    public static float x;
+    public static float  y;
+
 }

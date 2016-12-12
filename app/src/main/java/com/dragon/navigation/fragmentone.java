@@ -1,5 +1,6 @@
 package com.dragon.navigation;
 
+import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,13 +38,21 @@ public class fragmentone extends Fragment {
     private FragmentManager  fm;
     private FragmentTransaction transaction;
     private RelativeLayout isee;
-    private RefreshviewThread   refreshviewthread;
-    private  static final int UPDATE_VIEW = 1;
-    public boolean ThreadIsCreated=false;
 
+    private RefreshviewThread   refreshviewthread;
+    private ScrollThread scrollThread;
+
+    private  static final int UPDATE_VIEW = 1;
+    private  static final int SCROLL_VIEW = 2;
+    public boolean ThreadIsCreated=false;
+    private int viewnum=10;
     public static int SelectID=-1;
     public static boolean IsSelected=false;
 
+    private float movex=0;
+    private float movey=0;
+    private float prex=0;
+    private float prey=0;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.moveview, container, false);
@@ -52,10 +62,12 @@ public class fragmentone extends Fragment {
     @Override
     public void onStart(){
         super.onStart();
-        initnewview(10);
+        initnewview(viewnum);
         if(ThreadIsCreated==false) {
-            refreshviewthread = new RefreshviewThread();
-            refreshviewthread.start();
+          //  refreshviewthread = new RefreshviewThread();
+         //   refreshviewthread.start();
+           scrollThread =new ScrollThread();
+           scrollThread.start();
             ThreadIsCreated = true;
         }
     }
@@ -140,6 +152,46 @@ public class fragmentone extends Fragment {
             }
         }
     }
+    public void getscrollviewxy(float currentdegree,float todegree,float currenty,float toy){
+
+            ValueAnimator animatordegree = ValueAnimator.ofFloat(currentdegree,todegree);
+            animatordegree.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    movex = (float)animation.getAnimatedValue();
+                    doscroll();
+                }
+            });
+            animatordegree.setDuration(100);
+            animatordegree.setInterpolator(new DecelerateInterpolator());
+            animatordegree.start();
+
+        ValueAnimator animatory = ValueAnimator.ofFloat(currenty,toy);
+        animatory.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                movey = (float)animation.getAnimatedValue();
+                doscroll();
+            }
+        });
+        animatory.setDuration(100);
+        animatory.setInterpolator(new DecelerateInterpolator());
+        animatory.start();
+    }
+
+    private void doscroll(){
+        float disx=movex-prex;
+        float disy=movey-prey;
+            layoutarray[0].smoothScrollBy(-(int)(disx*18),0);
+        Data.x=widgetarray[0].getX();
+        Data.y=layoutarray[0].getY();
+        prex=movex;
+        prey=movey;
+    }
+
+
+
+
     private class RefreshviewThread extends Thread{
         public void run(){
                 while (true) {
@@ -159,12 +211,33 @@ public class fragmentone extends Fragment {
                 }
         }
     }
+
+    private class ScrollThread extends Thread{
+        public void run(){
+            while (true) {
+                try{
+                    sleep(50);
+                    Message msg = new Message();
+                    msg.what = SCROLL_VIEW;
+                    viewhandler.sendMessage(msg);
+                }catch (InterruptedException e){
+
+                }
+
+            }
+        }
+    }
     //UI线程用于处理view的移除。
     Handler viewhandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_VIEW:;
                     isee.removeAllViews();
+
+
+                    break;
+                case SCROLL_VIEW:;
+                    getscrollviewxy(Data.q[0],Data.q[0],Data.yangle,Data.toyangle);
 
 
                     break;
