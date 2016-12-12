@@ -152,21 +152,22 @@ public class fragmentone extends Fragment {
             }
         }
     }
-    public void getscrollviewxy(float currentdegree,float todegree,float currenty,float toy){
+    public void getscrollviewxy(float currentdegree,float currenty){
 
-            ValueAnimator animatordegree = ValueAnimator.ofFloat(currentdegree,todegree);
+            ValueAnimator animatordegree = ValueAnimator.ofFloat(prex,currentdegree);
             animatordegree.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    movex = (float)animation.getAnimatedValue();
+                    movex = (float)animation.getAnimatedValue()*18;
                     doscroll();
                 }
             });
+            prex=currentdegree;
             animatordegree.setDuration(100);
             animatordegree.setInterpolator(new DecelerateInterpolator());
             animatordegree.start();
 
-        ValueAnimator animatory = ValueAnimator.ofFloat(currenty,toy);
+        ValueAnimator animatory = ValueAnimator.ofFloat(0,currenty-prey);
         animatory.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -180,13 +181,9 @@ public class fragmentone extends Fragment {
     }
 
     private void doscroll(){
-        float disx=movex-prex;
-        float disy=movey-prey;
-            layoutarray[0].smoothScrollBy(-(int)(disx*18),0);
+            layoutarray[0].smoothScrollTo((int)movex,-800);
         Data.x=widgetarray[0].getX();
         Data.y=layoutarray[0].getY();
-        prex=movex;
-        prey=movey;
     }
 
 
@@ -216,7 +213,7 @@ public class fragmentone extends Fragment {
         public void run(){
             while (true) {
                 try{
-                    sleep(50);
+                    sleep(100);
                     Message msg = new Message();
                     msg.what = SCROLL_VIEW;
                     viewhandler.sendMessage(msg);
@@ -237,7 +234,7 @@ public class fragmentone extends Fragment {
 
                     break;
                 case SCROLL_VIEW:;
-                    getscrollviewxy(Data.q[0],Data.q[0],Data.yangle,Data.toyangle);
+                    getscrollviewxy(Data.q[0],Data.yangle);
 
 
                     break;

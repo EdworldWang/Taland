@@ -21,7 +21,7 @@ public class Data {
            0, -1, 0, 0,
             -1, 0, 0, 0,
             0, 0, -1.0f, 0,
-            0, 0, 4000, 1};
+            0, -1000, 4000, 1};
     public static int degree;
     public static boolean getfirstdegree=false;
     public static float firstdegree;
