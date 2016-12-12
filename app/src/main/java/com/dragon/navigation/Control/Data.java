@@ -44,4 +44,7 @@ public class Data {
 
     public static volatile int SelectArroundId=-1;//默认不被选择
     public static boolean IsSelectArround=false;
+
+    public static float yangle=0;
+    public static float xangle=0;
 }

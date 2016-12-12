@@ -281,76 +281,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 
     }
 
-    public void initnewview(int size){
-        FragmentManager fm = mActivity.getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-      TextView ucan= (TextView) fm.findFragmentByTag("yourname").
-                getView().findViewById(R.id.www);
-        ucan.setText("woailuo");
-        ucan.invalidate();
-        FrameLayout isee= (FrameLayout) fm.findFragmentByTag("yourname").
-                getView().findViewById(R.id.contentwidget);
-        this.size=size;
-        FrameLayout ican=(FrameLayout)View.inflate(this.mActivity, R.layout.blanklayout,
-                null);
-        ican.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        for(int i=0;i<size;i++){
-            layoutarray[i]=new scrollerlayout(this.mActivity);
-            //  layoutarray[i].addView(widgetarray[i]);
-        }
-        for(int i=0;i<size;i++){
-            LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(
-                    200+30*Data.AroundpoiList.get(i).getPoiName().length(), 150);
-           widgetarray[i]=new NewWidget(this.mActivity);
-          //  widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
-            widgetarray[i].setContent(size+"");
-            widgetarray[i].setContentBackgroundColor(R.color.red);
-            widgetarray[i].setTitle(Data.AroundpoiList.get(i).getPoiName());
-            widgetarray[i].setTitleBackgroundColor(R.color.ivory);
-            widgetarray[i].setTextSize(40);
-            widgetarray[i].setTextColor(Color.WHITE);
-            widgetarray[i].setLayoutParams(blue);
-            widgetarray[i].setId(i);
-            widgetarray[i].setmType(Data.AroundpoiList.get(i).getPoiDes());
-            layoutarray[i].addView(widgetarray[i]);
-         //   Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
-            isee.addView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
-           layoutarray[i].smoothScrollBy(-500,-500,2000);
-            widgetarray[i].setOnClickListener(new OnScrollerClick());
 
-        }
-        TextureView textureView=new TextureView(this.mActivity);
-        ican.addView(textureView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-     //mActivity.addContentView(ucan, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-         //      ViewGroup.LayoutParams.MATCH_PARENT));
-
-            //ican.bringToFront();
-    }
-        public class OnScrollerClick implements View.OnClickListener{
-            public void onClick(View v){
-                int id=v.getId();
-                for (int i=0;i<widgetarray.length;i++){
-                    if(widgetarray[i].getId()==id){
-                      /*  widgetarray[i].setTitle(widgetarray[i].getmType());
-                        widgetarray[i].invalidate();*/
-                        //widget做的改变需要用incalidate()才会改变
-                        //解释了之前为什么settitle没有改变的原因
-                        Data.SelectArroundId=i;
-                 Data.IsSelectArround=true;
-                        widgetarray[i].setTitle(String.valueOf(Data.AroundpoiList.get(i).getFirstbearing()));
-                        widgetarray[i].invalidate();
-                        layoutarray[i].smoothScrollBy(-500,-500,2000);
-                        Routedesign myroute=new Routedesign(mActivity);
-                        RouteSearch.FromAndTo fromAndTo=new RouteSearch.FromAndTo(Data.AroundpoiList.get(i).getMyLatLonPoint(),
-                                new LatLonPoint(here.latitude,here.longitude));//出错了，都设置成经度
-                        myroute.dodesign(fromAndTo,0);
-                    }
-                }
-            }
-        }
 
 
 

@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:id="@+id/qqq"
   >
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/contentwidget"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></FrameLayout>
+        android:layout_height="match_parent"></RelativeLayout>
     <TextView
         android:id="@+id/www"
         android:layout_width="wrap_content"

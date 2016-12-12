@@ -12,6 +12,7 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.R;
+import com.dragon.navigation.fragmentone;
 
 /**
  * Created by EdwardPC on 2016/12/1.
@@ -149,23 +150,15 @@ public class Mytestview extends View {
                     }else{
                         drawDistance=(Data.AroundpoiList.get(i).getDistance()/2.5f);
                     }
+                    if(i==Data.SelectArroundId){
+                        mPaint.setColor(0xffff0000);
+                    }else{
+                        mPaint.setColor(0xffffffff);
+                    }
                     canvas.drawCircle(mCx,mCy-drawDistance,4,mPaint);
 
                 }
                 //单独画这个点,若在上面先画则会使得后面画的白点盖住了红点，达不到优先展示
-              /*  if(Data.IsSelectArround) {
-                    canvas.save();
-                     canvas.rotate(Data.AroundpoiList.get(Data.SelectArroundId).getFirstbearing(), mCx, mCy);
-                    float distance = Data.AroundpoiList.get(Data.SelectArroundId).getDistance();
-                    if (distance >= 500) {
-                        drawDistance = 198;
-                    } else {
-                        drawDistance = (Data.AroundpoiList.get(Data.SelectArroundId).getDistance() / 2.5f);
-                    }
-                    mPaint.setColor(0xffff0000);
-                    canvas.drawCircle(mCx, mCy - drawDistance, 4, mPaint);
-                    canvas.restore();
-                }*/
             }
             canvas.rotate(-Rotatedegree,mCx,mCy);
         }

@@ -220,9 +220,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         Data.locationhere.setLatitude(0);
         ArPoiSearch.here=new LatLng(0,0);
     // initnewview();
-        testview=new NavigatorView(this);
-        addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
+    //    testview=new NavigatorView(this);
+     //   addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+     //           ViewGroup.LayoutParams.WRAP_CONTENT));
         Locationdes=new Location("des");
         Locationhere=new Location("here");
         FrameLayout BlankLayout = (FrameLayout) View.inflate(this, R.layout.blanklayout,
@@ -776,9 +776,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);
         SensorManager.getOrientation(R, values);
+        for(int i=0;i<9;i+=3){
+            Log.i("R",R[i]+"    "+R[i+1]+"    "+R[i+2]);
+        }
+            Log.i("values",values[0]+"    "+values[1]+"    "+values[2]);
         Data.currentAzimuth = RAD_TO_DEGREE * values[0];
         values[0] = (float) Math.toDegrees(values[0]);
-
+        Data.yangle=(float) Math.toDegrees(values[1]);
+        Data.xangle=(float) Math.toDegrees(values[2]);
 
         return values[0];
     }
@@ -817,12 +822,12 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         currentDegree = -degree;
 */
        /* if(Control.candrawview==true) {*/
-            viewaround.doRotatetaAnim(currentDegree, -degree);
+
             //自定义动画类animator来达到部分控件的旋转和
             //指向那部分不变
 
-        currentDegree = -degree;
-
+            viewaround.doRotatetaAnim(currentDegree, -degree);
+            currentDegree = -degree;
 
 
      //  Log.i("ddd","alive");
@@ -883,8 +888,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //用于请求searcharround服务和刷新服务右上角的界面
     private Runnable myRunnable = new Runnable() {
         public void run() {
-            while (true) {
-                try {
+
+            /*    try {
                         Log.i("runnable","hhh");
                     Thread.sleep(10000);
                         Control.candrawview=false;
@@ -901,31 +906,26 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
                 }catch (InterruptedException e){
 
-                }
-                float degree=-calculateOrientation();
-                Data.predegree=degree;
+                }*/
+            while(true) {
+                /*float degree = -calculateOrientation();
+                Data.predegree = degree;*/
                /* layout_sub_Lin.offsetLeftAndRight(Data.predegree*15);*/
                 //layout_sub_Lin.scrollTo(Data.predegree*15,0);
+                try{
+                    Thread.sleep(500);
+                    Message message2 = new Message();
+                    message2.what = 2;
+                    handler.sendMessage(message2);
+                }catch (InterruptedException e) {
 
-                Message message2 = new Message();
-                message2.what = 2;
-                handler.sendMessage(message2);
-
-
+                }
             }
-        }
 
-    };
-    TimerTask task = new TimerTask() {
-
-        public void run() {
-
-            //execute the task
 
         }
 
     };
-
 
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -953,7 +953,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     final float startBearing = Locationdes.bearingTo(Locationhere);
                     Data.bearing = Util.positiveModulo(startBearing - currentAzimuth,
                             360);
-                    testview.setBearing(Data.bearing);
+                    mydegree.setText("selectid"+Data.SelectArroundId+"\n"+
+                    "yangle="+Data.yangle+"\n"+
+                    "xangle="+Data.xangle);
+                  //  testview.setBearing(Data.bearing);
                   /*  mydegree.setText("bearing="+Data.bearing+"\n"+
                     "des latitude="+Data.locationdes.getLatitude()+"\n"+
                     "des longitude="+Data.locationdes.getLongitude()+"\n"+
