@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -163,8 +165,8 @@ public class fragmentone extends Fragment {
                 }
             });
             prex=currentdegree;
-            animatordegree.setDuration(100);
-            animatordegree.setInterpolator(new DecelerateInterpolator());
+            animatordegree.setDuration(200);
+            animatordegree.setInterpolator(new LinearInterpolator());
             animatordegree.start();
 
         ValueAnimator animatory = ValueAnimator.ofFloat(0,currenty-prey);
@@ -175,7 +177,7 @@ public class fragmentone extends Fragment {
                 doscroll();
             }
         });
-        animatory.setDuration(100);
+        animatory.setDuration(200);
         animatory.setInterpolator(new DecelerateInterpolator());
         animatory.start();
     }
@@ -213,7 +215,7 @@ public class fragmentone extends Fragment {
         public void run(){
             while (true) {
                 try{
-                    sleep(100);
+                    sleep(200);
                     Message msg = new Message();
                     msg.what = SCROLL_VIEW;
                     viewhandler.sendMessage(msg);
