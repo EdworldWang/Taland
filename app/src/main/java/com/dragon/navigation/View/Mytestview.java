@@ -150,7 +150,7 @@ public class Mytestview extends View {
                     }else{
                         drawDistance=(Data.AroundpoiList.get(i).getDistance()/2.5f);
                     }
-                    if(i==Data.SelectArroundId){
+                    if(i==fragmentone.SelectID){
                         mPaint.setColor(0xffff0000);
                     }else{
                         mPaint.setColor(0xffffffff);

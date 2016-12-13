@@ -21,7 +21,7 @@ public class Data {
            0, -1, 0, 0,
             -1, 0, 0, 0,
             0, 0, -1.0f, 0,
-            0, -1000, 4000, 1};
+            -800, 0, 4000, 1};
     public static int degree;
     public static boolean getfirstdegree=false;
     public static float firstdegree;
@@ -52,8 +52,12 @@ public class Data {
  public static float toyangle=0;
     public static float xangle=0;
  public static float q[]=new float[3];
+    public static float vector[]=new float[3];
 
     public static float x;
     public static float  y;
 
+
+    public static float screenWidth;
+    public static float screenHeigh;
 }

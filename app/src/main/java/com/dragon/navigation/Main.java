@@ -36,6 +36,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -171,7 +172,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private float[] accelerometerValues = new float[3];
     private float[] magneticFieldValues = new float[3];
     private float[] motion = new float[3];
-    private float[] gravity = new float[3];//低通滤波后的重力
+    private float[] gravityValues = new float[3];//低通滤波后的重力
     private float[] linear_acceleration=new float[3];//不含重力的手机加速度
     //***********新建子线程更新UI**********************
     private static final int UPDATE_TEXT = 1;
@@ -187,6 +188,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
     private OrientationProvider currentOrientationProvider;
     private OrientationProvider currentOrientationProvider2;
+    private OrientationProvider currentOrientationProvider3;
     private ImprovedOrientationSensor2Provider currentImproved2;
     private GravityCompassProvider currentGravityCompassProvider;
     /**
@@ -208,6 +210,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         setContentView(R.layout.main_camera2);
 
         ButterKnife.bind(this);
+
+
+        DisplayMetrics dm = new DisplayMetrics();
+        //获取屏幕信息
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Data.screenWidth = dm.widthPixels;
+        Data.screenHeigh = dm.heightPixels;
+
         textureView = (TextureView) findViewById(R.id.texture);
       //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
 
@@ -331,6 +341,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 this.SENSOR_SERVICE));
         currentOrientationProvider2 = new ImprovedOrientationSensor2Provider((SensorManager) this.getSystemService(
                 this.SENSOR_SERVICE));
+
         // Create OpenGL ES view:
         int depthSize = 16;
         int stencilSize = 0;
@@ -804,6 +815,12 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 */
             accelerometerValues=event.values;
         }
+        if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
+          /*  gravitySmoother.put(event.values);
+            gravitySmoother.getSmoothed(accelerometerValues, SMOOTHING);
+*/
+            gravityValues=event.values;
+        }
 
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
            /* magneticFieldSmoother.put(event.values);
@@ -828,11 +845,12 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
             //自定义动画类animator来达到部分控件的旋转和
             //指向那部分不变
+        currentAzimuth=currentDegree;
         Data.currentAzimuth=currentDegree;
             viewaround.doRotatetaAnim(currentDegree, -degree);
             currentDegree = -degree;
-            Data.currentAzimuth=currentDegree;
-            Data.todegree=currentDegree;
+          /*  Data.currentAzimuth=currentDegree;
+            Data.todegree=currentDegree;*/
 
 
      //  Log.i("ddd","alive");
@@ -894,31 +912,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private Runnable myRunnable = new Runnable() {
         public void run() {
 
-            /*    try {
-                        Log.i("runnable","hhh");
-                    Thread.sleep(10000);
-                        Control.candrawview=false;
-                      Data.AroundpoiList.clear();
-                        ArPoiSearch Arnear = new ArPoiSearch( Main.this, "", "餐饮服务", "深圳市");
-                        Arnear.setSearchtype(Servicetype.searchbound);
-                        Arnear.doSearch();
-                        Log.i("runnable","WHAT HAPPEN");
-                        Message message = new Message();
-                        message.what = 1;
-                        handler.sendMessage(message);
-
-
-
-                }catch (InterruptedException e){
-
-                }*/
             while(true) {
                 /*float degree = -calculateOrientation();
                 Data.predegree = degree;*/
                /* layout_sub_Lin.offsetLeftAndRight(Data.predegree*15);*/
                 //layout_sub_Lin.scrollTo(Data.predegree*15,0);
                 try{
-                    Thread.sleep(500);
+                    Thread.sleep(200);
                     Message message2 = new Message();
                     message2.what = 2;
                     handler.sendMessage(message2);
@@ -963,7 +963,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     "yangle="+Data.yangle+"\n"+
                     "xangle="+Data.xangle+"\n"+
                     "q"+Data.q[0]+" "+Data.q[1]+"   "+Data.q[2]+"\n"+
-                    "x="+Data.x+"   y="+Data.y);
+                    "vector="+Data.vector[0]+"  "+Data.vector[1]+"   "+Data.vector[2]+"\n"+
+                            "data.bearing"+Data.bearing);
                   //  testview.setBearing(Data.bearing);
                   /*  mydegree.setText("bearing="+Data.bearing+"\n"+
                     "des latitude="+Data.locationdes.getLatitude()+"\n"+

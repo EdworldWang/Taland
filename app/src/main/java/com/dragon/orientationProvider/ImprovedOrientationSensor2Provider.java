@@ -150,7 +150,6 @@ public class ImprovedOrientationSensor2Provider extends OrientationProvider {
             float[] q = new float[4];
             // Calculate angle. Starting with API_18, Android will provide this value as event.values[3], but if not, we have to calculate it manually.
             SensorManager.getQuaternionFromVector(q, event.values);
-
             // Store in quaternion
             quaternionRotationVector.setXYZW(q[1], q[2], q[3], -q[0]);
             if (!positionInitialised) {
@@ -271,7 +270,7 @@ public class ImprovedOrientationSensor2Provider extends OrientationProvider {
 
             // Set the rotation matrix as well to have both representations
             SensorManager.getRotationMatrixFromVector(currentOrientationRotationMatrix.matrix, correctedQuat.ToArray());
-
+           // SensorManager.getOrientation(currentOrientationRotationMatrix.matrix, Data.vector);
         }
     }
 }

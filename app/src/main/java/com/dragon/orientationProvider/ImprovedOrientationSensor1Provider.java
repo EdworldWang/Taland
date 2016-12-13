@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import com.dragon.navigation.Control.Data;
 import com.dragon.representation.Quaternion;
 
 
@@ -269,6 +270,7 @@ public class ImprovedOrientationSensor1Provider extends OrientationProvider {
 
             // Set the rotation matrix as well to have both representations
             SensorManager.getRotationMatrixFromVector(currentOrientationRotationMatrix.matrix, correctedQuat.ToArray());
+
         }
     }
 }

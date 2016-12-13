@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -55,6 +56,14 @@ public class fragmentone extends Fragment {
     private float movey=0;
     private float prex=0;
     private float prey=0;
+
+    public static boolean IsSelectView;
+
+    private int NoSelectTiTleColor=0x7f0a00ca;//蔚蓝色
+    private int NoSelectContentColor=0x7f0a0077;//透明深蓝
+    private int SelectedTitleColor=0x7fff4500;//橘红色
+    private int SelectedContentColor;
+    //-1表示没有人被选择
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         return inflater.inflate(R.layout.moveview, container, false);
@@ -65,6 +74,7 @@ public class fragmentone extends Fragment {
     public void onStart(){
         super.onStart();
         initnewview(viewnum);
+
         if(ThreadIsCreated==false) {
           //  refreshviewthread = new RefreshviewThread();
          //   refreshviewthread.start();
@@ -92,6 +102,7 @@ public class fragmentone extends Fragment {
                 getView().findViewById(R.id.contentwidget);
         FrameLayout ican=(FrameLayout)View.inflate(getActivity(), R.layout.blanklayout,
                 null);
+        isee.setOnClickListener(new OnScrollerClick());
         isee.removeAllViews();
         //每次调用start都会先清除里面的view
         /*ican.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -104,21 +115,23 @@ public class fragmentone extends Fragment {
             LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(
                     200+30* Data.AroundpoiList.get(i).getPoiName().length(), 150);
             widgetarray[i]=new NewWidget(getActivity());
-            //  widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
-            widgetarray[i].setContent(size+"");
-            widgetarray[i].setContentBackgroundColor(R.color.red);
+             widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
+         //   widgetarray[i].setContent(size+"");
+            widgetarray[i].setContentBackgroundColor(NoSelectContentColor);
+            //0x7ffff4500
             widgetarray[i].setTitle(Data.AroundpoiList.get(i).getPoiName());
-            widgetarray[i].setTitleBackgroundColor(R.color.ivory);
+            widgetarray[i].setTitleBackgroundColor(NoSelectTiTleColor);
             widgetarray[i].setTextSize(40);
             widgetarray[i].setTextColor(Color.WHITE);
             widgetarray[i].setLayoutParams(blue);
             widgetarray[i].setId(i);
             widgetarray[i].setmType(Data.AroundpoiList.get(i).getPoiDes());
-            layoutarray[i].addView(widgetarray[i]);
+          layoutarray[i].addView(widgetarray[i]);
             //   Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
-            isee.addView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            isee.addView(layoutarray[i],new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT));
-            layoutarray[i].smoothScrollBy(-500,-500,2000);
+            layoutarray[i].smoothScrollBy((int)-Data.screenWidth/2+widgetarray[i].getLayoutParams().width/2,
+                    -100-i*90,1000);
             widgetarray[i].setOnClickListener(new OnScrollerClick());
 
         }
@@ -135,24 +148,47 @@ public class fragmentone extends Fragment {
     public class OnScrollerClick implements View.OnClickListener{
         public void onClick(View v){
             int id=v.getId();
+            if(id==R.id.contentwidget){
+                // Log.i("hello","good");给外面的relativelayout加事件后，
+                //点击空白处，此处可行，说明接收到了事件
+                    if(SelectID!=-1) {
+                        //说明有view被选择了
+                        widgetarray[SelectID].SelectedDraw(0x7f0a00ca);
+                        SelectID=-1;
+                        //没有view被选择
+                    }
+            }
             for (int i=0;i<widgetarray.length;i++){
                 if(widgetarray[i].getId()==id){
                       /*  widgetarray[i].setTitle(widgetarray[i].getmType());
                         widgetarray[i].invalidate();*/
                     //widget做的改变需要用incalidate()才会改变
                     //解释了之前为什么settitle没有改变的原因
-                  Data.SelectArroundId=i;
-                    Data.IsSelectArround=true;
-                    widgetarray[i].setTitle(Data.SelectArroundId+"");
-                    widgetarray[i].invalidate();
-                    layoutarray[i].smoothScrollBy(-500,-500,2000);
+                    if(SelectID!=-1) {
+                        //说明之前已经点击了一个地方
+                        //先将之前的view设置回正常形态
+                        //再重新绘制点击的view
+                        //设置被选择的id
+                        widgetarray[SelectID].SelectedDraw(NoSelectTiTleColor);
+                    }
+                    widgetarray[i].SelectedDraw(SelectedTitleColor);
+                    SelectID=i;
+                    layoutarray[i].smoothScrollBy(-500, -500, 2000);
               /*      Routedesign myroute=new Routedesign(getActivity());
                     RouteSearch.FromAndTo fromAndTo=new RouteSearch.FromAndTo(Data.AroundpoiList.get(i).getMyLatLonPoint(),
                             new LatLonPoint(here.latitude,here.longitude));//出错了，都设置成经度
                     myroute.dodesign(fromAndTo,0);*/
+
                 }
             }
+
+
         }
+    }
+    public void textdrawview(){
+                NewWidget mytext=new NewWidget(getActivity());
+                mytext.setTitle("liangyu");
+
     }
     public void getscrollviewxy(float currentdegree,float currenty){
 
@@ -165,27 +201,26 @@ public class fragmentone extends Fragment {
                 }
             });
             prex=currentdegree;
-            animatordegree.setDuration(200);
+            animatordegree.setDuration(450);
             animatordegree.setInterpolator(new LinearInterpolator());
             animatordegree.start();
 
-        ValueAnimator animatory = ValueAnimator.ofFloat(0,currenty-prey);
+        ValueAnimator animatory = ValueAnimator.ofFloat(prey,currenty);
         animatory.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                movey = (float)animation.getAnimatedValue();
+                movey = (float)animation.getAnimatedValue()*36;
                 doscroll();
             }
         });
-        animatory.setDuration(200);
-        animatory.setInterpolator(new DecelerateInterpolator());
+        prey=currenty;
+        animatory.setDuration(350);
+        animatory.setInterpolator(new AccelerateDecelerateInterpolator());
         animatory.start();
     }
 
     private void doscroll(){
-            layoutarray[0].smoothScrollTo((int)movex,-800);
-        Data.x=widgetarray[0].getX();
-        Data.y=layoutarray[0].getY();
+            layoutarray[0].smoothScrollTo(-500,(int)movey);
     }
 
 
@@ -215,7 +250,7 @@ public class fragmentone extends Fragment {
         public void run(){
             while (true) {
                 try{
-                    sleep(200);
+                    sleep(350);
                     Message msg = new Message();
                     msg.what = SCROLL_VIEW;
                     viewhandler.sendMessage(msg);

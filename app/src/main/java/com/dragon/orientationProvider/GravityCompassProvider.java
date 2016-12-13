@@ -59,6 +59,7 @@ public class GravityCompassProvider extends OrientationProvider {
             for(int j=0;j<3;j++){
                 Data.q[j]=(float)Math.toDegrees(values[j]);
             }
+            Data.currentAzimuth=Data.q[0];
             currentOrientationQuaternion.setRowMajor(currentOrientationRotationMatrix.matrix);
         }
     }
