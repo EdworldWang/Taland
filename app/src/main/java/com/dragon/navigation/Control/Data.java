@@ -21,7 +21,7 @@ public class Data {
            0, -1, 0, 0,
             -1, 0, 0, 0,
             0, 0, -1.0f, 0,
-            -800, 0, 4000, 1};
+            800, 0, 4000, 1};
     public static int degree;
     public static boolean getfirstdegree=false;
     public static float firstdegree;
@@ -36,7 +36,7 @@ public class Data {
     public static Location locationhere;
     public static float bearing;
 
-
+    public static float setdegree=0;
 
    public static volatile List<SearchpoiEntity> AroundpoiList = new ArrayList<>();
     public static int poinum=0;

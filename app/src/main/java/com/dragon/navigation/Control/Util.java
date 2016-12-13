@@ -129,7 +129,7 @@ public final class Util {
 		final float startBearing = destination.bearingTo(Data.locationhere);
 		float bearing=Util.positiveModulo(startBearing - Data.currentAzimuth, 360);
 
-		return  (bearing>=180)?bearing-180:bearing+180;
+		return  bearing;
 
 	}
 }

@@ -88,6 +88,7 @@ import com.dragon.navigation.util.Servicetype;
 import com.dragon.navigation.util.ToastUtil;
 import com.dragon.navigation.util.scrollerlayout;
 import com.dragon.orientationProvider.AccelerometerCompassProvider;
+import com.dragon.orientationProvider.CalibratedGyroscopeProvider;
 import com.dragon.orientationProvider.GravityCompassProvider;
 import com.dragon.orientationProvider.ImprovedOrientationSensor2Provider;
 import com.dragon.orientationProvider.OrientationProvider;
@@ -148,7 +149,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private Activity myactivity;
     //    *****************************************************************
 //    指南针
-    private Mytestview viewaround;
+    private Mytestview viewarround;
     //    搜素关键字
     private AutoCompleteTextView mSearchText;
     //    当前城市，自定义控件，为了获取焦点
@@ -220,7 +221,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         textureView = (TextureView) findViewById(R.id.texture);
       //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
-
+        viewarround=(Mytestview) findViewById(R.id.Compass);
         travelingList = ModelUtil.getTravelingData();
         mAdapter = new TravelingAdapter(this, travelingList);
 
@@ -279,7 +280,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
     //ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
-        viewaround = (Mytestview) findViewById(R.id.Compass);
       //imgZnz.setAlpha(0.2f);
 
 //        ****************************************************
@@ -339,7 +339,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     public void initAR(){
         currentOrientationProvider = new GravityCompassProvider((SensorManager) this.getSystemService(
                 this.SENSOR_SERVICE));
-        currentOrientationProvider2 = new ImprovedOrientationSensor2Provider((SensorManager) this.getSystemService(
+        currentOrientationProvider2 = new CalibratedGyroscopeProvider((SensorManager) this.getSystemService(
                 this.SENSOR_SERVICE));
 
         // Create OpenGL ES view:
@@ -352,6 +352,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         mRenderer = new MainRenderer(this);
         mRenderer.setOrientationProvider(currentOrientationProvider);
+        mRenderer.setArrowProvider(currentOrientationProvider2);
         mRenderer.setTextures(mTextures);
         mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mGlView.setZOrderOnTop(true);
@@ -846,13 +847,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             //自定义动画类animator来达到部分控件的旋转和
             //指向那部分不变
         currentAzimuth=currentDegree;
-        Data.currentAzimuth=currentDegree;
-            viewaround.doRotatetaAnim(currentDegree, -degree);
-            currentDegree = -degree;
+      //  Data.currentAzimuth=currentDegree;
+           
           /*  Data.currentAzimuth=currentDegree;
             Data.todegree=currentDegree;*/
 
-
+        viewarround.doRotatetaAnim(currentDegree, -degree);
+       // currentDegree = -degree;
      //  Log.i("ddd","alive");
     }
 
@@ -936,7 +937,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    if(Control.geifirstData==false){
                      /*   float degree=-calculateOrientation();
                         float disdegree=degree-widgetarray[0].getDestination();
                         //若为正数，说明度数比目标大，目标图向左移动，
@@ -946,18 +946,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                         Data.predegree=degree;
                         Data.firstdegree=degree;
                         Control.geifirstData=true;*/
-                    }
-                    Control.displayPoi = true;
+
 
                     break;
                 case 2:
-                    Locationhere.setLatitude(ArPoiSearch.here.latitude);
-                    Locationhere.setLongitude(ArPoiSearch.here.longitude);
-                    Locationdes.setLatitude(Data.locationdes.getLatitude());
-                    Locationdes.setLongitude(Data.locationdes.getLongitude());
-                    final float startBearing = Locationdes.bearingTo(Locationhere);
-                    Data.bearing = Util.positiveModulo(startBearing - currentAzimuth,
-                            360);
                     mydegree.setText("selectid"+Data.SelectArroundId+"\n"+
                             "Data.currentdegree="+Data.currentAzimuth+"\n"+
                     "yangle="+Data.yangle+"\n"+

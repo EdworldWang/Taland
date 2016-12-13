@@ -103,6 +103,31 @@ public class SearchpoiAdapter extends BaseListAdapter<SearchpoiEntity> {
             case "商务住宅":
                 holder.poiImage.setImageResource(R.drawable.zhuzhai);
                 break;
+            case "科教文化":
+                holder.poiImage.setImageResource(R.drawable.jiaoyu);
+                break;
+            case "公共设施":
+                holder.poiImage.setImageResource(R.drawable.ar_cesuo);
+                break;
+            case "购物服务":
+                holder.poiImage.setImageResource(R.drawable.ar_chaoshi);
+                break;
+            case "风景名胜":
+                holder.poiImage.setImageResource(R.drawable.ar_fengjing);
+                break;
+            case  "交通设施":
+                holder.poiImage.setImageResource(R.drawable.ar_gongjiao);
+                break;
+            case  "医疗保健":
+                holder.poiImage.setImageResource(R.drawable.yiliao);
+                break;
+            case  "金融保险":
+                holder.poiImage.setImageResource(R.drawable.yinhang);
+                break;
+            default:
+                holder.poiImage.setImageResource(R.drawable.ar_qita);
+                break;
+
         }
 
         //mImageManager.loadUrlImage(entity.getImage_url(), holder.poiImage);

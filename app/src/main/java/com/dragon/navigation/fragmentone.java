@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -63,6 +64,9 @@ public class fragmentone extends Fragment {
     private int NoSelectContentColor=0x7f0a0077;//透明深蓝
     private int SelectedTitleColor=0x7fff4500;//橘红色
     private int SelectedContentColor;
+
+    private Location   Locationdestination;
+    private Location   Locationhere;
     //-1表示没有人被选择
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -74,6 +78,9 @@ public class fragmentone extends Fragment {
     public void onStart(){
         super.onStart();
         initnewview(viewnum);
+
+        Locationdestination=new Location("LocDes");
+        Locationhere=new Location("LocHere");
 
         if(ThreadIsCreated==false) {
           //  refreshviewthread = new RefreshviewThread();
@@ -135,13 +142,6 @@ public class fragmentone extends Fragment {
             widgetarray[i].setOnClickListener(new OnScrollerClick());
 
         }
-        /*TextureView textureView=new TextureView(getActivity());
-        ican.addView(textureView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));*/
-        //mActivity.addContentView(ucan, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        //      ViewGroup.LayoutParams.MATCH_PARENT));
-
-        //ican.bringToFront();
     }
 
 
@@ -154,8 +154,11 @@ public class fragmentone extends Fragment {
                     if(SelectID!=-1) {
                         //说明有view被选择了
                         widgetarray[SelectID].SelectedDraw(0x7f0a00ca);
-                        SelectID=-1;
+
                         //没有view被选择
+
+                        SelectID=-1;
+
                     }
             }
             for (int i=0;i<widgetarray.length;i++){
@@ -173,7 +176,15 @@ public class fragmentone extends Fragment {
                     }
                     widgetarray[i].SelectedDraw(SelectedTitleColor);
                     SelectID=i;
-                    layoutarray[i].smoothScrollBy(-500, -500, 2000);
+                    //layoutarray[i].smoothScrollBy(-500, -500, 2000);
+                    Locationdestination.setLatitude(Data.AroundpoiList.get(SelectID).getMyLatLonPoint().getLatitude());
+                    Locationdestination.setLongitude(Data.AroundpoiList.get(SelectID).getMyLatLonPoint().getLongitude());
+                    Locationhere.setLatitude(ArPoiSearch.here.latitude);
+                    Locationhere.setLongitude(ArPoiSearch.here.longitude);
+                    final float startBearing =  Locationdestination.bearingTo(Locationhere);
+                    Data.bearing = Util.positiveModulo(startBearing - Data.currentAzimuth,
+                            360);
+                    MainRenderer.setbearing(Data.bearing);
               /*      Routedesign myroute=new Routedesign(getActivity());
                     RouteSearch.FromAndTo fromAndTo=new RouteSearch.FromAndTo(Data.AroundpoiList.get(i).getMyLatLonPoint(),
                             new LatLonPoint(here.latitude,here.longitude));//出错了，都设置成经度

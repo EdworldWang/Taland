@@ -7,7 +7,10 @@
     <RelativeLayout
         android:id="@+id/contentwidget"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></RelativeLayout>
+        android:layout_height="match_parent">
+
+
+    </RelativeLayout>
     <TextView
         android:id="@+id/www"
         android:layout_width="wrap_content"
@@ -16,6 +19,8 @@
         android:text="qfef  fd"
         android:textSize="20sp"
         android:textStyle="bold" />
+
+
 
 
 </LinearLayout>

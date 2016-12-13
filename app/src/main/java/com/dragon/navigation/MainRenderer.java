@@ -73,12 +73,21 @@ public class MainRenderer implements GLSurfaceView.Renderer {
     private int picturenum = 0;
     private boolean LeaveTrack = false;
     private OrientationProvider orientationProvider = null;
+    private OrientationProvider ArrowProvider=null;
+    private static float Bearing=0f;
+
+    public static void setbearing(float bearing){
+        Bearing=bearing;
+    }
     public MainRenderer(Main activity) {
         Log.i(LOGTAG, "creat a ImageTargetRenderer");
         mActivity = activity;
     }
     public void setOrientationProvider(OrientationProvider orientationProvider) {
         this.orientationProvider = orientationProvider;
+    }
+    public void setArrowProvider(OrientationProvider orientationProvider) {
+        this.ArrowProvider = orientationProvider;
     }
 
     // Called to draw the current frame.
@@ -202,9 +211,13 @@ public class MainRenderer implements GLSurfaceView.Renderer {
               250f,500f);
 
         Quaternion q = orientationProvider.getQuaternion();
-         Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
+       // Quaternion arrowq = ArrowProvider.getQuaternion();
+        Matrix.rotateM(modelViewMatrix,0,Bearing,0,0,1);
+        //沿着z轴旋转一定的角度
+   //   Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI),q.getX(),q.getY(),q.getZ());
         drawModel(drawmy, modelViewMatrix, "1", true);
-        modelViewMatrix2[12]=-500.0f;
+
+        Matrix.translateM(modelViewMatrix2,0,0f,0f,500f);
         Matrix.scaleM(modelViewMatrix2, 0, 100f,
                 100f,1f);
         Matrix.rotateM(modelViewMatrix2,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
@@ -140,10 +141,14 @@ public class Mytestview extends View {
                 mPaint.setStrokeWidth(2.5f);
                 mPaint.setColor(0xffffffff);
                 float drawDistance=0;
+            //    Log.i("dfd",Data.currentAzimuth+"   ");
+                //
                 for (int i = 0;i<Data.AroundpoiList.size();i++){
                     canvas.save();
                     //各个地方旋转的时候要注意旋转的中心设置
+
                     canvas.rotate(Data.AroundpoiList.get(i).getFirstbearing(),mCx,mCy);
+                  //  Log.i("cc","bearing "+i+"="+Data.AroundpoiList.get(i).getFirstbearing());
                     float distance=Data.AroundpoiList.get(i).getDistance();
                     if(distance>=500){
                         drawDistance=198;
@@ -156,6 +161,7 @@ public class Mytestview extends View {
                         mPaint.setColor(0xffffffff);
                     }
                     canvas.drawCircle(mCx,mCy-drawDistance,4,mPaint);
+                    canvas.restore();
 
                 }
                 //单独画这个点,若在上面先画则会使得后面画的白点盖住了红点，达不到优先展示
