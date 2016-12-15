@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +18,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
@@ -29,9 +32,13 @@ import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.Control.Util;
 import com.dragon.navigation.Function.Routedesign;
+import com.dragon.navigation.use.SampleApplicationGLView;
 import com.dragon.navigation.util.NewWidget;
 import com.dragon.navigation.util.Servicetype;
 import com.dragon.navigation.util.scrollerlayout;
+import com.dragon.orientationProvider.CalibratedGyroscopeProvider;
+import com.dragon.orientationProvider.GravityCompassProvider;
+import com.dragon.orientationProvider.OrientationProvider;
 
 /**
  * Created by EdwardPC on 2016/12/9.
@@ -57,7 +64,9 @@ public class fragmentone extends Fragment {
     private float movey=0;
     private float prex=0;
     private float prey=0;
-
+    private float prebearing=0f;
+    private float nowbearing=0f;
+    private float rotatez;
     public static boolean IsSelectView;
 
     private int NoSelectTiTleColor=0x7f0a00ca;//蔚蓝色
@@ -78,7 +87,6 @@ public class fragmentone extends Fragment {
     public void onStart(){
         super.onStart();
         initnewview(viewnum);
-
         Locationdestination=new Location("LocDes");
         Locationhere=new Location("LocHere");
 
@@ -177,14 +185,7 @@ public class fragmentone extends Fragment {
                     widgetarray[i].SelectedDraw(SelectedTitleColor);
                     SelectID=i;
                     //layoutarray[i].smoothScrollBy(-500, -500, 2000);
-                    Locationdestination.setLatitude(Data.AroundpoiList.get(SelectID).getMyLatLonPoint().getLatitude());
-                    Locationdestination.setLongitude(Data.AroundpoiList.get(SelectID).getMyLatLonPoint().getLongitude());
-                    Locationhere.setLatitude(ArPoiSearch.here.latitude);
-                    Locationhere.setLongitude(ArPoiSearch.here.longitude);
-                    final float startBearing =  Locationdestination.bearingTo(Locationhere);
-                    Data.bearing = Util.positiveModulo(startBearing - Data.currentAzimuth,
-                            360);
-                    MainRenderer.setbearing(Data.bearing);
+                   doarrow();
               /*      Routedesign myroute=new Routedesign(getActivity());
                     RouteSearch.FromAndTo fromAndTo=new RouteSearch.FromAndTo(Data.AroundpoiList.get(i).getMyLatLonPoint(),
                             new LatLonPoint(here.latitude,here.longitude));//出错了，都设置成经度
@@ -234,6 +235,31 @@ public class fragmentone extends Fragment {
             layoutarray[0].smoothScrollTo(-500,(int)movey);
     }
 
+
+    private void doarrow(){
+        Locationdestination.setLatitude(Data.AroundpoiList.get(SelectID).getMyLatLonPoint().getLatitude());
+        Locationdestination.setLongitude(Data.AroundpoiList.get(SelectID).getMyLatLonPoint().getLongitude());
+        Locationhere.setLatitude(ArPoiSearch.here.latitude);
+        Locationhere.setLongitude(ArPoiSearch.here.longitude);
+        final float startBearing =  Locationdestination.bearingTo(Locationhere);
+        Data.bearing = Util.positiveModulo(startBearing - Data.currentAzimuth,
+                360);
+    //    float realbearing=(-(Data.bearing-180)-Data.currentAzimuth)%360;
+        float realbearing=(180-Data.bearing-Data.currentAzimuth+360)%360;
+       Data.realbearing=realbearing;
+        ValueAnimator animatorbearing = ValueAnimator.ofFloat(prebearing,realbearing);
+        animatorbearing.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                rotatez = (float)animation.getAnimatedValue();
+                MainRenderer.setbearing(rotatez);
+            }
+        });
+        prebearing=realbearing;
+        animatorbearing.setDuration(250);
+        animatorbearing.setInterpolator(new AccelerateInterpolator());
+        animatorbearing.start();
+    }
 
 
 

@@ -2,22 +2,21 @@
 <LinearLayout
     android:id="@+id/searchpoi_root_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@color/snow">
+    android:orientation="vertical"
+    android:background="@drawable/ripple_item_clicked">
     <!--"注释，下面的Relativelayout ripple_item-clicked直接影响到listview的透明程度"-->
     <LinearLayout
         android:id="@+id/leftview"
-        android:layout_width="0dp"
-        android:layout_weight="4"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="5"
             android:layout_height="match_parent"
-            android:background="@drawable/ripple_item_clicked"
             android:padding="10dp">
 
             <ImageView
@@ -30,6 +29,7 @@
             <TextView
                 android:id="@+id/poi_name"
                 android:layout_width="wrap_content"
+                android:maxWidth="200dp"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/poi_image"
                 android:layout_marginLeft="10dp"
@@ -39,13 +39,14 @@
                 android:lineSpacingExtra="2dp"
                 android:maxLines="1"
                 android:text="标题"
-                android:textColor="@color/font_black_0"
+                android:textColor="@color/black"
                 android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/poi_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="200dp"
                 android:layout_below="@+id/poi_name"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="2dp"
@@ -53,31 +54,35 @@
                 android:text="描述"
                 android:ellipsize="middle"
                 android:maxLines="2"
-                android:textColor="@color/font_black_5"
+                android:textColor="@color/font_black_1"
                 android:textSize="13sp"
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="3px"
+            android:layout_height="match_parent"
+            android:background="@color/goldenrod"></RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/rightview"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/poi_dis"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="距离"
+                        android:textColor="@color/font_black_1"
+                        android:textSize="12sp"/>
+                </RelativeLayout>
+    </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/font_black_5"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/rightview"
-        android:layout_width="50dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/poi_dis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="距离"
-            android:textColor="@color/font_black_5"
-            android:textSize="12sp"/>
-    </LinearLayout>
-
-
+        android:layout_height="3px"
+        android:background="@color/goldenrod"/>
 </LinearLayout>

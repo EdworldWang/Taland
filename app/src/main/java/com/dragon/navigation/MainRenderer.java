@@ -21,6 +21,7 @@ import com.dragon.navigation.use.SampleUtils;
 import com.dragon.navigation.use.Texture;
 import com.dragon.orientationProvider.OrientationProvider;
 import com.dragon.representation.Quaternion;
+import com.dragon.representation.Vector3f;
 
 import java.util.Vector;
 
@@ -171,8 +172,8 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         // // 获取指向着色器中vertexPosition的index
         vertexHandle = GLES20.glGetAttribLocation(shaderProgramID,
                 "vertexPosition");//attribute vec4 vertexPosition
-  // normalHandle = GLES20.glGetAttribLocation(shaderProgramID,
-   //    "vertexNormal");//attribute vec4 vertexNormal
+         normalHandle = GLES20.glGetAttribLocation(shaderProgramID,
+   "vertexNormal");//attribute vec4 vertexNormal
         textureCoordHandle = GLES20.glGetAttribLocation(shaderProgramID,
                 "vertexTexCoord");//attribute vec2 vertexTexCoord
         mvpMatrixHandle = GLES20.glGetUniformLocation(shaderProgramID,
@@ -207,17 +208,42 @@ public class MainRenderer implements GLSurfaceView.Renderer {
 
 
 
-        Matrix.scaleM(modelViewMatrix, 0, 250f,
-              250f,500f);
+
 
         Quaternion q = orientationProvider.getQuaternion();
+        Quaternion arrowqua=ArrowProvider.getQuaternion();
+        Quaternion myz=new Quaternion();
        // Quaternion arrowq = ArrowProvider.getQuaternion();
-        Matrix.rotateM(modelViewMatrix,0,Bearing,0,0,1);
+      //  Matrix.rotateM(modelViewMatrix,0,Bearing,0,0,1);
         //沿着z轴旋转一定的角度
-   //   Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI),q.getX(),q.getY(),q.getZ());
+        Quaternion my=new Quaternion();
+        my.copyFromVec3(new Vector3f(0,0,1),0);
+
+
+
+        Quaternion conjugate=new Quaternion();//q的共轭，q已经单位化了,故跟q的逆相同
+        conjugate.setXYZW(-q.getX(),-q.getY(),-q.getZ(),q.getW());
+
+      //  Log.i("Quaternion q","W="+q.getW()+" X="+q.getX()+"  Y="+q.getY()+"  Z="+q.getZ());
+     //   Log.i("Quaternion conjugate","W="+conjugate.getW()+" X="+conjugate.getX()+"  Y="+conjugate.getY()+"  Z="+conjugate.getZ());
+
+        Quaternion MulResult=new Quaternion();
+       // MulResult.setXYZW(1,2,3,4);//证明下面的乘积有效
+        q.multiplyByQuat(my,MulResult);//乘后的结果存在MulResult
+     //   Log.i("左乘后 MulResult","W="+MulResult.getW()+" X="+MulResult.getX()+"  Y="+MulResult.getY()+"  Z="+MulResult.getZ());
+        MulResult.multiplyByQuat(conjugate,my);
+      //  Log.i("右乘后 MulResult","W="+my.getW()+" X="+my.getX()+"  Y="+my.getY()+"  Z="+my.getZ());
+        //并不是一个单位四元数达到效果，是一个纯四元数，转动的角度为0，对应一个坐标点
+
+     //   Log.i("my quaternion","Bearing="+my.getW()+" X="+my.getX()+"  Y="+my.getY()+"  Z="+my.getZ());
+        Matrix.scaleM(modelViewMatrix, 0, 250f,
+                250f,10f);
+        //  Matrix.rotateM(modelViewMatrix,0,Bearing-Data.currentAzimuth,my.getX(),my.getY(),my.getZ());
+        Matrix.rotateM(modelViewMatrix,0,Bearing,my.getX(),my.getY(),my.getZ());
+        Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
         drawModel(drawmy, modelViewMatrix, "1", true);
 
-        Matrix.translateM(modelViewMatrix2,0,0f,0f,500f);
+       // Matrix.translateM(modelViewMatrix2,0,0f,-500f,0f);
         Matrix.scaleM(modelViewMatrix2, 0, 100f,
                 100f,1f);
         Matrix.rotateM(modelViewMatrix2,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
@@ -258,15 +284,15 @@ public class MainRenderer implements GLSurfaceView.Renderer {
             //变量类型为vec4(x,y,z,1)，这里是3的缘故，
             // 表示(x,y,z)后面那个比例系数1不用
             SampleUtils.checkGLError("vert");
-     //   GLES20.glVertexAttribPointer(normalHandle, 3, GLES20.GL_FLOAT,
-      //         false, 0, model.getNormals());
+       GLES20.glVertexAttribPointer(normalHandle, 3, GLES20.GL_FLOAT,
+            false, 0, model.getNormals());
             GLES20.glVertexAttribPointer(textureCoordHandle, 2,
                     GLES20.GL_FLOAT, false, 0, model.getTexCoords());
             SampleUtils.checkGLError("coord");
             //启用或者禁用顶点属性数组，下面为启用
             GLES20.glEnableVertexAttribArray(vertexHandle);
             SampleUtils.checkGLError("vd");
-     //   GLES20.glEnableVertexAttribArray(normalHandle);
+      GLES20.glEnableVertexAttribArray(normalHandle);
             // SampleUtils.checkGLError("nd");//这里出错
             GLES20.glEnableVertexAttribArray(textureCoordHandle);
             // activate texture 0, bind it, and pass to shader
@@ -299,7 +325,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
             //以上无标记处无错误
             // disable the enabled arrays
             GLES20.glDisableVertexAttribArray(vertexHandle);
-     //  GLES20.glDisableVertexAttribArray(normalHandle);
+       GLES20.glDisableVertexAttribArray(normalHandle);
             GLES20.glDisableVertexAttribArray(textureCoordHandle);
             //   } else {
             SampleUtils.checkGLError("Render Frame");

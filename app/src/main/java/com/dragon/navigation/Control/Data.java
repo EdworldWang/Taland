@@ -21,7 +21,7 @@ public class Data {
            0, -1, 0, 0,
             -1, 0, 0, 0,
             0, 0, -1.0f, 0,
-            800, 0, 4000, 1};
+            1200, 0, 4000, 1};
     public static int degree;
     public static boolean getfirstdegree=false;
     public static float firstdegree;
@@ -47,7 +47,7 @@ public class Data {
 
  public static float currentAzimuth=0;
  public static float todegree=0;
-
+public static float realbearing=0;
     public static float yangle=0;
  public static float toyangle=0;
     public static float xangle=0;

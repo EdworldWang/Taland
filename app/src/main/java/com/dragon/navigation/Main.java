@@ -3,6 +3,7 @@ package com.dragon.navigation;
 import android.Manifest;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -315,25 +316,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
       /*  mydegree.setText(hhh.getWidth()+" "+hhh.getHeight()+"  "+hhh.getParent()+
                 "\n"+layoutarray[1].getWidth()+" "+layoutarray[1].getHeight());*/
     }
-    private void setDefaultFragment()
-    {
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        fragmentone mWeixin = new fragmentone();
-        //下面的参数可以缺省
-        transaction.add(R.id.fragments, mWeixin,"yourname");
-        transaction.commit();
-  /*      mydegree.setText();*/
-     /*   mytext.setTextColor(0xffff0000);
-        mytext.setText(mytext.getParent().toString());*/
-     /*   FrameLayout ucan= (FrameLayout)fm.findFragmentByTag("yourname").
-                getView().findViewById(R.id.contentwidget);*/
-        TextView textView=new TextView(this);
-        textView.setText("oijgoijgifgksd");
-      //  ucan.addView(ucan,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        //        ViewGroup.LayoutParams.MATCH_PARENT));
 
-    }
 
 
     public void initAR(){
@@ -360,30 +343,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mGlView.bringToFront();
         addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));
-
-
-      /*  layoutarray[1]=new scrollerlayout(this);
-        widgetarray[1]=new NewWidget(this);
-        LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(250, 150);
-        widgetarray[1].setLayoutParams(blue);
-        widgetarray[1].setContent(" ");
-        widgetarray[1].setContentBackgroundColor(R.color.red);
-        widgetarray[1].setTitle("cdsvd");
-        widgetarray[1].setTitleBackgroundColor(R.color.ivory);
-        widgetarray[1].setTextSize(40);
-        widgetarray[1].setTextColor(Color.WHITE);
-       // layoutarray[1].addView(widgetarray[1]);
-        RelativeLayout  gg = (RelativeLayout) View.inflate(this, R.layout.blanklayout,
-                null);
-        gg.addView( widgetarray[1], new ViewGroup.LayoutParams(200,150));
-        widgetarray[1].scrollTo(-500,-500);
-        TextView open=new TextView(this);
-        open.setText("open open");
-        gg.addView(open,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        addContentView(gg,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        gg.bringToFront();*/
     }
 
 
@@ -804,7 +763,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         Data.yangle=(float) Math.toDegrees(values[1]);
         Data.toyangle=(float) Math.toDegrees(values[1]);
         Data.xangle=(float) Math.toDegrees(values[2]);
-
+      /*  MainRenderer.setbearing(-Data.currentAzimuth);*/
         return values[0];
     }
     private static final float RAD_TO_DEGREE = (float) (360 / (2 * Math.PI));
@@ -875,6 +834,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin);
             mArPoiSearch.setSearchtype(Servicetype.searchnear_view);
             mArPoiSearch.doSearch();
+            Fragment contain=getFragmentManager().findFragmentByTag("yourname");
+            FragmentTransaction manager=getFragmentManager().beginTransaction();
+            if(contain!=null){
+               manager.hide(contain);
+                manager.commit();
+                mGlView.setVisibility(View.INVISIBLE);
+            }
+
         }
     }
 
@@ -956,7 +923,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     "xangle="+Data.xangle+"\n"+
                     "q"+Data.q[0]+" "+Data.q[1]+"   "+Data.q[2]+"\n"+
                     "vector="+Data.vector[0]+"  "+Data.vector[1]+"   "+Data.vector[2]+"\n"+
-                            "data.bearing"+Data.bearing);
+                            "data.bearing"+Data.bearing+"\n"+
+                    "real="+Data.realbearing);
                   //  testview.setBearing(Data.bearing);
                   /*  mydegree.setText("bearing="+Data.bearing+"\n"+
                     "des latitude="+Data.locationdes.getLatitude()+"\n"+
@@ -1004,6 +972,4 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mTextures.add(Texture.loadTextureFromApk("1.png", getAssets(),
                 "1"));
     }
-
-
 }

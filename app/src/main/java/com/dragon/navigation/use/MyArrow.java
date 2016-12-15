@@ -139,10 +139,20 @@ public class MyArrow extends MeshObject
             1,1,0,  1, 1, 0, 1,1,0,  //right two
             0, -1,0 ,0,-1,0, 0,-1,0,  //bottom one
             0, -1,0 ,0,-1,0, 0,-1,0,  //bottom two
-            0,0,1,  0,0,1,  0,0,1,     //square front
-            0,0,1,  0,0,1,  0,0,1
+            0,0,1,  0,0,1,  0,0,1,     //square front  one
+            0,0,1,  0,0,1,  0,0,1,    //square front two
 
+            0,0,-1,  0,0,-1,  0,0,-1,     //back square  one
+            0,0,-1,  0,0,-1,  0,0,-1,       //back square two
 
+            -1,0,0,   -1,0,0, -1,0,0,//bottom left one
+            -1,0,0,   -1,0,0, -1,0,0,//bottom left two
+
+            1,0,0,      1,0,0,      1,0,0,//bottom right one
+            1,0,0,      1,0,0,      1,0,0,//bottom right two
+
+            0,-1,0,     0,-1,0,      0,-1,0,
+            0,-1,0,     0,-1,0,     0,-1,0
     };
 
     private static final short  cubeIndices[]   = {

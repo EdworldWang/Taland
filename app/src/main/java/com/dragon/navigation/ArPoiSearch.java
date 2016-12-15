@@ -166,7 +166,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
             SearchpoiEntity SelectedEntity=mAdapter.getItem(position);
             Log.i("ArPoiSearch",SelectedEntity.getPoiName()+"   "+SelectedEntity.getDistance()+
-            "   "+SelectedEntity.getFirstbearing());
+                    "   "+SelectedEntity.getFirstbearing());
 
         }
     }
