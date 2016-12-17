@@ -29,6 +29,9 @@ import com.amap.api.services.poisearch.IndoorData;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.amap.api.services.route.RouteSearch;
+import com.dragon.Reback.Employee;
+import com.dragon.Reback.ListviewCallBack;
+import com.dragon.Reback.ListviewWorker;
 import com.dragon.navigation.Adapter.SearchpoiAdapter;
 import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
@@ -74,6 +77,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     private LinearLayout lin;
     private LinearLayout.LayoutParams LP_FW;
     private float distance;
+    private Handler handler;
     public static LatLng here;
 
    // private List<SearchpoiEntity> SearchpoiList = new ArrayList<>();
@@ -119,6 +123,10 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 
     }
 
+    public ArPoiSearch(Activity activity,String mKeyWord, String mStylePoi, String mCityCode,LinearLayout lin,Handler mainhandler){
+       this(activity,mKeyWord,mStylePoi,mCityCode,lin);
+        handler=mainhandler;
+    }
     public ArPoiSearch(Activity activity,String mKeyWord, String mStylePoi, String mCityCode,LinearLayout lin){
         this.mActivity= activity;
         this.mKeyWord = mKeyWord;
@@ -129,6 +137,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
     }
 
+
     public ArPoiSearch(Activity activity,String mKeyWord, String mStylePoi, String mCityCode){
         this.mActivity= activity;
         this.mKeyWord = mKeyWord;
@@ -138,7 +147,9 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     public void setSearchtype(Servicetype searchtype) {
         this.searchtype = searchtype;
     }
-
+    public void setHandler(Handler handler){
+        this.handler=handler;
+    }
     public void doSearch(){
         showProgressDialog();// 耗时操作前，显示进度框
         currentPage = 0;
@@ -163,20 +174,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
     }
 
 
-    public class OnListItemClick implements AdapterView.OnItemClickListener{
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-            SearchpoiEntity SelectedEntity=mAdapter.getItem(position);
-            Log.i("ArPoiSearch",SelectedEntity.getPoiName()+"   "+SelectedEntity.getDistance()+
-                    "   "+SelectedEntity.getFirstbearing());
-            Handler handler=new Handler();
-            Message text=new Message();
-            text.what=88;
-            Log.i("handler",handler.getLooper().getThread().toString());
-            handler.sendMessage(text);
 
-        }
-    }
 
 
 
@@ -220,12 +218,9 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         }
                         Data.poinum=poiItems.size();
                         lin.removeAllViews();
-                        FragmentManager fm = mActivity.getFragmentManager();
-                        FragmentTransaction transaction = fm.beginTransaction();
-                        fragmentone mWeixin = new fragmentone();
-                        //下面的参数可以缺省
-                        transaction.add(R.id.fragments, mWeixin,"yourname");
-                        transaction.commit();
+                        Message msg=new Message();
+                        msg.what=4;
+                        handler.sendMessage(msg);
                        // initnewview(poiItems.size());
                     }else if(searchtype==Servicetype.searchnear_view) {
                         for (int i = 0; i < poiItems.size(); i++) {
@@ -247,7 +242,7 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
 
 
                         }
-                        mAdapter = new SearchpoiAdapter(this.mActivity, Data.SearchpoiList);
+                       /* mAdapter = new SearchpoiAdapter(this.mActivity, Data.SearchpoiList);
                         LinearLayout father = (LinearLayout) View.inflate(this.mActivity, R.layout.searchlistview,
                                 null);
                         listView = (ListView) father.findViewById(R.id.listView);
@@ -255,7 +250,12 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                         listView.setAdapter(mAdapter);
                         listView.setVisibility(View.VISIBLE);
                         listView.setOnItemClickListener(new OnListItemClick());
-                        lin.addView(listView, LP_FW);
+                        lin.addView(listView, LP_FW);*/
+                        Employee employee=new Employee(new ListviewWorker(this.mActivity,lin,handler));
+                        employee.doWork();
+                        Message msg=new Message();
+                        msg.what=88;
+                        handler.sendMessage(msg);
                     }
 
 

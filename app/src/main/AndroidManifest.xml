@@ -48,7 +48,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Main">
+        <activity android:name=".Main"  >
         </activity>
 
         <activity android:name=".GuideActivity">

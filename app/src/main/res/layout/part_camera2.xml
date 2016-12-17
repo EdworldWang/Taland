@@ -5,7 +5,13 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal" >
     <LinearLayout
-        android:id="@+id/fragments"
+        android:id="@+id/fragmentone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        ></LinearLayout>
+    <LinearLayout
+        android:id="@+id/fragmenttwo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"

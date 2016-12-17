@@ -115,7 +115,7 @@
     <color name="darkred">#8b0000</color><!--暗红色 -->
     <color name="blueviolet">#8a2be2</color><!--紫罗兰蓝色 -->
     <color name="lightskyblue">#87cefa</color><!--亮天蓝色 -->
-    <color name="skyblue">#87ceeb</color><!--天蓝色 -->
+    <color name="skyblue">#ff87ceeb</color><!--天蓝色 -->
     <color name="gray">#808080</color><!--灰色 -->
     <color name="olive">#808000</color><!--橄榄色 -->
     <color name="purple">#800080</color><!--紫色 -->

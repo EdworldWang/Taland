@@ -43,6 +43,7 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -63,6 +64,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.NavigateArrow;
 import com.amap.api.maps.model.Text;
@@ -72,6 +74,7 @@ import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.amap.api.services.route.RouteSearch;
 import com.dragon.Reback.ListviewCallBack;
+import com.dragon.navigation.Adapter.SearchpoiAdapter;
 import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
@@ -101,7 +104,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.Vector;
 
 import butterknife.BindView;
@@ -111,7 +113,7 @@ import butterknife.ButterKnife;
  * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.arnav.basicFuction.camera2 .
  */
 public class Main extends Activity implements View.OnClickListener, SensorEventListener,
-        TextWatcher, Inputtips.InputtipsListener ,ListviewCallBack{
+        TextWatcher, Inputtips.InputtipsListener, ListviewCallBack{
     private static final String TAG = "Main";
     private ArPoiSearch mArPoiSearch;
    private MLocation mLocation;
@@ -122,8 +124,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private TextureView textureView;
     //用SparseIntArray来代替hashMap，进行性能优化。
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
-    private  NavigatorView testview;
-    private NewWidget mNewWidget;
+
+    private int Alivefrag;
+   private FragmentManager fragmentManager;
+
     private static final int NUM_SMOOTH_SAMPLES = 4;
     private static final DataSmoother.Smoothing SMOOTHING = DataSmoother.Smoothing.AVERAGE;
     private final DataSmoother gravitySmoother = new DataSmoother(
@@ -148,7 +152,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private ImageReader imageReader;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
-    private Activity myactivity;
     //    *****************************************************************
 //    指南针
     private Mytestview viewarround;
@@ -173,18 +176,15 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
     NewWidget wen1;
     private float[] accelerometerValues = new float[3];
+    private float[] gravityValues = new float[3];
     private float[] magneticFieldValues = new float[3];
     private float[] motion = new float[3];
-    private float[] gravityValues = new float[3];//低通滤波后的重力
-    private float[] linear_acceleration=new float[3];//不含重力的手机加速度
     //***********新建子线程更新UI**********************
     private static final int UPDATE_TEXT = 1;
     private Handler mUiHandler = new MyUiHandler();
     private scrollerlayout[] layoutarray=new scrollerlayout[10];
     private NewWidget[]  widgetarray=new NewWidget[10];
 
-    private Location Locationdes;
-    private Location Locationhere;
     private float currentAzimuth = UNKNOWN_AZIMUTH;
     public final static float UNKNOWN_AZIMUTH = Float.NaN;
 
@@ -205,29 +205,33 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
     private List<TravelingEntity> travelingList = new ArrayList<>(); // ListView数据
-    private TravelingAdapter mAdapter; // 主页数据
+    private SearchpoiAdapter mAdapter; // 主页数据
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.main_camera2);
-
+       // setContentView(R.layout.main_camera2);
+        setContentView(R.layout.background);
         ButterKnife.bind(this);
 
-
+        mAdapter = new SearchpoiAdapter(this, Data.SearchpoiList);
         DisplayMetrics dm = new DisplayMetrics();
         //获取屏幕信息
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         Data.screenWidth = dm.widthPixels;
         Data.screenHeigh = dm.heightPixels;
 
-        textureView = (TextureView) findViewById(R.id.texture);
+        fragmentManager=getFragmentManager();
+
+        textureView =(TextureView) findViewById(R.id.texture);
+      RelativeLayout buttonview=(RelativeLayout)  View.inflate(this,R.layout.main_camera2,null);
+     addContentView(buttonview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+             ViewGroup.LayoutParams.MATCH_PARENT));
       //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
         viewarround=(Mytestview) findViewById(R.id.Compass);
-        travelingList = ModelUtil.getTravelingData();
-        mAdapter = new TravelingAdapter(this, travelingList);
+       // travelingList = ModelUtil.getTravelingData();
+       // mAdapter = new TravelingAdapter(this, travelingList);
 
-        myactivity=this;
         Data.locationdes=new Location("des");
         Data.locationdes.setLongitude(0);
         Data.locationdes.setLatitude(0);
@@ -239,8 +243,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     //    testview=new NavigatorView(this);
      //   addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
      //           ViewGroup.LayoutParams.WRAP_CONTENT));
-        Locationdes=new Location("des");
-        Locationhere=new Location("here");
         FrameLayout BlankLayout = (FrameLayout) View.inflate(this, R.layout.blanklayout,
                 null);
         assert textureView != null;
@@ -249,6 +251,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mCurrentCity = (MyTextView) findViewById(R.id.current_city);
         LatLonPoint lp = new LatLonPoint(0, 0);
       mLocation = new MLocation(Main.this, savedInstanceState, mCurrentCity);
+        mLocation.setHandler(handler);
       mLocation.initLoction();
 
         LinearLayout happy = (LinearLayout) View.inflate(this, R.layout.succees,
@@ -812,7 +815,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
           /*  Data.currentAzimuth=currentDegree;
             Data.todegree=currentDegree;*/
 
-        viewarround.doRotatetaAnim(currentDegree, -degree);
+      //  viewarround.doRotatetaAnim(currentDegree, -degree);
        // currentDegree = -degree;
      //  Log.i("ddd","alive");
     }
@@ -832,14 +835,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //            默认搜索范围是深圳市，为空是全国
             final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin);
             Data.SearchpoiList.clear();
-            mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin);
+            mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin,handler);
             mArPoiSearch.setSearchtype(Servicetype.searchnear_view);
             mArPoiSearch.doSearch();
-            Fragment contain=getFragmentManager().findFragmentByTag("yourname");
-            FragmentTransaction manager=getFragmentManager().beginTransaction();
+            Fragment contain=fragmentManager.findFragmentByTag("yourname");
+            FragmentTransaction ft=fragmentManager.beginTransaction();
             if(contain!=null){
-               manager.hide(contain);
-                manager.commit();
+              ft.hide(contain);
+                ft.commit();
                 mGlView.setVisibility(View.INVISIBLE);
             }
 
@@ -903,20 +906,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                     /*   float degree=-calculateOrientation();
-                        float disdegree=degree-widgetarray[0].getDestination();
-                        //若为正数，说明度数比目标大，目标图向左移动，
-                        // 手机向左移动，度数变为负数，减少，图像向右移动
-                        Data.movedistance=-24*disdegree;
-                        layoutarray[0].smoothScrollBy((int)Data.movedistance,0,500);
-                        Data.predegree=degree;
-                        Data.firstdegree=degree;
-                        Control.geifirstData=true;*/
-
 
                     break;
                 case 88:
                     Log.i("cc","有消息了!");
+                    //在同一个线程中也可以通过handle进行消息的传递
                     break;
                 case 2:
 
@@ -930,31 +924,34 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     "vector="+Data.vector[0]+"  "+Data.vector[1]+"   "+Data.vector[2]+"\n"+
                             "data.bearing"+Data.bearing+"\n"+
                     "real="+Data.realbearing);
-                  //  testview.setBearing(Data.bearing);
-                  /*  mydegree.setText("bearing="+Data.bearing+"\n"+
-                    "des latitude="+Data.locationdes.getLatitude()+"\n"+
-                    "des longitude="+Data.locationdes.getLongitude()+"\n"+
-                        "here latitude="+Data.locationhere.getLatitude()+"\n"+
-                       "here longitude="+Data.locationhere.getLongitude()+"\n"+
-                    "size="+ArPoiSearch.size);*/
-                   /* mydegree.setText("Data.movedistance="+Data.movedistance+"\n"+
-                            "predegree="+Data.predegree+"\n"+
-                            "firstdegree="+Data.firstdegree+"\n"+
-                            "gravity[0]="+gravity[0]+"\n"+
-                            "gravity[1]"+gravity[1]+"\n"+
-                            "gravity[2]"+gravity[2]+"\n"+
-                            "accelerometerValues[0]="+accelerometerValues[0]+"\n"+
-                            "accelerometerValues[1]"+accelerometerValues[1]+"\n"+
-                            "accelerometerValues[2]"+accelerometerValues[2]+"\n"+
-                            " linear_acceleration[0]"+ linear_acceleration[0]+"\n"+
-                            " linear_acceleration[1]"+ linear_acceleration[1]+"\n"+
-                            " linear_acceleration[2]"+ linear_acceleration[2]+"\n"+
-                            "widgetarray[0].getX()"+widgetarray[0].getX()+"\n"+
-                            "widgetarray[0].getY()"+widgetarray[0].getY()+"\n"+
-                            "widgetarray[0].destionation"+widgetarray[0].getDestination()+"\n"
-
-               );*/
                     break;
+                case 4:
+                    fragmentone fragNear = new fragmentone();
+                    //下面的参数可以缺省
+                    FragmentTransaction ftnear=fragmentManager.beginTransaction();
+                    ftnear.add(R.id.fragmentone, fragNear,"yourname");
+                    ftnear.commit();
+                    break;
+                case 5:
+                    fragmenttwo fragGuide = new fragmenttwo();
+                  //  fragGuide.setDestination(msg.obj);
+                    //下面的参数可以缺省
+                    FragmentTransaction ftguide=fragmentManager.beginTransaction();
+                    ftguide.add(R.id.fragmenttwo, fragGuide,"guide");
+                    ftguide.commit();
+                    Alivefrag=2;
+                   // setContentView(R.layout.guide_view);
+                    break;
+                case 9:
+                    if( Control.finishLocation==false) {
+
+                        ArPoiSearch Arnear = new ArPoiSearch(Main.this, "", "餐饮服务", "深圳市");
+                        Arnear.setHandler(this);
+                        Arnear.setSearchtype(Servicetype.searchbound);
+                        Arnear.doSearch();
+
+                        Control.finishLocation=true;
+                    }
             }
             super.handleMessage(msg);
         }
@@ -963,9 +960,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
 
-    private void fillAdapter(List<TravelingEntity> list) {
+/*    private void fillAdapter(List<TravelingEntity> list) {
             mAdapter.setData(list);
-        }
+        }*/
 
     private void loadTextures() {
         mTextures.add(Texture.loadTextureFromApk("Collect/icebird.jpg", getAssets(),
@@ -978,7 +975,38 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 "1"));
     }
     public void makeList(){
-        Log.i("Main","listview is searched");
+        Log.i("Main","listview is searched"+this.toString());
 
+        mAdapter=new SearchpoiAdapter(Main.this,Data.SearchpoiList);
     }
+
+   /* public class innerpeace implements ListviewCallBack{
+        public void makeList(){
+            Log.i("Main","listview is searched"+this.toString());
+
+            mAdapter=new SearchpoiAdapter(Main.this,Data.SearchpoiList);
+        }
+    }*/
+
+    public void onBackPressed() {
+        if (Alivefrag==2){
+           Fragment fragment =fragmentManager.findFragmentByTag("guide");
+            FragmentTransaction removeft=fragmentManager.beginTransaction();
+            removeft.remove(fragment);
+            removeft.commit();
+        }
+        // 完全由自己控制返回键逻辑，系统不在控制，但是有个前提是不要在Activity的onKeyDown或者OnKeyUp中拦截掉返回键
+
+        // 拦截：就是在OnKeyDown或者OnKeyUp中自己处理了返回键（这里处理之后return true.或者return false都会导致onBackPressed不会执行）
+
+        // 不拦截：在OnKeyDown和OnKeyUp中返回super对应的方法（如果两个方法都被覆写就分别都要返回super.onKeyDown,super.onKeyUp）
+    }
+   /* public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) { //按下的如果是BACK，同时没有重复
+            Toast.makeText(this,"魔力去吧Back键测试",1).show();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }*/
 }

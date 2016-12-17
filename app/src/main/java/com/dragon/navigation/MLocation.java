@@ -1,7 +1,10 @@
 package com.dragon.navigation;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.LinearLayout;
 
@@ -37,7 +40,11 @@ public class MLocation implements LocationSource,AMapLocationListener {
     public String resultLocation="";
     private boolean flagCurrentLocation;
     private boolean FlagCurrentCity;
+
+    private Handler Locationhandler;
     private String mCity;
+
+    private static int FINSHLOCATION=9;
 
 //    构造函数
     public  MLocation(){
@@ -50,6 +57,9 @@ public class MLocation implements LocationSource,AMapLocationListener {
         this.mCurrentCity = currentCity;
         this.flagCurrentLocation = true;
 
+    }
+    public void setHandler(Handler mainhandler){
+        Locationhandler=mainhandler;
     }
 //初始化
     public void initLoction(){
@@ -106,13 +116,13 @@ public class MLocation implements LocationSource,AMapLocationListener {
                 }
                 flagCurrentLocation=false;
 //                Toast.makeText(this.mActivity, amapLocation.getCity(), Toast.LENGTH_SHORT).show();
-                 if( Control.finishLocation==false) {
-                    Log.e("information", "Aoi name" + amapLocation.getAoiName() + "address" + amapLocation.getAddress() + amapLocation.getProvince() + amapLocation.getCity() + amapLocation.getDistrict());
-                    ArPoiSearch Arnear = new ArPoiSearch(this.mActivity, "", "餐饮服务", "深圳市", new LinearLayout(this.mActivity));
-                    Arnear.setSearchtype(Servicetype.searchbound);
-                    Arnear.doSearch();
-                    Control.finishLocation=true;
-                }
+
+                Message msg=new Message();
+                msg.what=FINSHLOCATION;
+                Log.e("information", "Aoi name" + amapLocation.getAoiName() + "address" + amapLocation.getAddress() + amapLocation.getProvince()
+                        + amapLocation.getCity() + amapLocation.getDistrict());
+                Locationhandler.sendMessage(msg);
+
 
 
             } else {
