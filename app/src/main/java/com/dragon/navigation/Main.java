@@ -32,6 +32,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -70,6 +71,7 @@ import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.amap.api.services.route.RouteSearch;
+import com.dragon.Reback.ListviewCallBack;
 import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
@@ -81,7 +83,6 @@ import com.dragon.navigation.use.DataSmoother;
 import com.dragon.navigation.use.SampleApplicationGLView;
 import com.dragon.navigation.use.Texture;
 import com.dragon.navigation.util.AMapUtil;
-import com.dragon.navigation.util.DensityUtil;
 import com.dragon.navigation.util.ModelUtil;
 import com.dragon.navigation.util.MyTextView;
 import com.dragon.navigation.util.NewWidget;
@@ -110,7 +111,7 @@ import butterknife.ButterKnife;
  * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.arnav.basicFuction.camera2 .
  */
 public class Main extends Activity implements View.OnClickListener, SensorEventListener,
-        TextWatcher, Inputtips.InputtipsListener {
+        TextWatcher, Inputtips.InputtipsListener ,ListviewCallBack{
     private static final String TAG = "Main";
     private ArPoiSearch mArPoiSearch;
    private MLocation mLocation;
@@ -879,7 +880,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //用于请求searcharround服务和刷新服务右上角的界面
     private Runnable myRunnable = new Runnable() {
         public void run() {
-
             while(true) {
                 /*float degree = -calculateOrientation();
                 Data.predegree = degree;*/
@@ -887,9 +887,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 //layout_sub_Lin.scrollTo(Data.predegree*15,0);
                 try{
                     Thread.sleep(200);
-                    Message message2 = new Message();
-                    message2.what = 2;
-                    handler.sendMessage(message2);
+                    Looper.prepare();
+                    handler.getLooper().loop();
                 }catch (InterruptedException e) {
 
                 }
@@ -916,8 +915,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
                     break;
+                case 88:
+                    Log.i("cc","有消息了!");
+                    break;
                 case 2:
-                    mydegree.setText("selectid"+Data.SelectArroundId+"\n"+
+
+                    mydegree.setText("  handler.getLooper().getThread()"+
+                            handler.getLooper().getThread()+"\n"+
+                            "selectid"+Data.SelectArroundId+"\n"+
                             "Data.currentdegree="+Data.currentAzimuth+"\n"+
                     "yangle="+Data.yangle+"\n"+
                     "xangle="+Data.xangle+"\n"+
@@ -971,5 +976,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 "znz"));
         mTextures.add(Texture.loadTextureFromApk("1.png", getAssets(),
                 "1"));
+    }
+    public void makeList(){
+        Log.i("Main","listview is searched");
+
     }
 }

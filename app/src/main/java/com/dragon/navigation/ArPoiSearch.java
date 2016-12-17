@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
@@ -167,6 +169,11 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
             SearchpoiEntity SelectedEntity=mAdapter.getItem(position);
             Log.i("ArPoiSearch",SelectedEntity.getPoiName()+"   "+SelectedEntity.getDistance()+
                     "   "+SelectedEntity.getFirstbearing());
+            Handler handler=new Handler();
+            Message text=new Message();
+            text.what=88;
+            Log.i("handler",handler.getLooper().getThread().toString());
+            handler.sendMessage(text);
 
         }
     }
