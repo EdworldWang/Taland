@@ -214,13 +214,13 @@ public class ArPoiSearch implements PoiSearch.OnPoiSearchListener{
                             // 有时会返回为空，设置时，若为空则设置为其区地址
                             //之前才用poiItems.get(i).getdistance()，返回值会出现-1的情况，
                             //原因是距离过大。所以采用自己计算
-
                         }
+
                         Data.poinum=poiItems.size();
-                        lin.removeAllViews();
                         Message msg=new Message();
                         msg.what=4;
                         handler.sendMessage(msg);
+
                        // initnewview(poiItems.size());
                     }else if(searchtype==Servicetype.searchnear_view) {
                         for (int i = 0; i < poiItems.size(); i++) {

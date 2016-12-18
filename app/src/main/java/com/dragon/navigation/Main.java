@@ -202,16 +202,17 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private TextView mydegree;
     private  scrollerlayout layout_sub_Lin;
 
-
-
+   private RelativeLayout buttonview;
+    private FrameLayout topview;
     private List<TravelingEntity> travelingList = new ArrayList<>(); // ListView数据
     private SearchpoiAdapter mAdapter; // 主页数据
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+      setContentView(R.layout.background);
        // setContentView(R.layout.main_camera2);
-        setContentView(R.layout.background);
+        topview=(FrameLayout)findViewById(R.id.topview);
         ButterKnife.bind(this);
 
         mAdapter = new SearchpoiAdapter(this, Data.SearchpoiList);
@@ -224,7 +225,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         fragmentManager=getFragmentManager();
 
         textureView =(TextureView) findViewById(R.id.texture);
-      RelativeLayout buttonview=(RelativeLayout)  View.inflate(this,R.layout.main_camera2,null);
+     buttonview=(RelativeLayout)  View.inflate(this,R.layout.main_camera2,null);
      addContentView(buttonview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
              ViewGroup.LayoutParams.MATCH_PARENT));
       //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
@@ -404,6 +405,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            Log.i("texture","destroy");
             return true;
         }
 
@@ -469,6 +471,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         //        摄像头断开连接时的方法
         @Override
         public void onDisconnected(CameraDevice camera) {
+            Log.e(TAG, "onDisconnected");
             cameraDevice.close();
             Main.this.cameraDevice = null;
         }
@@ -476,6 +479,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         //        打开摄像头出现错误时激发方法
         @Override
         public void onError(CameraDevice camera, int error) {
+            Log.e(TAG, "onClose");
             cameraDevice.close();
             Main.this.cameraDevice = null;
         }
@@ -939,6 +943,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     FragmentTransaction ftguide=fragmentManager.beginTransaction();
                     ftguide.add(R.id.fragmenttwo, fragGuide,"guide");
                     ftguide.commit();
+                    //((ViewGroup)buttonview.getParent()).removeView(buttonview);
+                    //采用移除的效率不高，在添加的时候会卡顿，耗费资源对时间监听由延迟
+                    topview.bringToFront();
                     Alivefrag=2;
                    // setContentView(R.layout.guide_view);
                     break;
@@ -949,9 +956,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                         Arnear.setHandler(this);
                         Arnear.setSearchtype(Servicetype.searchbound);
                         Arnear.doSearch();
+                        Log.i("location","i am here");
 
                         Control.finishLocation=true;
                     }
+                    break;
             }
             super.handleMessage(msg);
         }
@@ -992,8 +1001,18 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         if (Alivefrag==2){
            Fragment fragment =fragmentManager.findFragmentByTag("guide");
             FragmentTransaction removeft=fragmentManager.beginTransaction();
-            removeft.remove(fragment);
+            removeft.hide(fragment);
             removeft.commit();
+
+            //buttonview会盖住之前的摄像头背景，故要将背景的layout提取出来
+            //置于最顶部
+           /* addContentView(buttonview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));*/
+            buttonview.bringToFront();
+         /*   closeCamera();
+            stopBackgroundThread();
+            startBackgroundThread();*/
+
         }
         // 完全由自己控制返回键逻辑，系统不在控制，但是有个前提是不要在Activity的onKeyDown或者OnKeyUp中拦截掉返回键
 

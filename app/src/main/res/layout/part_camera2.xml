@@ -10,12 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         ></LinearLayout>
-    <LinearLayout
-        android:id="@+id/fragmenttwo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        ></LinearLayout>
+
 
     <RelativeLayout
         android:id="@+id/search_bar_layout"

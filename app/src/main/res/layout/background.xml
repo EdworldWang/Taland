@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topview"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextureView
         android:id="@+id/texture"
         android:layout_width="match_parent"
@@ -9,5 +11,13 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         />
+    <LinearLayout
+        android:id="@+id/fragmenttwo"
+        android:layout_width="match_parent"
+        android:layout_height="147dp"
+        android:orientation="vertical"
+        ></LinearLayout>
 
-</LinearLayout>
+
+
+</FrameLayout>

@@ -121,7 +121,8 @@ public class MLocation implements LocationSource,AMapLocationListener {
                 msg.what=FINSHLOCATION;
                 Log.e("information", "Aoi name" + amapLocation.getAoiName() + "address" + amapLocation.getAddress() + amapLocation.getProvince()
                         + amapLocation.getCity() + amapLocation.getDistrict());
-                Locationhandler.sendMessage(msg);
+               Locationhandler.sendMessage(msg);
+
 
 
 
