@@ -847,7 +847,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             if(contain!=null){
               ft.hide(contain);
                 ft.commit();
-                mGlView.setVisibility(View.INVISIBLE);
+               // mGlView.setVisibility(View.INVISIBLE);
             }
 
         }
@@ -938,6 +938,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     break;
                 case 5:
                     fragmenttwo fragGuide = new fragmenttwo();
+                    fragGuide.remove();
                   //  fragGuide.setDestination(msg.obj);
                     //下面的参数可以缺省
                     FragmentTransaction ftguide=fragmentManager.beginTransaction();
@@ -1000,8 +1001,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     public void onBackPressed() {
         if (Alivefrag==2){
            Fragment fragment =fragmentManager.findFragmentByTag("guide");
+
             FragmentTransaction removeft=fragmentManager.beginTransaction();
-            removeft.hide(fragment);
+            removeft.remove(fragment);
             removeft.commit();
 
             //buttonview会盖住之前的摄像头背景，故要将背景的layout提取出来

@@ -151,7 +151,9 @@ public class fragmentone extends Fragment {
 
         }
     }
+    public void onHide(){
 
+    }
 
     public class OnScrollerClick implements View.OnClickListener{
         public void onClick(View v){

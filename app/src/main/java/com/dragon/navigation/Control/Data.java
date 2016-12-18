@@ -57,7 +57,7 @@ public static float realbearing=0;
     public static float x;
     public static float  y;
 
-
+    public static SearchpoiEntity SelectedEntity;
     public static float screenWidth;
     public static float screenHeigh;
 }

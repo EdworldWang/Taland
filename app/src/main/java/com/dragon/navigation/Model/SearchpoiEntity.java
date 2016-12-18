@@ -94,4 +94,5 @@ public class SearchpoiEntity {
     public String getPoiName() {
         return poiName;
     }
+
 }

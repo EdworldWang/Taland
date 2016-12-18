@@ -1,6 +1,8 @@
 package com.dragon.navigation.Function;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -31,6 +33,7 @@ public class Routedesign implements RouteSearch.OnRouteSearchListener {
     public Routedesign(Activity activity) {
         this.mActivity= activity;
     }
+    public Handler Routehandler;
     public void dodesign(RouteSearch.FromAndTo fromandtoint, int walkMode){
         this.walkMode=walkMode;
         this.fromandto=fromandto;
@@ -38,6 +41,9 @@ public class Routedesign implements RouteSearch.OnRouteSearchListener {
         routeSearch.setRouteSearchListener(this);
         query = new RouteSearch.WalkRouteQuery(fromandtoint, walkMode);
         routeSearch.calculateWalkRouteAsyn(query);
+    }
+    public void setHandler(Handler handler){
+        Routehandler=handler;
     }
 
     public void onWalkRouteSearched(WalkRouteResult result, int rCode) {
@@ -49,15 +55,47 @@ public class Routedesign implements RouteSearch.OnRouteSearchListener {
                     walkPathsList = routeResult.getPaths();
                     mywalkpath=walkPathsList.get(0);
                     walkStepsList=mywalkpath.getSteps();
+
+                    Message Insnum=new Message();
+                    Insnum.what=1;
+                    Insnum.arg1=walkStepsList.size();
+                    Routehandler.sendMessage(Insnum);//初始化数组大小
+                    //表示了由多少条信息
+
                     for(int i=0;i<walkStepsList.size();i++){
                         mywalkstep=walkStepsList.get(i);
+
+                        Message routeInstrction=new Message();
+                        routeInstrction.what=2;
+                        routeInstrction.obj=mywalkstep.getInstruction()+","+
+                        mywalkstep.getDuration()+","+mywalkstep.getDistance()+",";
+                        // mywalkstep.getRoad()有时为空
+                        //mywalkstep.getAction在前面都有信息了
+                        Routehandler.sendMessage(routeInstrction);
+
+
+
                         Log.i("routedesign",mywalkstep.getInstruction());
+
                         myLatLonPointlist=mywalkstep.getPolyline();
+                        Message pointnum=new Message();
+                        pointnum.what=3;
+                        pointnum.arg1=i;
+                        pointnum.arg2=myLatLonPointlist.size();
+                        Routehandler.sendMessage(pointnum);//int
                         for(int f=0;f<myLatLonPointlist.size();f++){
                             Log.i("routedesign",myLatLonPointlist.get(f).toString());
+                            Message point=new Message();
+                            point.what=4;
+                            point.obj=myLatLonPointlist.get(f).toString();
+                            Routehandler.sendMessage(point);
                         }
 
                     }
+                    Message msg=new Message();
+                    msg.what=9;
+                    //规划完成
+                    Routehandler.sendMessage(msg);
                 }
             }else{
                 Log.i("dfd","null");
