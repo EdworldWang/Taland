@@ -47,7 +47,7 @@ public class SplashActivity extends Activity {
             switch(msg.what){
                 case SWITCH_MAINACTIVITY:
                     Intent mIntent = new Intent();
-                    mIntent.setClass(SplashActivity.this,Main.class);
+                    mIntent.setClass(SplashActivity.this,UserActivity.class);
                     SplashActivity.this.startActivity(mIntent);
                     SplashActivity.this.finish();
                     break;

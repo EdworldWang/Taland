@@ -22,7 +22,7 @@ public class Data {
             -1, 0, 0, 0,
             0, 0, -1.0f, 0,
             1200, 0, 4000, 1};
-    public static int degree;
+    public static int floatdegree;
     public static boolean getfirstdegree=false;
     public static float firstdegree;
     public static float predegree;

@@ -806,9 +806,9 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
      //   ra.setDuration(200);
       //  layout_sub_Lin.startAnimation(ta);
 
-     /*   viewaround.startAnimation(ra);
-        currentDegree = -degree;
-*/
+      // viewaround.startAnimation(ra);
+      //  currentDegree = -degree;
+
        /* if(Control.candrawview==true) {*/
 
             //自定义动画类animator来达到部分控件的旋转和
@@ -819,7 +819,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
           /*  Data.currentAzimuth=currentDegree;
             Data.todegree=currentDegree;*/
 
-      //  viewarround.doRotatetaAnim(currentDegree, -degree);
+
        // currentDegree = -degree;
      //  Log.i("ddd","alive");
     }
@@ -894,8 +894,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 //layout_sub_Lin.scrollTo(Data.predegree*15,0);
                 try{
                     Thread.sleep(200);
-                    Looper.prepare();
-                    handler.getLooper().loop();
+                    Message circle=new Message();
+                    circle.what=11;
+                    handler.sendMessage(circle);
+
                 }catch (InterruptedException e) {
 
                 }
@@ -961,6 +963,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
                         Control.finishLocation=true;
                     }
+                    break;
+                case 11:
+                    viewarround.doRotatetaAnim(Data.todegree,Data.currentAzimuth);
+                    Data.todegree=Data.currentAzimuth;
                     break;
             }
             super.handleMessage(msg);

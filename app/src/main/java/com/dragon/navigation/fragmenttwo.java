@@ -148,8 +148,8 @@ public class fragmenttwo extends Fragment {
         Locationhere.setLatitude(ArPoiSearch.here.latitude);
         Locationhere.setLongitude(ArPoiSearch.here.longitude);
         String[]  Pointmessage=  ListLatLonPoint.get(0).split(",");
-        next.setLatitude(Float.parseFloat(Pointmessage[0]));
-        next.setLongitude(Float.parseFloat(Pointmessage[0]));
+        next.setLatitude(destinationpoint.getLatitude());
+        next.setLongitude(destinationpoint.getLongitude());
         final float startBearing =  next.bearingTo(Locationhere);
         Data.bearing = Util.positiveModulo(startBearing - Data.currentAzimuth,
                 360);
