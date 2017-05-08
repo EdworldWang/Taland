@@ -7,7 +7,7 @@ Vuforia is a trademark of PTC Inc., registered in the United States and other
 countries.
 ===============================================================================*/
 
-package com.dragon.navigation;
+package com.dragon.navigation.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
+import com.dragon.navigation.R;
 
 
 public class ActivitySplashScreen extends Activity

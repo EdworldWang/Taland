@@ -40,7 +40,7 @@
             android:name="com.amap.api.v2.apikey"
             android:value="ac5668645b366fbaf9b23ba03d57a4d4"/>
 
-        <activity android:name=".ActivitySplashScreen">
+        <activity android:name=".Activity.ActivitySplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -48,16 +48,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Main"  >
+        <activity android:name=".Activity.Main"  >
         </activity>
 
-        <activity android:name=".GuideActivity">
+        <activity android:name=".Activity.GuideActivity">
         </activity>
-        <activity android:name=".SplashActivity">
+        <activity android:name=".Activity.SplashActivity">
         </activity>
-        <activity android:name=".UserActivity">
+        <activity android:name=".Activity.UserActivity">
         </activity>
-        <activity android:name=".MySetting">
+        <activity android:name=".Activity.MySetting">
 
         </activity>
         <!--定位服务-->

@@ -11,7 +11,8 @@ import java.nio.Buffer;
 /**
  * This file created by dragon on 2016/7/29 21:58,belong to com.vuforia.samples.SampleApplication.utils .
  */
-public class model extends MeshObject {
+//这个类是用于Model更换的，方式为读取txt
+public class Model extends MeshObject {
     private  static final String TAG="modelTest";
 
     private Buffer mVertBuff;//顶点
@@ -20,7 +21,7 @@ public class model extends MeshObject {
     private int verticesNumber = 0;
     private AssetManager assetManager;
 
-    public model(AssetManager inputassetManager){
+    public Model(AssetManager inputassetManager){
         this.assetManager = inputassetManager;
         setVerts();
         setTexCoords();
@@ -154,7 +155,7 @@ public class model extends MeshObject {
     private void setVerts(){
         int num = 0;
         try{
-            num = loadVertsFromModel("ImageTargets/model/verts.txt");
+            num = loadVertsFromModel("ImageTargets/Model/verts.txt");
 
         } catch(IOException e){
             e.printStackTrace();
@@ -166,7 +167,7 @@ public class model extends MeshObject {
     {
         int num = 0;
         try {
-            num = loadTexCoordsFromModel("ImageTargets/model/texcoords.txt");
+            num = loadTexCoordsFromModel("ImageTargets/Model/texcoords.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -178,7 +179,7 @@ public class model extends MeshObject {
     {
         int num = 0;
         try {
-            num = loadNormsFromModel("ImageTargets/model/norms.txt");
+            num = loadNormsFromModel("ImageTargets/Model/norms.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }

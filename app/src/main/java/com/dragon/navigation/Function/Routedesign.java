@@ -64,19 +64,14 @@ public class Routedesign implements RouteSearch.OnRouteSearchListener {
 
                     for(int i=0;i<walkStepsList.size();i++){
                         mywalkstep=walkStepsList.get(i);
-
                         Message routeInstrction=new Message();
                         routeInstrction.what=2;
                         routeInstrction.obj=mywalkstep.getInstruction()+","+
-                        mywalkstep.getDuration()+","+mywalkstep.getDistance()+",";
+                                mywalkstep.getDuration()+","+mywalkstep.getDistance()+",";
                         // mywalkstep.getRoad()有时为空
                         //mywalkstep.getAction在前面都有信息了
                         Routehandler.sendMessage(routeInstrction);
-
-
-
-                        Log.i("routedesign",mywalkstep.getInstruction());
-
+                        Log.i("Routedesign",mywalkstep.getInstruction());
                         myLatLonPointlist=mywalkstep.getPolyline();
                         Message pointnum=new Message();
                         pointnum.what=3;
@@ -84,7 +79,7 @@ public class Routedesign implements RouteSearch.OnRouteSearchListener {
                         pointnum.arg2=myLatLonPointlist.size();
                         Routehandler.sendMessage(pointnum);//int
                         for(int f=0;f<myLatLonPointlist.size();f++){
-                            Log.i("routedesign",myLatLonPointlist.get(f).toString());
+                            Log.i("Routedesign",myLatLonPointlist.get(f).toString());
                             Message point=new Message();
                             point.what=4;
                             point.obj=myLatLonPointlist.get(f).toString();
@@ -98,19 +93,16 @@ public class Routedesign implements RouteSearch.OnRouteSearchListener {
                     Routehandler.sendMessage(msg);
                 }
             }else{
-                Log.i("dfd","null");
+                Log.i("Routedesign","null");
             }
         }else{
-            Log.i("dfd","error");
+            Log.i("Routedesign","error");
         }
     }
+    public void onBusRouteSearched(BusRouteResult var1, int var2){
 
-   public void onBusRouteSearched(BusRouteResult var1, int var2){
-
-   }
-
+    }
     public void onDriveRouteSearched(DriveRouteResult var1, int var2){
 
     }
-
 }

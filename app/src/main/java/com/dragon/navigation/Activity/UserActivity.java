@@ -1,4 +1,4 @@
-package com.dragon.navigation;
+package com.dragon.navigation.Activity;
 
 import com.alibaba.fastjson.JSONObject;
 import java.io.UnsupportedEncodingException;
@@ -7,33 +7,27 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
+import com.dragon.navigation.R;
 import com.dragon.navigation.View.HTMLSpirit;
-import com.dragon.navigation.View.HttpMethod;
-import com.dragon.navigation.util.MyToast;
-import com.dragon.navigation.util.Servicetype;
+import com.dragon.navigation.Connect.HttpMethod;
 import com.dragon.navigation.util.ToastUtil;
 
 public class UserActivity extends Activity {
@@ -54,25 +48,6 @@ public class UserActivity extends Activity {
         textpassword=(EditText) findViewById(R.id.Login_EditText02);
         System.out.println("ip"+GetHostIp());
         Handler handler=new Handler();
-//		executorService=Executors.newScheduledThreadPool(2);
-//		Thread th=new MyThread1();
-//		executorService.scheduleAtFixedRate(th, 1, 3, TimeUnit.SECONDS);
-//		Timer timer = new Timer();
-//		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
-//		try {
-//			startDate = dateFormatter.parse("2010/11/26 00:20:00");
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		timer.scheduleAtFixedRate(new TimerTask(){
-//		   public void run()
-//		   {
-//		       System.out.println("execute task!" + this.scheduledExecutionTime());
-//		   }
-//		},startDate,3*60*1000);
-//
     }
 
     private OnClickListener l=new OnClickListener() {
@@ -163,6 +138,7 @@ public class UserActivity extends Activity {
                    Main.class);
                UserActivity.this.finish();
            startActivity(intent);
+               Data.name=accountstr;
                break;
            case "110":
                Message msg=new Message();
@@ -305,8 +281,6 @@ public class UserActivity extends Activity {
         System.out.println(strResult);
         JSONObject j = JSONObject.parseObject(strResult);
         System.out.println(j.toString());
-
-
     }
 
 

@@ -1,4 +1,4 @@
-package com.dragon.navigation.View;
+package com.dragon.navigation.Connect;
 
 import android.os.Build;
 import android.util.Log;
@@ -21,30 +21,17 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpMethod {
-	 /**
-     * ��ָ��URL����GET����������
-     * 
-     * @param url
-     *            ���������URL
-     * @param param
-     *            �������
-     * @return URL ������Զ����Դ����Ӧ���
-     */
+
     public static String sendGet(String url, String param) {
         String result = "";
         BufferedReader in = null;
         try {
             String urlNameString = url + "?" + param;
             URL realUrl = new URL(urlNameString);
-            // �򿪺�URL֮�������
             URLConnection connection = realUrl.openConnection();
-            // ����ͨ�õ���������
             connection.setRequestProperty("Content-Type", "application/json");
-            // ����ʵ�ʵ�����
             connection.connect();
-            // ��ȡ������Ӧͷ�ֶ�
             Map<String, List<String>> map = connection.getHeaderFields();
-            // �������е���Ӧͷ�ֶ�
             for (String key : map.keySet()) {
                 System.out.println(key + "--->" + map.get(key));
             }
@@ -56,10 +43,9 @@ public class HttpMethod {
                 result += line;
             }
         } catch (Exception e) {
-            System.out.println("����GET��������쳣��" + e);
+            System.out.println("Get" + e);
             e.printStackTrace();
         }
-        // ʹ��finally�����ر�������
         finally {
             try {
                 if (in != null) {
@@ -72,15 +58,7 @@ public class HttpMethod {
         return result;
     }
 
-    /**
-     * ��ָ�� URL ����POST����������
-     * 
-     * @param url
-     *            ��������� URL
-     * @param param
-     *            �������
-     * @return ������Զ����Դ����Ӧ���
-     */
+
     public static String sendPost(String url, String param) {
         PrintWriter out = null;
         BufferedReader in = null;
@@ -89,7 +67,7 @@ public class HttpMethod {
             URL realUrl = new URL(url);
             Log.i("1", "1");
 
-            URLConnection conn = realUrl.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) realUrl.openConnection();
             Log.i("1", "2");
             if (Integer.parseInt(Build.VERSION.SDK) < Build.VERSION_CODES.FROYO) {
                 System.setProperty("http.keepAlive", "false");
@@ -105,22 +83,17 @@ public class HttpMethod {
             conn.setRequestProperty("mid", "00105100000001");
             conn.setRequestProperty("Method","POST");
             Log.i("1", "5");
-            // ����POST�������������������
             conn.setDoOutput(true);
             Log.i("1", "6");
             conn.setDoInput(true);
             Log.i("1", "7");
-            //  ��ȡURLConnection�����Ӧ�������
             out = new PrintWriter(conn.getOutputStream());
-            
             Log.i("1", "8");
-            // �����������
             out.print(param);
             Log.i("1", "9");
-            // flush������Ļ���
             out.flush();
             Log.i("1", "10");
-            // ����BufferedReader����������ȡURL����Ӧ
+            //BufferedReader
             in = new BufferedReader(
                     new InputStreamReader(conn.getInputStream()));
             Log.i("1", "11");
@@ -131,10 +104,10 @@ public class HttpMethod {
             }
             Log.i("1", "13");
         } catch (Exception e) {
-            System.out.println("���� POST ��������쳣��"+e);
+            System.out.println("post"+e);
             e.printStackTrace();
         }
-        //ʹ��finally�����ر��������������
+        //finally
         finally{
             try{
                 if(out!=null){

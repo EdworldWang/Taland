@@ -30,7 +30,7 @@ import java.util.HashMap;
 // Exposes functionality for loading a texture from the APK.
 public class Texture
 {
-    private static final String LOGTAG = "Vuforia_Texture";
+    private static final String LOGTAG = "Texture";
     
     public int mWidth;          // The width of the texture.
     public int mHeight;         // The height of the texture.

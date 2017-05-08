@@ -3,17 +3,14 @@ package com.dragon.navigation.View;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
 import com.dragon.navigation.Control.Data;
-import com.dragon.navigation.R;
-import com.dragon.navigation.fragmentone;
+import com.dragon.navigation.Activity.fragmentone;
 
 /**
  * Created by EdwardPC on 2016/12/1.

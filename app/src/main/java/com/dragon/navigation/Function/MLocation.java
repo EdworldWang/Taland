@@ -1,12 +1,10 @@
-package com.dragon.navigation;
-
+package com.dragon.navigation.Function;
 import android.app.Activity;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -16,21 +14,13 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.model.LatLng;
-import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
-import com.dragon.navigation.util.MyTextView;
-import com.dragon.navigation.util.Servicetype;
 
-/**
- * This file created by dragon on 2016/9/29 20:55,
- * belong to com.dragon.navigation .
- * 因本人无法解决此类服务的返回值问题，所以这种设计方式放弃（dragon20161006）
- */
-
+//于2017.3.5进行代码整理
 public class MLocation implements LocationSource,AMapLocationListener {
 
     private Activity mActivity;
-    private MyTextView mCurrentCity;
+    private TextView mCurrentCity;
     private Bundle mSavedInstanceState;
     private AMap aMap;
     private MapView mapView;
@@ -39,24 +29,16 @@ public class MLocation implements LocationSource,AMapLocationListener {
     private AMapLocationClientOption mLocationOption;
     public String resultLocation="";
     private boolean flagCurrentLocation;
-    private boolean FlagCurrentCity;
 
     private Handler Locationhandler;
-    private String mCity;
-
     private static int FINSHLOCATION=9;
 
-//    构造函数
-    public  MLocation(){
-
-    }
     //    构造函数
-    public MLocation(Activity mActivity,Bundle mSavedInstanceState,MyTextView currentCity){
+    public MLocation(Activity mActivity,Bundle mSavedInstanceState,TextView currentCity){
         this.mActivity = mActivity;
         this.mSavedInstanceState =mSavedInstanceState;
-        this.mCurrentCity = currentCity;
+        this.mCurrentCity = currentCity;//用于显示当前的地址
         this.flagCurrentLocation = true;
-
     }
     public void setHandler(Handler mainhandler){
         Locationhandler=mainhandler;
@@ -72,13 +54,14 @@ public class MLocation implements LocationSource,AMapLocationListener {
         if(aMap==null){
             aMap=mapView.getMap();
             aMap.setLocationSource(this);// 设置定位监听
-//            aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-            aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+            // aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
+            aMap.setMyLocationEnabled(true);
+            // 设置为true表示显示定位层并可触发定位，
+            // false表示隐藏定位层并不可触发定位，默认是false
             // 设置定位的类型为定位模式 ，可以由定位、跟随或地图根据面向方向旋转几种
             aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);//定位模式
         }
     }
-
     public void onResume(){
         mapView.onResume();
     }
@@ -116,20 +99,15 @@ public class MLocation implements LocationSource,AMapLocationListener {
                 }
                 flagCurrentLocation=false;
 //                Toast.makeText(this.mActivity, amapLocation.getCity(), Toast.LENGTH_SHORT).show();
-
                 Message msg=new Message();
                 msg.what=FINSHLOCATION;
-                Log.e("information", "Aoi name" + amapLocation.getAoiName() + "address" + amapLocation.getAddress() + amapLocation.getProvince()
+                Log.e("information", "Aoi name" + amapLocation.getAoiName() + "address" +
+                        amapLocation.getAddress() + amapLocation.getProvince()
                         + amapLocation.getCity() + amapLocation.getDistrict());
                Locationhandler.sendMessage(msg);
-
-
-
-
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode()+ ": " + amapLocation.getErrorInfo();
                 Log.e("AmapErr",errText);
-
             }
         }
     }
@@ -164,7 +142,6 @@ public class MLocation implements LocationSource,AMapLocationListener {
      * 停止定位
 
 */
-
     @Override
     public void deactivate() {
         mListener = null;
@@ -177,8 +154,4 @@ public class MLocation implements LocationSource,AMapLocationListener {
     public void onSaveInstanceState(Bundle outState) {
         mapView.onSaveInstanceState(outState);
     }
-
-
-
-
 }

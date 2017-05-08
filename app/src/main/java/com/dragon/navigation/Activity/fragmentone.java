@@ -1,44 +1,34 @@
-package com.dragon.navigation;
+package com.dragon.navigation.Activity;
 
 import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.route.RouteSearch;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.Control.Util;
-import com.dragon.navigation.Function.Routedesign;
-import com.dragon.navigation.use.SampleApplicationGLView;
-import com.dragon.navigation.util.NewWidget;
-import com.dragon.navigation.util.Servicetype;
-import com.dragon.navigation.util.scrollerlayout;
-import com.dragon.orientationProvider.CalibratedGyroscopeProvider;
-import com.dragon.orientationProvider.GravityCompassProvider;
-import com.dragon.orientationProvider.OrientationProvider;
+import com.dragon.navigation.Function.ArPoiSearch;
+import com.dragon.navigation.Renderer.MainRenderer;
+import com.dragon.navigation.R;
+import com.dragon.navigation.View.NewWidget;
+import com.dragon.navigation.Function.Servicetype;
+import com.dragon.navigation.View.scrollerlayout;
 
 /**
  * Created by EdwardPC on 2016/12/9.
@@ -150,7 +140,9 @@ public class fragmentone extends Fragment {
             widgetarray[i].setOnClickListener(new OnScrollerClick());
 
         }
-    }
+      //
+        //  isee.setVisibility(View.INVISIBLE);
+}
     public void onHide(){
 
     }

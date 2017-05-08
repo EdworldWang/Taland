@@ -128,8 +128,6 @@ public final class Util {
 	public static float getBearing(Location destination){
 		final float startBearing = destination.bearingTo(Data.locationhere);
 		float bearing=Util.positiveModulo(startBearing - Data.currentAzimuth, 360);
-
 		return  bearing;
-
 	}
 }

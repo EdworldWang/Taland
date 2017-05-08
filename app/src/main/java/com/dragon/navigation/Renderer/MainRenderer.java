@@ -1,19 +1,15 @@
-package com.dragon.navigation;
+package com.dragon.navigation.Renderer;
 
-import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.amap.api.services.a.q;
-import com.dragon.navigation.Control.Control;
+import com.dragon.navigation.Activity.Main;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.use.ArrowObject;
-import com.dragon.navigation.use.Banana;
 import com.dragon.navigation.use.CubeObject;
 import com.dragon.navigation.use.CubeShaders;
-import com.dragon.navigation.use.LoadingDialogHandler;
 import com.dragon.navigation.use.MeshObject;
 import com.dragon.navigation.use.MyArrow;
 import com.dragon.navigation.use.MyCube;
@@ -53,7 +49,6 @@ public class MainRenderer implements GLSurfaceView.Renderer {
     private CubeObject mCubeObject;
     private MyCube     myCube;
     private ArrowObject mArrowObject;
-    private Banana mBanana;
     private MyArrow drawmy;
     private float kBuildingScale = 12.0f;
 
@@ -206,10 +201,6 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         float[] modelViewMatrix= Data.modelViewMatrix.clone();
         float[] modelViewMatrix2= Data.modelViewMatrix.clone();
 
-
-
-
-
         Quaternion q = orientationProvider.getQuaternion();
         Quaternion arrowqua=ArrowProvider.getQuaternion();
         Quaternion myz=new Quaternion();
@@ -218,8 +209,6 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         //沿着z轴旋转一定的角度
         Quaternion my=new Quaternion();
         my.copyFromVec3(new Vector3f(0,0,1),0);
-
-
 
         Quaternion conjugate=new Quaternion();//q的共轭，q已经单位化了,故跟q的逆相同
         conjugate.setXYZW(-q.getX(),-q.getY(),-q.getZ(),q.getW());
@@ -240,9 +229,9 @@ public class MainRenderer implements GLSurfaceView.Renderer {
                 250f,10f);
         //  Matrix.rotateM(modelViewMatrix,0,Bearing-Data.currentAzimuth,my.getX(),my.getY(),my.getZ());
         Matrix.rotateM(modelViewMatrix,0,Bearing,my.getX(),my.getY(),my.getZ());
-        Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI), q.getX(),q.getY(),q.getZ());
+        Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI),
+                q.getX(),q.getY(),q.getZ());
         drawModel(drawmy, modelViewMatrix, "1", true);
-
        // Matrix.translateM(modelViewMatrix2,0,0f,-500f,0f);
         Matrix.scaleM(modelViewMatrix2, 0, 100f,
                 100f,1f);
@@ -307,13 +296,13 @@ public class MainRenderer implements GLSurfaceView.Renderer {
                     mTextures.get(textureIndex).mTextureID[0]);
             GLES20.glUniform1i(texSampler2DHandle, 0);
 
-            // pass the model view matrix to the shader
+            // pass the Model view matrix to the shader
             GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                     modelViewProjection, 0);
             // finally draw the teapot
     /*   GLES20.glDrawElements(GLES20.GL_TRIANGLES,
-                   model.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
-                    model.getIndices());*/
+                   Model.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
+                    Model.getIndices());*/
             //glDrawArray(GL_POLYGON, index,nvert), 这是在OpenGL下绘制一个多边形的方法, 第三个参数是点数目, 第二个是当前多边形点的索引(标号),  该函数会从数组中找到第index个点, 向后找到nvert个, 用这些点来点点依次相连绘制成多边形,
             if(IsArray==true) {
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, model.getNumObjectVertex());

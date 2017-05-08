@@ -68,7 +68,7 @@
                     android:layout_marginRight="8dp"
                     android:background="#ffff"
                     android:gravity="left|center_vertical"
-                    android:hint="手机号"
+                    android:hint="用户名"
                     android:padding="12dp"
                     android:textColor="#000000" />
             </LinearLayout>

@@ -1,4 +1,4 @@
-package com.dragon.navigation;
+package com.dragon.navigation.Activity;
 
 import android.animation.ValueAnimator;
 import android.app.Fragment;
@@ -17,12 +17,13 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.RouteSearch;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.Control.Util;
+import com.dragon.navigation.Function.ArPoiSearch;
 import com.dragon.navigation.Function.Routedesign;
+import com.dragon.navigation.Renderer.MainRenderer;
 import com.dragon.navigation.Model.SearchpoiEntity;
+import com.dragon.navigation.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by EdwardPC on 2016/12/17.

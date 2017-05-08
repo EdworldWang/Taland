@@ -1,4 +1,4 @@
-package com.dragon.navigation;
+package com.dragon.navigation.Activity;
 
 /**
  * This file created by dragon on 2016/9/19 10:20,
@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.dragon.navigation.R;
+
 import java.util.ArrayList;
 /**
  * This file created by dragon on 2016/9/19 9:31,
@@ -25,7 +27,6 @@ import java.util.ArrayList;
  */
 public class GuideActivity extends Activity {
     private ViewPager viewPager;
-
     /**
      * 装分页显示的view的数组
      */

@@ -1,4 +1,4 @@
-package com.dragon.navigation;
+package com.dragon.navigation.Activity;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import com.dragon.navigation.R;
 
 /**
  * This file created by dragon on 2016/9/19 9:13,
@@ -47,7 +49,7 @@ public class SplashActivity extends Activity {
             switch(msg.what){
                 case SWITCH_MAINACTIVITY:
                     Intent mIntent = new Intent();
-                    mIntent.setClass(SplashActivity.this,UserActivity.class);
+                    mIntent.setClass(SplashActivity.this,Main.class);
                     SplashActivity.this.startActivity(mIntent);
                     SplashActivity.this.finish();
                     break;

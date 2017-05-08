@@ -20,15 +20,24 @@ public class SearchpoiEntity {
     private boolean isNoData = false;
     private int height;
 
-    public SearchpoiEntity(String poiName, String poiType, int distance, float firstbearing, String poiDes, LatLonPoint myLatLonPoint) {
+    public SearchpoiEntity(String poiName, String poiType, int distance,
+                           float firstbearing, String poiDes, LatLonPoint myLatLonPoint) {
             this.poiName=poiName;
             this.poiType=poiType;
             this.distance=distance;
-        this.firstbearing=firstbearing;
+            this.firstbearing=firstbearing;
             this.poiDes=poiDes;
             this.myLatLonPoint=myLatLonPoint;
     }
     public SearchpoiEntity() {
+    }
+    private SearchpoiEntity(PoiBuilder builder){
+        this.poiName=builder.poiName;
+        this.poiType=builder.poiType;
+        this.distance=builder.distance;
+        this.firstbearing=builder.firstbearing;
+        this.poiDes=builder.poiDes;
+        this.myLatLonPoint=builder.myLatLonPoint;
     }
 
     public LatLonPoint getMyLatLonPoint() {
@@ -94,5 +103,44 @@ public class SearchpoiEntity {
     public String getPoiName() {
         return poiName;
     }
+    public static class PoiBuilder{
+        private final String poiName;
+        private final LatLonPoint myLatLonPoint;
+        private int distance;
+        private float firstbearing;
+        private String poiDes;
+        private String poiType;
+        private int height;
 
+        public PoiBuilder(String poiName,LatLonPoint myLatLonPoint,int distance){
+            this.poiName = poiName;
+            this.myLatLonPoint = myLatLonPoint;
+            this.distance = distance;
+        }
+        public PoiBuilder poiDes(String poiDes){
+            this.poiDes = poiDes;
+            return this;
+        }
+        public PoiBuilder firstbearing(float firstbearing){
+            this.firstbearing = firstbearing;
+            return  this;
+        }
+        public PoiBuilder poiType(String poiType){
+            this.poiType = poiType;
+            return this;
+        }
+        public PoiBuilder height(int height){
+            this.height = height;
+            return  this;
+        }
+        public SearchpoiEntity build(){
+            return new SearchpoiEntity(this);
+     /*       new PoiBuilder("地点A",new LatLonPoint(116,115),500)
+                    .height(500)
+                    .poiType("美食")
+                    .poiDes("深圳大学附近")
+                    .firstbearing(80)
+                    .build()*/
+        }
+    }
 }

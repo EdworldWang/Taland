@@ -1,8 +1,6 @@
 package com.dragon.Reback;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -10,17 +8,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.route.RouteSearch;
 import com.dragon.navigation.Adapter.SearchpoiAdapter;
 import com.dragon.navigation.Control.Data;
-import com.dragon.navigation.Function.Routedesign;
-import com.dragon.navigation.Main;
 import com.dragon.navigation.Model.SearchpoiEntity;
 import com.dragon.navigation.R;
-import com.dragon.navigation.fragmenttwo;
 
 /**
  * Created by EdwardPC on 2016/12/17.

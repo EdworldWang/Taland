@@ -27,19 +27,18 @@ public class ResGeoCoding implements GeocodeSearch.OnGeocodeSearchListener {
         geocoderSearch.setOnGeocodeSearchListener(this);
         geocoderSearch.getFromLocationAsyn(query);
     }
-
     @Override
     public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
            if(rCode==1000){
                if(result != null && result.getRegeocodeAddress()!=null
                        &&result.getRegeocodeAddress().getFormatAddress()!=null){
                     addressName = result.getRegeocodeAddress().getFormatAddress()+"附近";
-                       Log.i("dfd",addressName);
+                       Log.i("ResGeoCoding",addressName);
                }else{
-                   Log.i("dfd","null");
+                   Log.i("ResGeoCoding","null");
                }
            }else{
-               Log.i("dfd","error");
+               Log.i("ResGeoCoding","error");
            }
     }
 

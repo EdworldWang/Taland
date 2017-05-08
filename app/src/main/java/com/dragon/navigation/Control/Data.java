@@ -51,6 +51,7 @@ public static float realbearing=0;
     public static float yangle=0;
  public static float toyangle=0;
     public static float xangle=0;
+    public static String name="";
  public static float q[]=new float[3];
     public static float vector[]=new float[3];
 

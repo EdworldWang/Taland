@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * Created by sunfusheng on 16/4/20.
  */
+//该类用做SearchpoiEntity的参考
 public class TravelingEntity implements Serializable, Comparable<TravelingEntity> {
 
 

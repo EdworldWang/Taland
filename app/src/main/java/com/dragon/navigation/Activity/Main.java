@@ -1,14 +1,21 @@
-package com.dragon.navigation;
-
+package com.dragon.navigation.Activity;
+// ------------------------ 主界面 ------------------------
+/**
+ *
+ *
+ * @author Edward
+ * @date 2017/5/8
+ */
 import android.Manifest;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
@@ -32,67 +39,51 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.NavigateArrow;
-import com.amap.api.maps.model.Text;
-import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.amap.api.services.route.RouteSearch;
 import com.dragon.Reback.ListviewCallBack;
 import com.dragon.navigation.Adapter.SearchpoiAdapter;
-import com.dragon.navigation.Adapter.TravelingAdapter;
 import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
-import com.dragon.navigation.Control.Util;
+import com.dragon.navigation.Function.ArPoiSearch;
+import com.dragon.navigation.Function.MLocation;
+import com.dragon.navigation.Renderer.MainRenderer;
 import com.dragon.navigation.Model.TravelingEntity;
+import com.dragon.navigation.R;
 import com.dragon.navigation.View.Mytestview;
-import com.dragon.navigation.View.NavigatorView;
 import com.dragon.navigation.use.DataSmoother;
 import com.dragon.navigation.use.SampleApplicationGLView;
 import com.dragon.navigation.use.Texture;
 import com.dragon.navigation.util.AMapUtil;
-import com.dragon.navigation.util.ModelUtil;
-import com.dragon.navigation.util.MyTextView;
-import com.dragon.navigation.util.NewWidget;
-import com.dragon.navigation.util.Servicetype;
+import com.dragon.navigation.View.NewWidget;
+import com.dragon.navigation.Function.Servicetype;
 import com.dragon.navigation.util.ToastUtil;
-import com.dragon.navigation.util.scrollerlayout;
-import com.dragon.orientationProvider.AccelerometerCompassProvider;
+import com.dragon.navigation.View.scrollerlayout;
 import com.dragon.orientationProvider.CalibratedGyroscopeProvider;
 import com.dragon.orientationProvider.GravityCompassProvider;
 import com.dragon.orientationProvider.ImprovedOrientationSensor2Provider;
@@ -101,17 +92,14 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * This file created by dragon on 2016/7/26 19:40,belong to com.dragon.arnav.basicFuction.camera2 .
- */
 public class Main extends Activity implements View.OnClickListener, SensorEventListener,
         TextWatcher, Inputtips.InputtipsListener, ListviewCallBack{
     private static final String TAG = "Main";
@@ -158,10 +146,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     //    搜素关键字
     private AutoCompleteTextView mSearchText;
     //    当前城市，自定义控件，为了获取焦点
-    private MyTextView mCurrentCity;
     // 搜索
     private TextView btnSearch;
     //    商家
+    private TextView mCurrentCity;
     private TextView mMerchant;
     private Button btnMy;
     // 要输入的poi搜索关键字
@@ -225,11 +213,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         fragmentManager=getFragmentManager();
 
         textureView =(TextureView) findViewById(R.id.texture);
-     buttonview=(RelativeLayout)  View.inflate(this,R.layout.main_camera2,null);
-     addContentView(buttonview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-             ViewGroup.LayoutParams.MATCH_PARENT));
+     buttonview=(RelativeLayout)View.inflate(this,R.layout.main_camera2,null);
+    addContentView(buttonview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+     ViewGroup.LayoutParams.MATCH_PARENT));
+       // buttonview.setVisibility(View.INVISIBLE);
       //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
         viewarround=(Mytestview) findViewById(R.id.Compass);
+   //    viewarround.setVisibility(View.INVISIBLE);
        // travelingList = ModelUtil.getTravelingData();
        // mAdapter = new TravelingAdapter(this, travelingList);
 
@@ -242,15 +232,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         ArPoiSearch.here=new LatLng(0,0);
     // initnewview();
     //    testview=new NavigatorView(this);
-     //   addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-     //           ViewGroup.LayoutParams.WRAP_CONTENT));
+    //  addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+    //      ViewGroup.LayoutParams.WRAP_CONTENT));
         FrameLayout BlankLayout = (FrameLayout) View.inflate(this, R.layout.blanklayout,
                 null);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
 //********************Location***************************
-        mCurrentCity = (MyTextView) findViewById(R.id.current_city);
-        LatLonPoint lp = new LatLonPoint(0, 0);
+        mCurrentCity = (TextView) findViewById(R.id.current_city);
       mLocation = new MLocation(Main.this, savedInstanceState, mCurrentCity);
         mLocation.setHandler(handler);
       mLocation.initLoction();
@@ -344,10 +333,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mRenderer.setTextures(mTextures);
         mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mGlView.setZOrderOnTop(true);
-        mGlView.setRenderer(mRenderer);
+       mGlView.setRenderer(mRenderer);
         mGlView.bringToFront();
-        addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
+     addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
 
@@ -756,6 +745,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //                SensorManager.SENSOR_DELAY_FASTEST, handler);
         float[] values = new float[3];
         float[] R = new float[9];
+
         final float inclinationMat[] = new float[9];
       /*  SensorManager.getRotationMatrix(R, null, accelerometerValues,
                 magneticFieldValues);*/
@@ -773,6 +763,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         Data.xangle=(float) Math.toDegrees(values[2]);
       /*  MainRenderer.setbearing(-Data.currentAzimuth);*/
         return values[0];
+
     }
     private static final float RAD_TO_DEGREE = (float) (360 / (2 * Math.PI));
     @Override
@@ -789,11 +780,11 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 */
             gravityValues=event.values;
         }
-
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
            /* magneticFieldSmoother.put(event.values);
             magneticFieldSmoother.getSmoothed(magneticFieldValues, SMOOTHING);*/
             magneticFieldValues=event.values;
+
         }
         int degree = (int)calculateOrientation();
 
@@ -815,13 +806,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             //指向那部分不变
         currentAzimuth=currentDegree;
       //  Data.currentAzimuth=currentDegree;
-           
-          /*  Data.currentAzimuth=currentDegree;
-            Data.todegree=currentDegree;*/
-
-
-       // currentDegree = -degree;
-     //  Log.i("ddd","alive");
     }
 
     @Override
@@ -834,6 +818,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         keyWord = AMapUtil.checkEditText(mSearchText);
         if ("".equals(keyWord)) {
             ToastUtil.show(this, "请输入搜索关键字");
+
             return;
         } else {
 //            默认搜索范围是深圳市，为空是全国
@@ -965,7 +950,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     }
                     break;
                 case 11:
-                    viewarround.doRotatetaAnim(Data.todegree,Data.currentAzimuth);
+//                    viewarround.doRotatetaAnim(Data.todegree,Data.currentAzimuth);
                     Data.todegree=Data.currentAzimuth;
                     break;
             }
@@ -995,15 +980,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         mAdapter=new SearchpoiAdapter(Main.this,Data.SearchpoiList);
     }
-
-   /* public class innerpeace implements ListviewCallBack{
-        public void makeList(){
-            Log.i("Main","listview is searched"+this.toString());
-
-            mAdapter=new SearchpoiAdapter(Main.this,Data.SearchpoiList);
-        }
-    }*/
-
+    /*-----返回键功能重写-----*/
+    @Override
     public void onBackPressed() {
         if (Alivefrag==2){
            Fragment fragment =fragmentManager.findFragmentByTag("guide");
