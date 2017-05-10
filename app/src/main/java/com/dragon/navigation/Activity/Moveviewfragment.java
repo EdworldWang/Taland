@@ -31,9 +31,12 @@ import com.dragon.navigation.Function.Servicetype;
 import com.dragon.navigation.View.scrollerlayout;
 
 /**
- * Created by EdwardPC on 2016/12/9.
+ * 封装地理信息
+ *
+ * @author Jinhu
+ * @date 2016/4/15
  */
-public class fragmentone extends Fragment {
+public class Moveviewfragment extends Fragment {
     private scrollerlayout[] layoutarray=new scrollerlayout[10];
     private  NewWidget[]  widgetarray=new NewWidget[10];
     private FragmentManager  fm;

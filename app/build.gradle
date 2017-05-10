@@ -39,4 +39,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile files('libs/fastjson-1.2.2.jar')
     compile files('libs/fastjson-1.2.2-sources.jar')
+    compile 'com.android.support:design:25.3.1'
 }

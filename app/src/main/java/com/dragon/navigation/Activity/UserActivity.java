@@ -10,17 +10,22 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -33,6 +38,14 @@ import com.dragon.navigation.util.ToastUtil;
 public class UserActivity extends Activity {
     EditText account;
     EditText textpassword;
+
+    private static final String EMAIL_PATTERN = "^[a-zA-Z0-9#_~!$&'()*+,;=:.\"(),:;<>@\\[\\]\\\\]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*$";
+    private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+    private Matcher matcher;
+
+  TextInputLayout usernameWrapper;
+    TextInputLayout passwordWrapper;
+
     private ProgressDialog progDialog = null;// 登陆时进度条
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +53,70 @@ public class UserActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        usernameWrapper = (TextInputLayout) findViewById(R.id.TextInputUsername);
+        passwordWrapper = (TextInputLayout) findViewById(R.id.TextInputPassword);
+        usernameWrapper.isInEditMode();
+        passwordWrapper.isInEditMode();
+        usernameWrapper.setHint("Email");
+        passwordWrapper.setHint("Password");
+        account=(EditText) findViewById(R.id.EditText_Account);
+        textpassword=(EditText) findViewById(R.id.EditText_Password);
         Button login=(Button) findViewById(R.id.btn_login);
-        login.setOnClickListener(l);
+        login.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                hideKeyboard();
+
+                String username = usernameWrapper.getEditText().getText().toString();
+                String password = passwordWrapper.getEditText().getText().toString();
+                if (!validateEmail(username)) {
+                    usernameWrapper.setError("Not a valid email address!");
+                   // usernameWrapper.setErrorTextAppearance();
+
+                } else if (!validatePassword(password)) {
+                    passwordWrapper.setError("Not a valid password!");
+                } else {
+                    usernameWrapper.setErrorEnabled(false);
+                    passwordWrapper.setErrorEnabled(false);
+                    //doLogin();
+                    MyThread1 one = new MyThread1();
+                    one.flag = "0";
+                    one.start();
+                    Message msg = new Message();
+                    msg.what = 1;
+                    handler.sendMessage(msg);
+                }
+            }
+        });
         Button register=(Button) findViewById(R.id.btn_register);
         register.setOnClickListener(l);
-        account=(EditText) findViewById(R.id.Login_EditText01);
-        textpassword=(EditText) findViewById(R.id.Login_EditText02);
+
+
+
+
         System.out.println("ip"+GetHostIp());
         Handler handler=new Handler();
     }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
+                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+//对用户名，是否为邮箱进行判定，密码长度必须大于5
+    public boolean validateEmail(String email) {
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+    public boolean validatePassword(String password) {
+        return password.length() > 5;
+    }
+
+
 
     private OnClickListener l=new OnClickListener() {
 
@@ -123,10 +191,11 @@ public class UserActivity extends Activity {
         entity.put("flag",flag);
 		/*  entity.put("name", "znbn");
 		  entity.put("password", "znbp");*/
-        String strUrlPath ="http://172.31.102.73/AR/server.php?";
+        String strUrlPath ="http://59.110.139.192/AR/server.php";
         //   String strUrlPath ="http://172.29.30.37/AR/server.php?name=梁宇";
         String strResult= HttpMethod.sendPost(strUrlPath, entity.toJSONString());
         String myanswer= HTMLSpirit.delHTMLTag(strResult);
+        System.out.println("strResult"+strResult+"\n"+"myanswer"+myanswer+"\n");
         //    System.out.println(entity.toJSONString());
         //    System.out.println("postone");
        switch(myanswer){
@@ -153,7 +222,7 @@ public class UserActivity extends Activity {
                handler.sendMessage(msg2);
                break;
            case "666":
-              mymessage mymsg=new mymessage();
+               System.out.println("??????");
                Message msg233=new Message();
                 msg233.what=6;
                handler.sendMessage(msg233);
@@ -172,7 +241,6 @@ public class UserActivity extends Activity {
                break;
 
        }
-        System.out.println(myanswer);
 //
 //	      JSONObject j = JSONObject.parseObject(strResult);
         //      System.out.println(j.toString()+"HERE");

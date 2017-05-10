@@ -48,14 +48,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.Main"  >
+        <activity android:name=".Activity.Main"
+                    android:theme="@style/ARTheme">
         </activity>
 
-        <activity android:name=".Activity.GuideActivity">
+        <activity android:name=".Activity.GuideActivity"
+                     android:theme="@style/GuideTheme">>
         </activity>
         <activity android:name=".Activity.SplashActivity">
         </activity>
-        <activity android:name=".Activity.UserActivity">
+        <activity android:name=".Activity.UserActivity"
+                   android:theme="@style/SIGNTheme">
         </activity>
         <activity android:name=".Activity.MySetting">
 

@@ -21,8 +21,6 @@ public class MySetting extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.my_setting);
         TextView test=(TextView)findViewById(R.id.test);
-        test.setText("firstdegree="+ Data.firstdegree+"\n"
-        +"dismove="+Data.movedistance+"\n"
-        +"alreadymove"+Data.alreadymove);
+
     }
 }

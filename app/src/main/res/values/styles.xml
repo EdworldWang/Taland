@@ -2,10 +2,40 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here.         <item name="android:windowFullscreen">true</item>-->
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">#00ffffff</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:navigationBarColor">#00ffffff</item>
+        <item name="android:windowBackground">@drawable/street</item>
+    </style>
+
+
+    <style name="ARTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/grey</item>
-        <item name="colorPrimaryDark">@color/red</item>
+        <item name="colorPrimaryDark">#834169e1</item>
         <item name="colorAccent">@color/blue</item>
+        <item name="android:navigationBarColor">#834169e1</item>
     </style>
+
+    <style name="GuideTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">@color/header_toast</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:navigationBarColor">@color/header_toast</item>
+    </style>
+
+
+    <style name="SIGNTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">#53191970</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:windowBackground">@drawable/login</item>
+        <item name="android:navigationBarColor">#53191970</item>
+    </style>
+
 
 </resources>

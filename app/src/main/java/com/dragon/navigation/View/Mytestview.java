@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
 import com.dragon.navigation.Control.Data;
-import com.dragon.navigation.Activity.fragmentone;
+import com.dragon.navigation.Activity.Moveviewfragment;
 
 /**
  * Created by EdwardPC on 2016/12/1.
@@ -152,7 +152,7 @@ public class Mytestview extends View {
                     }else{
                         drawDistance=(Data.AroundpoiList.get(i).getDistance()/2.5f);
                     }
-                    if(i==fragmentone.SelectID){
+                    if(i== Moveviewfragment.SelectID){
                         mPaint.setColor(0xffff0000);
                     }else{
                         mPaint.setColor(0xffffffff);

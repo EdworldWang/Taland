@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/mymidnightblue">
+    <!--必须写水波纹的颜色-->
+    <item>
+    <selector>
         <item android:state_pressed="true">
             <shape xmlns:android="http://schemas.android.com/apk/res/android" >
                 <corners android:radius="100dp"/>
@@ -22,4 +26,6 @@
                     android:bottom="8dp"/>
             </shape>
         </item>
-</selector>
+    </selector>
+    </item>
+</ripple>

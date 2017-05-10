@@ -48,7 +48,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="80dp"
-                android:background="#ffff"
+                android:background="@color/mylightslategray"
                 android:orientation="horizontal" >
 
 
@@ -59,10 +59,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="8dp"
                     android:src="@drawable/signin2" />
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/TextInputUsername"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+
                     <EditText
                         android:id="@+id/EditText_Account"
                         android:layout_width="fill_parent"
@@ -74,7 +71,6 @@
                         android:hint="Email"
                         android:padding="12dp"
                         android:textColor="#000000" />
-                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
 
@@ -109,10 +105,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/imageView" />
-                    <android.support.design.widget.TextInputLayout
-                            android:id="@+id/TextInputPassword"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
                             <EditText
                                 android:id="@+id/EditText_Password"
                                 android:layout_width="fill_parent"
@@ -125,7 +117,6 @@
                                 android:hint="Password"
                                 android:padding="12dp"
                                 android:textColor="#000000" />
-                    </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
 

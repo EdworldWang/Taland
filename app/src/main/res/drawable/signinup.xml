@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:state_pressed="true">
+<inset xmlns:android="http://schemas.android.com/apk/res/android">
+    <selector xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:drawable="@color/font_black_6" android:state_pressed="true">
             <shape xmlns:android="http://schemas.android.com/apk/res/android" >
                 <corners android:radius="100dp"/>
                 <solid android:color="#FF01CBF7"/>
@@ -11,7 +12,7 @@
                         android:bottom="8dp"/>
             </shape>
         </item>
-        <item android:state_pressed="false">
+        <item android:drawable="@color/light_yellow" android:state_pressed="false">
             <shape xmlns:android="http://schemas.android.com/apk/res/android" >
                 <corners android:radius="100dp"/>
                 <solid android:color="#FF01CBF7"/>
@@ -22,4 +23,5 @@
                     android:bottom="8dp"/>
             </shape>
         </item>
-</selector>
+    </selector>
+</inset>

@@ -8,8 +8,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@color/skyblue"
+        android:layout_height="121dp"
+        android:background="@color/myskyblue"
         >
                     <LinearLayout
                         android:orientation="horizontal"
@@ -17,10 +17,17 @@
                         android:layout_height="0dp"
                         android:layout_weight="1.5"
                         >
-                        <Button
+                        <FrameLayout
                             android:layout_width="60dp"
-                            android:layout_height="match_parent"
-                            />
+                            android:layout_height="match_parent">
+                            <Button
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/ic_close_white_24dp"
+                                />
+                        </FrameLayout>
+
 
                         <TextView
                             android:id="@+id/distance"

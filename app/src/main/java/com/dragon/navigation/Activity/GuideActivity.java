@@ -101,7 +101,7 @@ public class GuideActivity extends Activity {
 
             //跳转
             Intent mIntent = new Intent();
-            mIntent.setClass(GuideActivity.this, Main.class);
+            mIntent.setClass(GuideActivity.this, UserActivity.class);
             GuideActivity.this.startActivity(mIntent);
             GuideActivity.this.finish();
         }

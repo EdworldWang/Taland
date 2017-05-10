@@ -11,11 +11,9 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ContentProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
@@ -41,6 +39,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -65,7 +64,6 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
-import com.amap.api.services.route.RouteSearch;
 import com.dragon.Reback.ListviewCallBack;
 import com.dragon.navigation.Adapter.SearchpoiAdapter;
 import com.dragon.navigation.Control.Control;
@@ -92,7 +90,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -269,10 +266,10 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 //两个按键，搜索和我的监听
         btnMy = (Button) findViewById(R.id.My);
-        btnMy.setOnClickListener(this);
         btnSearch = (TextView) findViewById(R.id.btn_search);
+        //设置视图监听
+        btnMy.setOnClickListener(this);
         btnSearch.setOnClickListener(this);
-
 
     //ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
       //imgZnz.setAlpha(0.2f);
@@ -280,7 +277,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 //        ****************************************************
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 //        List<Sensor> deviceSensors = mSensorManager.getSensorList(Sensor.TYPE_ALL);
-//        Log.e("dragon",deviceSensors+"");
 //        实例化加速度传感器
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 //        实例化地磁传感器
@@ -295,12 +291,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-
-
-
         Thread mThread = new Thread(myRunnable);
         mThread.start();
-        RouteSearch routeSearch = new RouteSearch(this);
 
 
         initAR();
@@ -326,14 +318,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         mGlView = new SampleApplicationGLView(this);
         mGlView.init(translucent, depthSize, stencilSize);
-
         mRenderer = new MainRenderer(this);
         mRenderer.setOrientationProvider(currentOrientationProvider);
         mRenderer.setArrowProvider(currentOrientationProvider2);
         mRenderer.setTextures(mTextures);
         mGlView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
         mGlView.setZOrderOnTop(true);
-       mGlView.setRenderer(mRenderer);
+        mGlView.setRenderer(mRenderer);
         mGlView.bringToFront();
      addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT));
@@ -839,6 +830,14 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     }
 
 
+    /**
+     * 初始化视图监听器
+     */
+    private void registerViewListener() {
+
+    }
+
+
     //    检测所有按键
     @Override
     public void onClick(View v) {
@@ -917,7 +916,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                     "real="+Data.realbearing);
                     break;
                 case 4:
-                    fragmentone fragNear = new fragmentone();
+                    Moveviewfragment fragNear = new Moveviewfragment();
                     //下面的参数可以缺省
                     FragmentTransaction ftnear=fragmentManager.beginTransaction();
                     ftnear.add(R.id.fragmentone, fragNear,"yourname");
