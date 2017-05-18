@@ -34,6 +34,12 @@ import com.dragon.navigation.R;
 import com.dragon.navigation.View.HTMLSpirit;
 import com.dragon.navigation.Connect.HttpMethod;
 import com.dragon.navigation.util.ToastUtil;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 public class UserActivity extends Activity {
     EditText account;
@@ -43,7 +49,7 @@ public class UserActivity extends Activity {
     private Pattern pattern = Pattern.compile(EMAIL_PATTERN);
     private Matcher matcher;
 
-  TextInputLayout usernameWrapper;
+    TextInputLayout usernameWrapper;
     TextInputLayout passwordWrapper;
 
     private ProgressDialog progDialog = null;// 登陆时进度条
@@ -53,6 +59,7 @@ public class UserActivity extends Activity {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         usernameWrapper = (TextInputLayout) findViewById(R.id.TextInputUsername);
         passwordWrapper = (TextInputLayout) findViewById(R.id.TextInputPassword);

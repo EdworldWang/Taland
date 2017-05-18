@@ -21,7 +21,12 @@ public class Data {
            0, -1, 0, 0,
             -1, 0, 0, 0,
             0, 0, -1.0f, 0,
-            1200, 0, 4000, 1};
+            800, 0, 4000, 1};
+    public static float[] modelViewMatrix2=  {
+            0, -1, 0, 0,
+            -1, 0, 0, 0,
+            0, 0, -1.0f, 0,
+            1200, 200, 4500, 1};
     public static int floatdegree;
     public static boolean getfirstdegree=false;
     public static float firstdegree;
@@ -44,7 +49,7 @@ public class Data {
 
     public static volatile int SelectArroundId=-1;//默认不被选择
     public static boolean IsSelectArround=false;
-
+public static float[] provider = {0,0,0};
  public static float currentAzimuth=0;
  public static float todegree=0;
 public static float realbearing=0;

@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
 
             android:layout_centerHorizontal="true"
-            android:src="@drawable/button1"/>
+            android:src="@drawable/regist"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -130,7 +130,7 @@
                 android:textStyle="bold"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
-                android:background="@drawable/button"
+                android:background="@drawable/loginin"
                 android:text="Sign in" />
 
 
@@ -141,7 +141,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/button1"
+                android:background="@drawable/regist"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"

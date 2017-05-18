@@ -49,7 +49,7 @@
         </activity>
 
         <activity android:name=".Activity.Main"
-                    android:theme="@style/ARTheme">
+                    android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar">
         </activity>
 
         <activity android:name=".Activity.GuideActivity"
@@ -58,7 +58,7 @@
         <activity android:name=".Activity.SplashActivity">
         </activity>
         <activity android:name=".Activity.UserActivity"
-                   android:theme="@style/SIGNTheme">
+                   android:theme="@style/SignTheme">
         </activity>
         <activity android:name=".Activity.MySetting">
 

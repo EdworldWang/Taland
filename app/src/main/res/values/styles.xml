@@ -19,6 +19,30 @@
         <item name="android:navigationBarColor">#834169e1</item>
     </style>
 
+    <style name="MaterialDrawerTheme.Light.DarkToolbar" parent="MaterialTheme.Light.DarkToolbar">
+        <!-- Here we setting appcompat’s actionBarStyle -->
+        <item name="drawerArrowStyle">@style/MaterialDrawer.DrawerArrowStyle</item>
+
+        <!-- ...and here we setting appcompat’s color theming attrs -->
+        <item name="colorPrimary">@color/material_drawer_primary</item>
+        <item name="colorPrimaryDark">@color/material_drawer_primary_dark</item>
+        <item name="colorAccent">@color/material_drawer_accent</item>
+
+        <!-- MaterialDrawer specific values -->
+        <item name="material_drawer_background">@color/material_drawer_background</item>
+        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
+        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
+        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
+        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
+        <item name="material_drawer_hint_icon">@color/material_drawer_hint_icon</item>
+        <item name="material_drawer_divider">@color/material_drawer_divider</item>
+        <item name="material_drawer_selected">@color/material_drawer_selected</item>
+        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
+        <item name="material_drawer_header_selection_text">
+            @color/material_drawer_header_selection_text
+        </item>
+    </style>
+
     <style name="GuideTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/grey</item>
@@ -33,8 +57,19 @@
         <item name="colorPrimary">@color/grey</item>
         <item name="colorPrimaryDark">#53191970</item>
         <item name="colorAccent">@color/blue</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/login</item>
         <item name="android:navigationBarColor">#53191970</item>
+    </style>
+
+    <style name="SignTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryDark">#00ffffff</item>
+        <item name="colorAccent">@color/blue</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/mylogin</item>
+        <item name="android:navigationBarColor">#00ffffff</item>
     </style>
 
 

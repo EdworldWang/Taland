@@ -1,15 +1,7 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-    <RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/mymidnightblue">
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true">
 
 
         <ImageView
@@ -18,7 +10,7 @@
             android:layout_height="wrap_content"
 
             android:layout_centerHorizontal="true"
-            android:src="@drawable/button1"/>
+            android:src="@drawable/regist"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,11 +35,12 @@
 
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="36dp"
+                android:layout_marginRight="36dp"
                 android:layout_marginTop="80dp"
+                android:layout_centerHorizontal="true"
                 android:background="#ffff"
                 android:orientation="horizontal" >
 
@@ -72,6 +65,7 @@
                         android:background="#ffff"
                         android:gravity="left|center_vertical"
                         android:hint="Email"
+                        android:text="792288268@qq.com"
                         android:padding="12dp"
                         android:textColor="#000000" />
                 </android.support.design.widget.TextInputLayout>
@@ -87,11 +81,10 @@
 
 
             <LinearLayout
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_weight="0.25"
+                android:layout_marginLeft="36dp"
+                android:layout_marginRight="36dp"
                 android:background="#ffff"
                 android:orientation="horizontal" >
 
@@ -123,6 +116,8 @@
                                 android:inputType="textPassword"
                                 android:gravity="left|center_vertical"
                                 android:hint="Password"
+
+                                android:text="8125172123"
                                 android:padding="12dp"
                                 android:textColor="#000000" />
                     </android.support.design.widget.TextInputLayout>
@@ -131,26 +126,26 @@
 
             <Button
                 android:id="@+id/btn_login"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
                 android:layout_marginTop="16dp"
+
                 android:textStyle="bold"
                 android:textAllCaps="true"
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
-                android:background="@drawable/button"
+                android:background="@drawable/loginin"
                 android:text="Sign in" />
-
 
             <Button
                 android:id="@+id/btn_register"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/button1"
+                android:background="@drawable/regist"
                 android:textAllCaps="true"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
@@ -184,10 +179,6 @@
             android:layout_alignEnd="@+id/Login_icon_logo"
             android:layout_marginRight="65dp"
             android:layout_marginEnd="65dp" />
-
     </RelativeLayout>
 
-
-    </RelativeLayout>
-</FrameLayout>
 

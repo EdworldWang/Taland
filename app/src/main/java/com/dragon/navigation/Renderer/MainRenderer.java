@@ -186,11 +186,13 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         //清除颜色缓冲和深度缓冲
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+        GLES20.glDepthFunc(GLES20.GL_LEQUAL);
         GLES20.glEnable(GLES20.GL_BLEND);
-        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE);
+        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ZERO);
         // Set the viewport
 
-        GLES20.glViewport(0, -63, 1080, 1920);
+        GLES20.glViewport(0,0, 1080, 1920);
+        // GLES20.glViewport(0,-63 , 1080, 1920);设置视口矩阵
      //   GLES20.GL_SHADER_TYPE = GLES20.
         // handle face culling, we need to detect if we are using reflection
         // to determine the direction of the culling
@@ -199,7 +201,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         GLES20.glFrontFace(GLES20.GL_CCW); // Back camera
 
         float[] modelViewMatrix= Data.modelViewMatrix.clone();
-        float[] modelViewMatrix2= Data.modelViewMatrix.clone();
+        float[] modelViewMatrix2= Data.modelViewMatrix2.clone();
 
         Quaternion q = orientationProvider.getQuaternion();
         Quaternion arrowqua=ArrowProvider.getQuaternion();
@@ -225,13 +227,14 @@ public class MainRenderer implements GLSurfaceView.Renderer {
         //并不是一个单位四元数达到效果，是一个纯四元数，转动的角度为0，对应一个坐标点
 
      //   Log.i("my quaternion","Bearing="+my.getW()+" X="+my.getX()+"  Y="+my.getY()+"  Z="+my.getZ());
-        Matrix.scaleM(modelViewMatrix, 0, 250f,
-                250f,10f);
+       Matrix.scaleM(modelViewMatrix, 0, 250f,
+               250f,50f);
         //  Matrix.rotateM(modelViewMatrix,0,Bearing-Data.currentAzimuth,my.getX(),my.getY(),my.getZ());
         Matrix.rotateM(modelViewMatrix,0,Bearing,my.getX(),my.getY(),my.getZ());
         Matrix.rotateM(modelViewMatrix,0,(float) (2.0f * Math.acos(q.getW()) * 180.0f / Math.PI),
                 q.getX(),q.getY(),q.getZ());
         drawModel(drawmy, modelViewMatrix, "1", true);
+        GLES20.glViewport(100,0, 1080, 1920);
        // Matrix.translateM(modelViewMatrix2,0,0f,-500f,0f);
         Matrix.scaleM(modelViewMatrix2, 0, 100f,
                 100f,1f);
@@ -245,6 +248,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
                     q.getMatrix4x4().matrix[4*i+3] + "   ");
         }*/
      //   Data.modelDrawed=true;
+        GLES20.glDisable(GLES20.GL_DEPTH_TEST);
     }
 
 
@@ -304,7 +308,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
                    Model.getNumObjectIndex(), GLES20.GL_UNSIGNED_SHORT,
                     Model.getIndices());*/
             //glDrawArray(GL_POLYGON, index,nvert), 这是在OpenGL下绘制一个多边形的方法, 第三个参数是点数目, 第二个是当前多边形点的索引(标号),  该函数会从数组中找到第index个点, 向后找到nvert个, 用这些点来点点依次相连绘制成多边形,
-            if(IsArray==true) {
+         if(IsArray==true) {
             GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, model.getNumObjectVertex());
         }else{
             GLES20.glDrawElements(GLES20.GL_TRIANGLES,
@@ -318,7 +322,7 @@ public class MainRenderer implements GLSurfaceView.Renderer {
             GLES20.glDisableVertexAttribArray(textureCoordHandle);
             //   } else {
             SampleUtils.checkGLError("Render Frame");
-            GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+
         }
       /*  public void Output(String word,float MatrixData[]){
             Log.i(LOGTAG,word);

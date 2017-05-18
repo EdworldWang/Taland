@@ -1,13 +1,11 @@
 package com.dragon.navigation.Activity;
 // ------------------------ 主界面 ------------------------
 /**
- *
- *
  * @author Edward
  * @date 2017/5/8
  */
+
 import android.Manifest;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -40,6 +38,7 @@ import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -70,18 +69,19 @@ import com.dragon.navigation.Control.Control;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.Function.ArPoiSearch;
 import com.dragon.navigation.Function.MLocation;
-import com.dragon.navigation.Renderer.MainRenderer;
+import com.dragon.navigation.Function.Servicetype;
 import com.dragon.navigation.Model.TravelingEntity;
 import com.dragon.navigation.R;
+import com.dragon.navigation.Renderer.MainRenderer;
 import com.dragon.navigation.View.Mytestview;
+import com.dragon.navigation.View.NewWidget;
+import com.dragon.navigation.View.scrollerlayout;
 import com.dragon.navigation.use.DataSmoother;
 import com.dragon.navigation.use.SampleApplicationGLView;
 import com.dragon.navigation.use.Texture;
 import com.dragon.navigation.util.AMapUtil;
-import com.dragon.navigation.View.NewWidget;
-import com.dragon.navigation.Function.Servicetype;
+import com.dragon.navigation.util.MyTextView;
 import com.dragon.navigation.util.ToastUtil;
-import com.dragon.navigation.View.scrollerlayout;
 import com.dragon.orientationProvider.CalibratedGyroscopeProvider;
 import com.dragon.orientationProvider.GravityCompassProvider;
 import com.dragon.orientationProvider.ImprovedOrientationSensor2Provider;
@@ -89,19 +89,105 @@ import com.dragon.orientationProvider.OrientationProvider;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.BadgeStyle;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.ExpandableBadgeDrawerItem;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryToggleDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
+import com.mikepenz.materialdrawer.model.ToggleDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.mikepenz.octicons_typeface_library.Octicons;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class Main extends Activity implements View.OnClickListener, SensorEventListener,
-        TextWatcher, Inputtips.InputtipsListener, ListviewCallBack{
+
+public class Main extends AppCompatActivity implements SensorEventListener,
+        TextWatcher, Inputtips.InputtipsListener, ListviewCallBack {
+    @BindView(R.id.list_Lin)
+    LinearLayout lin;
     private static final String TAG = "Main";
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.texture)
+    TextureView texture;
+    @BindView(R.id.fragmentone)
+    LinearLayout fragmentone;
+    @BindView(R.id.searchText)
+    AutoCompleteTextView searchText;
+    @BindView(R.id.btn_search)
+    TextView btnSearch;
+    @BindView(R.id.linearLayout)
+    LinearLayout linearLayout;
+    @BindView(R.id.search_bar_layout)
+    RelativeLayout searchBarLayout;
+    @BindView(R.id.merchant)
+    TextView merchant;
+    @BindView(R.id.My)
+    Button My;
+
+    @BindView(R.id.current_city)
+    MyTextView currentCity;
+    @BindView(R.id.Compass)
+    Mytestview Compass;
+    @BindView(R.id.part_camera2)
+    RelativeLayout partCamera2;
+    @BindView(R.id.fragmenttwo)
+    LinearLayout fragmenttwo;
+    @BindView(R.id.topview)
+    FrameLayout topview;
+
+
+    @OnClick(R.id.My)
+    public void my(View v) {
+        Intent intent = new Intent(Main.this, MySetting.class);
+        startActivity(intent);
+//            Toast.makeText(Main.this, "我的", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.btn_search)
+//            ToastUtil.show(Main.this,"搜索");
+            public void search() {
+                     Control.choosedestination = false;
+                searchButton();
+            //            更新UI
+                     new Thread(new Runnable() {
+                    @Override
+                    public void run () { //　新建一个线程，并新建一个Message的对象，是用Handler的对象发送这个Message
+                        Message msg = new Message();
+                        msg.what = UPDATE_TEXT; // 用户自定义的一个值，用于标识不同类型的消息
+                        mUiHandler.sendMessage(msg); // 发送消息
+                    }
+                }).
+                start();
+            }
+
+
+
+    // final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin)
     private ArPoiSearch mArPoiSearch;
-   private MLocation mLocation;
+    private MLocation mLocation;
     private Vector<Texture> mTextures;
     private SampleApplicationGLView mGlView;
     private MainRenderer mRenderer;
@@ -111,7 +197,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     private int Alivefrag;
-   private FragmentManager fragmentManager;
+    private FragmentManager fragmentManager;
 
     private static final int NUM_SMOOTH_SAMPLES = 4;
     private static final DataSmoother.Smoothing SMOOTHING = DataSmoother.Smoothing.AVERAGE;
@@ -144,7 +230,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     private AutoCompleteTextView mSearchText;
     //    当前城市，自定义控件，为了获取焦点
     // 搜索
-    private TextView btnSearch;
     //    商家
     private TextView mCurrentCity;
     private TextView mMerchant;
@@ -167,8 +252,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     //***********新建子线程更新UI**********************
     private static final int UPDATE_TEXT = 1;
     private Handler mUiHandler = new MyUiHandler();
-    private scrollerlayout[] layoutarray=new scrollerlayout[10];
-    private NewWidget[]  widgetarray=new NewWidget[10];
+    private scrollerlayout[] layoutarray = new scrollerlayout[10];
+    private NewWidget[] widgetarray = new NewWidget[10];
 
     private float currentAzimuth = UNKNOWN_AZIMUTH;
     public final static float UNKNOWN_AZIMUTH = Float.NaN;
@@ -185,20 +270,30 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
      */
     private GoogleApiClient client;
     private TextView mydegree;
-    private  scrollerlayout layout_sub_Lin;
+    private scrollerlayout layout_sub_Lin;
 
-   private RelativeLayout buttonview;
-    private FrameLayout topview;
+
+    private static final int PROFILE_SETTING = 100000;
+
+    //save our header or result
+    private AccountHeader headerResult = null;
+    private Drawer result = null;
+
+    private RelativeLayout buttonview;
     private List<TravelingEntity> travelingList = new ArrayList<>(); // ListView数据
     private SearchpoiAdapter mAdapter; // 主页数据
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-      setContentView(R.layout.background);
-       // setContentView(R.layout.main_camera2);
-        topview=(FrameLayout)findViewById(R.id.topview);
+        setContentView(R.layout.background);
         ButterKnife.bind(this);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        // setContentView(R.layout.main_camera2);
+        topview = (FrameLayout) findViewById(R.id.topview);
+
 
         mAdapter = new SearchpoiAdapter(this, Data.SearchpoiList);
         DisplayMetrics dm = new DisplayMetrics();
@@ -207,72 +302,51 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         Data.screenWidth = dm.widthPixels;
         Data.screenHeigh = dm.heightPixels;
 
-        fragmentManager=getFragmentManager();
+        fragmentManager = getFragmentManager();
 
-        textureView =(TextureView) findViewById(R.id.texture);
-     buttonview=(RelativeLayout)View.inflate(this,R.layout.main_camera2,null);
-    addContentView(buttonview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-     ViewGroup.LayoutParams.MATCH_PARENT));
-       // buttonview.setVisibility(View.INVISIBLE);
-      //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
-        viewarround=(Mytestview) findViewById(R.id.Compass);
-   //    viewarround.setVisibility(View.INVISIBLE);
-       // travelingList = ModelUtil.getTravelingData();
-       // mAdapter = new TravelingAdapter(this, travelingList);
+        textureView = (TextureView) findViewById(R.id.texture);
+        //  buttonview=(RelativeLayout)View.inflate(this,R.layout.main_camera2,null);
+        // addContentView(buttonview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        //  ViewGroup.LayoutParams.MATCH_PARENT));
+        //    buttonview.bringToFront();
+        // buttonview.setVisibility(View.INVISIBLE);
+        //  ViewStub myviewstub =(ViewStub)findViewById(R.id.lanshouqian);
+        viewarround = (Mytestview) findViewById(R.id.Compass);
+        //    viewarround.setVisibility(View.INVISIBLE);
+        // travelingList = ModelUtil.getTravelingData();
+        // mAdapter = new TravelingAdapter(this, travelingList);
 
-        Data.locationdes=new Location("des");
+
+        Data.locationdes = new Location("des");
         Data.locationdes.setLongitude(0);
         Data.locationdes.setLatitude(0);
-        Data.locationhere=new Location("des");
+        Data.locationhere = new Location("des");
         Data.locationhere.setLongitude(0);
         Data.locationhere.setLatitude(0);
-        ArPoiSearch.here=new LatLng(0,0);
-    // initnewview();
-    //    testview=new NavigatorView(this);
-    //  addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-    //      ViewGroup.LayoutParams.WRAP_CONTENT));
+        ArPoiSearch.here = new LatLng(0, 0);
+        // initnewview();
+        //    testview=new NavigatorView(this);
+        //  addContentView(testview,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        //      ViewGroup.LayoutParams.WRAP_CONTENT));
         FrameLayout BlankLayout = (FrameLayout) View.inflate(this, R.layout.blanklayout,
                 null);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
 //********************Location***************************
         mCurrentCity = (TextView) findViewById(R.id.current_city);
-      mLocation = new MLocation(Main.this, savedInstanceState, mCurrentCity);
+        mLocation = new MLocation(Main.this, savedInstanceState, mCurrentCity);
         mLocation.setHandler(handler);
-      mLocation.initLoction();
+        mLocation.initLoction();
 
-        LinearLayout happy = (LinearLayout) View.inflate(this, R.layout.succees,
-                null);
-        mydegree = (TextView)happy.findViewById(R.id.degree);
-        mydegree.setText("");
-        mydegree.setTextColor(Color.RED);
 
-       /* Mytestview nine=new Mytestview(this);
-        addContentView(nine, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-             ViewGroup.LayoutParams.WRAP_CONTENT));*/
-
-        BlankLayout.setVisibility(View.VISIBLE);
-        BlankLayout.addView(happy,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        happy.setPadding(200,100,0,0);
-    addContentView(BlankLayout,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-       ViewGroup.LayoutParams.MATCH_PARENT));
-      BlankLayout.bringToFront();
 //        ToastUtil.show(Main.this,mLocation.getLp());
 //********************POI********************************
 
         mTextures = new Vector<Texture>();
-         loadTextures();
+        loadTextures();
 
-//两个按键，搜索和我的监听
-        btnMy = (Button) findViewById(R.id.My);
-        btnSearch = (TextView) findViewById(R.id.btn_search);
-        //设置视图监听
-        btnMy.setOnClickListener(this);
-        btnSearch.setOnClickListener(this);
-
-    //ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
-      //imgZnz.setAlpha(0.2f);
+        //ToastUtil.show(Main.this,mLocation.getLocationResult().getAddress());
+        //imgZnz.setAlpha(0.2f);
 
 //        ****************************************************
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -296,16 +370,126 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
 
         initAR();
-    //   setDefaultFragment();
+        //   setDefaultFragment();
 
 
-      /*  mydegree.setText(hhh.getWidth()+" "+hhh.getHeight()+"  "+hhh.getParent()+
-                "\n"+layoutarray[1].getWidth()+" "+layoutarray[1].getHeight());*/
+        // Create a few sample profile
+        // NOTE you have to define the loader logic too. See the CustomApplication for more details
+        final IProfile profile = new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
+        final IProfile profile2 = new ProfileDrawerItem().withName("Bernat Borras").withEmail("alorma@github.com").withIcon(Uri.parse("https://avatars3.githubusercontent.com/u/887462?v=3&s=460")).withIdentifier(101);
+        final IProfile profile3 = new ProfileDrawerItem().withName("Max Muster").withEmail("max.mustermann@gmail.com").withIcon(R.drawable.profile2).withIdentifier(102);
+        final IProfile profile4 = new ProfileDrawerItem().withName("Felix House").withEmail("felix.house@gmail.com").withIcon(R.drawable.profile3).withIdentifier(103);
+        final IProfile profile5 = new ProfileDrawerItem().withName("Mr. X").withEmail("mister.x.super@gmail.com").withIcon(R.drawable.profile4).withIdentifier(104);
+        final IProfile profile6 = new ProfileDrawerItem().withName("Batman").withEmail("batman@gmail.com").withIcon(R.drawable.profile5).withIdentifier(105);
+        // Create the AccountHeader
+        headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withTranslucentStatusBar(true)
+                .withHeaderBackground(R.drawable.header)
+                .addProfiles(
+                        profile,
+                        profile2,
+                        profile3,
+                        profile4,
+                        profile5,
+                        profile6,
+                        //don't ask but google uses 14dp for the add account icon in gmail but 20dp for the normal icons (like manage account)
+                        new ProfileSettingDrawerItem().withName("Add Account").withDescription("Add new GitHub Account").withIcon(new IconicsDrawable(this, GoogleMaterial.Icon.gmd_plus).actionBar().paddingDp(5).colorRes(R.color.material_drawer_primary_text)).withIdentifier(PROFILE_SETTING),
+                        new ProfileSettingDrawerItem().withName("Manage Account").withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(100001)
+                )
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean current) {
+                        //sample usage of the onProfileChanged listener
+                        //if the clicked item has the identifier 1 add a new profile ;)
+                        //例子为addcount
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING) {
+                            int count = 100 + headerResult.getProfiles().size() + 1;
+                            IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman" + count).withEmail("batman" + count + "@gmail.com").withIcon(R.drawable.profile5).withIdentifier(count);
+                            if (headerResult.getProfiles() != null) {
+                                //we know that there are 2 setting elements. set the new profile above them ;)
+                                headerResult.addProfile(newProfile, headerResult.getProfiles().size() - 2);
+                            } else {
+                                headerResult.addProfiles(newProfile);
+                            }
+                        }
+
+                        //false if you have not consumed the event and it should close the drawer
+                        return false;
+                    }
+                })
+                .withSavedInstance(savedInstanceState)
+                .build();
+
+        //Create the drawer
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withHasStableIds(true)
+                // .withItemAnimator(new AlphaCrossFadeAnimator())
+                .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_compact_header).withDescription(R.string.drawer_item_compact_header_desc).withIcon(GoogleMaterial.Icon.gmd_sun).withIdentifier(1).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_action_bar_drawer).withDescription(R.string.drawer_item_action_bar_drawer_desc).withIcon(FontAwesome.Icon.faw_home).withIdentifier(2).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_multi_drawer).withDescription(R.string.drawer_item_multi_drawer_desc).withIcon(FontAwesome.Icon.faw_gamepad).withIdentifier(3).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_non_translucent_status_drawer).withDescription(R.string.drawer_item_non_translucent_status_drawer_desc).withIcon(FontAwesome.Icon.faw_eye).withIdentifier(4).withSelectable(false).withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700)),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_advanced_drawer).withDescription(R.string.drawer_item_advanced_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_adb).withIdentifier(5).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_embedded_drawer).withDescription(R.string.drawer_item_embedded_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_battery).withIdentifier(7).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_fullscreen_drawer).withDescription(R.string.drawer_item_fullscreen_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_labels).withIdentifier(8).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_custom_container_drawer).withDescription(R.string.drawer_item_custom_container_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_my_location).withIdentifier(9).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_menu_drawer).withDescription(R.string.drawer_item_menu_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_filter_list).withIdentifier(10).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_mini_drawer).withDescription(R.string.drawer_item_mini_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_battery_charging).withIdentifier(11).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_fragment_drawer).withDescription(R.string.drawer_item_fragment_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_disc_full).withIdentifier(12).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_collapsing_toolbar_drawer).withDescription(R.string.drawer_item_collapsing_toolbar_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_camera_rear).withIdentifier(13).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_persistent_compact_header).withDescription(R.string.drawer_item_persistent_compact_header_desc).withIcon(GoogleMaterial.Icon.gmd_brightness_5).withIdentifier(14).withSelectable(false),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_crossfade_drawer_layout_drawer).withDescription(R.string.drawer_item_crossfade_drawer_layout_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_format_bold).withIdentifier(15).withSelectable(false),
+                        new SectionDrawerItem().withName(R.string.drawer_item_section_header),
+                        new ExpandableBadgeDrawerItem().withName("Collapsable Badge").withIcon(GoogleMaterial.Icon.gmd_collection_case_play).withIdentifier(18).withSelectable(false).withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700)).withBadge("100").withSubItems(
+                                new SecondaryDrawerItem().withName("CollapsableItem").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2000),
+                                new SecondaryDrawerItem().withName("CollapsableItem 2").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2001)
+                        ),
+                        new ExpandableDrawerItem().withName("Collapsable").withIcon(GoogleMaterial.Icon.gmd_collection_case_play).withIdentifier(19).withSelectable(false).withSubItems(
+                                new SecondaryDrawerItem().withName("CollapsableItem").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2002),
+                                new SecondaryDrawerItem().withName("CollapsableItem 2").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2003)
+                        ),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github).withIdentifier(20).withSelectable(false),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(GoogleMaterial.Icon.gmd_format_color_fill).withIdentifier(21).withTag("Bullhorn"),
+                        new DividerDrawerItem(),
+                        new SwitchDrawerItem().withName("Switch").withIcon(Octicons.Icon.oct_tools).withChecked(true),
+                        new SwitchDrawerItem().withName("Switch2").withIcon(Octicons.Icon.oct_tools).withChecked(true).withSelectable(false),
+                        new ToggleDrawerItem().withName("Toggle").withIcon(Octicons.Icon.oct_tools).withChecked(true),
+                        new DividerDrawerItem(),
+                        new SecondarySwitchDrawerItem().withName("Secondary switch").withIcon(Octicons.Icon.oct_tools).withChecked(true),
+                        new SecondarySwitchDrawerItem().withName("Secondary Switch2").withIcon(Octicons.Icon.oct_tools).withChecked(true).withSelectable(false),
+                        new SecondaryToggleDrawerItem().withName("Secondary toggle").withIcon(Octicons.Icon.oct_tools).withChecked(true)
+                ) // add the items we want to use with our Drawer
+                .withSavedInstance(savedInstanceState)
+                .withShowDrawerOnFirstLaunch(true)
+//                .withShowDrawerUntilDraggedOpened(true)
+                .build();
+
+
+        LinearLayout happy = (LinearLayout) View.inflate(this, R.layout.succees,
+                null);
+        mydegree = (TextView) happy.findViewById(R.id.degree);
+        mydegree.setText("");
+        mydegree.setTextColor(Color.RED);
+
+       /* Mytestview nine=new Mytestview(this);
+        addContentView(nine, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+             ViewGroup.LayoutParams.WRAP_CONTENT));*/
+
+        BlankLayout.setVisibility(View.VISIBLE);
+        BlankLayout.addView(happy, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        happy.setPadding(200, 100, 0, 0);
+        addContentView(BlankLayout, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
+        BlankLayout.bringToFront();
     }
 
 
-
-    public void initAR(){
+    public void initAR() {
         currentOrientationProvider = new GravityCompassProvider((SensorManager) this.getSystemService(
                 this.SENSOR_SERVICE));
         currentOrientationProvider2 = new CalibratedGyroscopeProvider((SensorManager) this.getSystemService(
@@ -326,8 +510,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         mGlView.setZOrderOnTop(true);
         mGlView.setRenderer(mRenderer);
         mGlView.bringToFront();
-     addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT));
+        addContentView(mGlView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
 
@@ -385,7 +569,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-            Log.i("texture","destroy");
+            Log.i("texture", "destroy");
             return true;
         }
 
@@ -646,7 +830,7 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
         //        注册监听事件
         mSensorManager.registerListener(Main.this, accelerometer, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(Main.this, magnetic, SensorManager.SENSOR_DELAY_UI);
-     mLocation.onResume();
+        mLocation.onResume();
         Log.e(TAG, "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {
@@ -680,8 +864,8 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         gravitySmoother.clear();
         magneticFieldSmoother.clear();
-     mLocation.onPause();
-     mLocation.deactivate();
+        mLocation.onPause();
+        mLocation.deactivate();
         currentOrientationProvider.stop();
         currentOrientationProvider2.stop();
     }
@@ -715,13 +899,13 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-    //    mLocation.onSaveInstanceState(outState);
+        //    mLocation.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-   //     mLocation.onDestroy();
+        //     mLocation.onDestroy();
         mTextures.clear();
         mTextures = null;
     }
@@ -749,54 +933,60 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             Log.i("values",values[0]+"    "+values[1]+"    "+values[2]);*/
         Data.currentAzimuth = RAD_TO_DEGREE * values[0];
         values[0] = (float) Math.toDegrees(values[0]);
-        Data.yangle=(float) Math.toDegrees(values[1]);
-        Data.toyangle=(float) Math.toDegrees(values[1]);
-        Data.xangle=(float) Math.toDegrees(values[2]);
+        Data.yangle = (float) Math.toDegrees(values[1]);
+        Data.toyangle = (float) Math.toDegrees(values[1]);
+        Data.xangle = (float) Math.toDegrees(values[2]);
       /*  MainRenderer.setbearing(-Data.currentAzimuth);*/
         return values[0];
 
     }
+
     private static final float RAD_TO_DEGREE = (float) (360 / (2 * Math.PI));
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
           /*  gravitySmoother.put(event.values);
             gravitySmoother.getSmoothed(accelerometerValues, SMOOTHING);
 */
-            accelerometerValues=event.values;
+            accelerometerValues = event.values;
         }
         if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
           /*  gravitySmoother.put(event.values);
             gravitySmoother.getSmoothed(accelerometerValues, SMOOTHING);
 */
-            gravityValues=event.values;
+            gravityValues = event.values;
         }
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
            /* magneticFieldSmoother.put(event.values);
             magneticFieldSmoother.getSmoothed(magneticFieldValues, SMOOTHING);*/
-            magneticFieldValues=event.values;
+            magneticFieldValues = event.values;
 
         }
-        int degree = (int)calculateOrientation();
+        int degree = (int) calculateOrientation();
 
-     //   RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f,
-      //          Animation.RELATIVE_TO_SELF, 0.5f);
+        //   RotateAnimation ra = new RotateAnimation(currentDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f,
+        //          Animation.RELATIVE_TO_SELF, 0.5f);
 
-       // mNewWidget.scrollTo(Data.predegree*15,0);
+        // mNewWidget.scrollTo(Data.predegree*15,0);
 //        int rotation = getWindowManager().getDefaultDisplay().getRotation();
- //      imgZnz.setRotate(ORIENTATIONS.get(rotation),50,50);
-     //   ra.setDuration(200);
-      //  layout_sub_Lin.startAnimation(ta);
+        //      imgZnz.setRotate(ORIENTATIONS.get(rotation),50,50);
+        //   ra.setDuration(200);
+        //  layout_sub_Lin.startAnimation(ta);
 
-      // viewaround.startAnimation(ra);
-      //  currentDegree = -degree;
+        // viewaround.startAnimation(ra);
+        //  currentDegree = -degree;
 
        /* if(Control.candrawview==true) {*/
 
-            //自定义动画类animator来达到部分控件的旋转和
-            //指向那部分不变
-        currentAzimuth=currentDegree;
-      //  Data.currentAzimuth=currentDegree;
+        //自定义动画类animator来达到部分控件的旋转和
+        //指向那部分不变
+        currentAzimuth = currentDegree;
+        mydegree.setText(Data.provider[2] + "\n" +
+                Data.q[1] + "\n" +
+                "realbearing与指北针距离  " + Data.realbearing + "\n" +
+                "databearing    " + Data.bearing + "\n");
+        //  Data.currentAzimuth=currentDegree;
     }
 
     @Override
@@ -813,17 +1003,17 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
             return;
         } else {
 //            默认搜索范围是深圳市，为空是全国
-            final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin);
+            //  final LinearLayout lin = (LinearLayout) findViewById(R.id.list_Lin);
             Data.SearchpoiList.clear();
-            mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin,handler);
+            mArPoiSearch = new ArPoiSearch(this, keyWord, "", "深圳市", lin, handler);
             mArPoiSearch.setSearchtype(Servicetype.searchnear_view);
             mArPoiSearch.doSearch();
-            Fragment contain=fragmentManager.findFragmentByTag("yourname");
-            FragmentTransaction ft=fragmentManager.beginTransaction();
-            if(contain!=null){
-              ft.hide(contain);
+            Fragment contain = fragmentManager.findFragmentByTag("yourname");
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            if (contain != null) {
+                ft.hide(contain);
                 ft.commit();
-               // mGlView.setVisibility(View.INVISIBLE);
+                // mGlView.setVisibility(View.INVISIBLE);
             }
 
         }
@@ -838,51 +1028,21 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
     }
 
 
-    //    检测所有按键
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_search:
-//            ToastUtil.show(Main.this,"搜索");
-                Control.choosedestination=false;
-                searchButton();
-//            更新UI
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() { //　新建一个线程，并新建一个Message的对象，是用Handler的对象发送这个Message
-                        Message msg = new Message();
-                        msg.what = UPDATE_TEXT; // 用户自定义的一个值，用于标识不同类型的消息
-                        mUiHandler.sendMessage(msg); // 发送消息
-                    }
-                }).start();
-                break;
-            case R.id.My:
-//            ToastUtil.show(Main.this,"我的");
-                Intent intent = new Intent(Main.this, MySetting.class);
-                startActivity(intent);
-//            Toast.makeText(Main.this, "我的", Toast.LENGTH_SHORT).show();
-                break;
-
-        }
-    }
-
-
-
-//用于请求searcharround服务和刷新服务右上角的界面
+    //用于请求searcharround服务和刷新服务右上角的界面
     private Runnable myRunnable = new Runnable() {
         public void run() {
-            while(true) {
+            while (true) {
                 /*float degree = -calculateOrientation();
                 Data.predegree = degree;*/
                /* layout_sub_Lin.offsetLeftAndRight(Data.predegree*15);*/
                 //layout_sub_Lin.scrollTo(Data.predegree*15,0);
-                try{
+                try {
                     Thread.sleep(200);
-                    Message circle=new Message();
-                    circle.what=11;
+                    Message circle = new Message();
+                    circle.what = 11;
                     handler.sendMessage(circle);
 
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
 
                 }
             }
@@ -899,58 +1059,59 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
                     break;
                 case 88:
-                    Log.i("cc","有消息了!");
+                    Log.i("cc", "有消息了!");
                     //在同一个线程中也可以通过handle进行消息的传递
                     break;
                 case 2:
 
-                    mydegree.setText("  handler.getLooper().getThread()"+
-                            handler.getLooper().getThread()+"\n"+
-                            "selectid"+Data.SelectArroundId+"\n"+
-                            "Data.currentdegree="+Data.currentAzimuth+"\n"+
-                    "yangle="+Data.yangle+"\n"+
-                    "xangle="+Data.xangle+"\n"+
-                    "q"+Data.q[0]+" "+Data.q[1]+"   "+Data.q[2]+"\n"+
-                    "vector="+Data.vector[0]+"  "+Data.vector[1]+"   "+Data.vector[2]+"\n"+
-                            "data.bearing"+Data.bearing+"\n"+
-                    "real="+Data.realbearing);
+                    mydegree.setText("  handler.getLooper().getThread()" +
+                            handler.getLooper().getThread() + "\n" +
+                            "selectid" + Data.SelectArroundId + "\n" +
+                            "Data.currentdegree=" + Data.currentAzimuth + "\n" +
+                            "yangle=" + Data.yangle + "\n" +
+                            "xangle=" + Data.xangle + "\n" +
+                            "q" + Data.q[0] + " " + Data.q[1] + "   " + Data.q[2] + "\n" +
+                            "vector=" + Data.vector[0] + "  " + Data.vector[1] + "   " + Data.vector[2] + "\n" +
+                            "data.bearing" + Data.bearing + "\n" +
+                            "real=" + Data.realbearing);
                     break;
                 case 4:
                     Moveviewfragment fragNear = new Moveviewfragment();
                     //下面的参数可以缺省
-                    FragmentTransaction ftnear=fragmentManager.beginTransaction();
-                    ftnear.add(R.id.fragmentone, fragNear,"yourname");
+                    FragmentTransaction ftnear = fragmentManager.beginTransaction();
+                    ftnear.add(R.id.fragmentone, fragNear, "yourname");
                     ftnear.commit();
+
                     break;
                 case 5:
                     fragmenttwo fragGuide = new fragmenttwo();
                     fragGuide.remove();
-                  //  fragGuide.setDestination(msg.obj);
+                    //  fragGuide.setDestination(msg.obj);
                     //下面的参数可以缺省
-                    FragmentTransaction ftguide=fragmentManager.beginTransaction();
-                    ftguide.add(R.id.fragmenttwo, fragGuide,"guide");
+                    FragmentTransaction ftguide = fragmentManager.beginTransaction();
+                    ftguide.add(R.id.fragmenttwo, fragGuide, "guide");
                     ftguide.commit();
                     //((ViewGroup)buttonview.getParent()).removeView(buttonview);
                     //采用移除的效率不高，在添加的时候会卡顿，耗费资源对时间监听由延迟
                     topview.bringToFront();
-                    Alivefrag=2;
-                   // setContentView(R.layout.guide_view);
+                    Alivefrag = 2;
+                    // setContentView(R.layout.guide_view);
                     break;
                 case 9:
-                    if( Control.finishLocation==false) {
+                    if (Control.finishLocation == false) {
 
                         ArPoiSearch Arnear = new ArPoiSearch(Main.this, "", "餐饮服务", "深圳市");
                         Arnear.setHandler(this);
                         Arnear.setSearchtype(Servicetype.searchbound);
                         Arnear.doSearch();
-                        Log.i("location","i am here");
+                        Log.i("location", "i am here");
 
-                        Control.finishLocation=true;
+                        Control.finishLocation = true;
                     }
                     break;
                 case 11:
 //                    viewarround.doRotatetaAnim(Data.todegree,Data.currentAzimuth);
-                    Data.todegree=Data.currentAzimuth;
+                    Data.todegree = Data.currentAzimuth;
                     break;
             }
             super.handleMessage(msg);
@@ -971,21 +1132,23 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
                 "Red"));
         mTextures.add(Texture.loadTextureFromApk("znz.png", getAssets(),
                 "znz"));
-        mTextures.add(Texture.loadTextureFromApk("1.png", getAssets(),
+        mTextures.add(Texture.loadTextureFromApk("001.png", getAssets(),
                 "1"));
     }
-    public void makeList(){
-        Log.i("Main","listview is searched"+this.toString());
 
-        mAdapter=new SearchpoiAdapter(Main.this,Data.SearchpoiList);
+    public void makeList() {
+        Log.i("Main", "listview is searched" + this.toString());
+
+        mAdapter = new SearchpoiAdapter(Main.this, Data.SearchpoiList);
     }
+
     /*-----返回键功能重写-----*/
     @Override
     public void onBackPressed() {
-        if (Alivefrag==2){
-           Fragment fragment =fragmentManager.findFragmentByTag("guide");
+        if (Alivefrag == 2) {
+            Fragment fragment = fragmentManager.findFragmentByTag("guide");
 
-            FragmentTransaction removeft=fragmentManager.beginTransaction();
+            FragmentTransaction removeft = fragmentManager.beginTransaction();
             removeft.remove(fragment);
             removeft.commit();
 
@@ -1013,4 +1176,6 @@ public class Main extends Activity implements View.OnClickListener, SensorEventL
 
         return super.onKeyDown(keyCode, event);
     }*/
+
+
 }

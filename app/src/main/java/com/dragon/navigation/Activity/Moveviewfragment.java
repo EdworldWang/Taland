@@ -200,36 +200,51 @@ public class Moveviewfragment extends Fragment {
 
     }
     public void getscrollviewxy(float currentdegree,float currenty){
-
-            ValueAnimator animatordegree = ValueAnimator.ofFloat(prex,currentdegree);
+//小于180°进行左转，大于180°进行右转，
+// 视野夹角给定一个范围，若不在此范围内则不进行绘制，目前给该夹角定为45°
+        //x轴不同于y轴的移动，左右的正负性已经确定
+        Locationdestination.setLatitude(Data.AroundpoiList.get(4).getMyLatLonPoint().getLatitude());
+        Locationdestination.setLongitude(Data.AroundpoiList.get(4).getMyLatLonPoint().getLongitude());
+        Locationhere.setLatitude(ArPoiSearch.here.latitude);
+        Locationhere.setLongitude(ArPoiSearch.here.longitude);
+        final float startBearing =  Locationdestination.bearingTo(Locationhere);
+        Data.bearing = Util.positiveModulo(startBearing - Data.currentAzimuth,
+                360);
+           float startx= Data.bearing - 180;
+            ValueAnimator animatordegree = ValueAnimator.ofFloat(prex,startx);
             animatordegree.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    movex = (float)animation.getAnimatedValue()*18;
+                    movex = (float)animation.getAnimatedValue()*-18;
                     doscroll();
                 }
             });
-            prex=currentdegree;
-            animatordegree.setDuration(450);
+            prex=startx;
+            animatordegree.setDuration(300);
             animatordegree.setInterpolator(new LinearInterpolator());
             animatordegree.start();
 
-        ValueAnimator animatory = ValueAnimator.ofFloat(prey,currenty);
+        ValueAnimator animatory = Data.provider[2]>0?
+                ValueAnimator.ofFloat(prey,currenty):ValueAnimator.ofFloat(prey,-currenty);
         animatory.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                movey = (float)animation.getAnimatedValue()*36;
+                movey = (float)animation.getAnimatedValue()*18;
                 doscroll();
             }
         });
-        prey=currenty;
-        animatory.setDuration(350);
-        animatory.setInterpolator(new AccelerateDecelerateInterpolator());
+        prey=Data.provider[2]>0?currenty:-currenty;
+        animatory.setDuration(400);
+        animatory.setInterpolator(new LinearInterpolator()     );
         animatory.start();
     }
 
     private void doscroll(){
-            layoutarray[0].smoothScrollTo(-500,(int)movey);
+        if(Data.bearing>120&&Data.bearing<240)
+            layoutarray[4].smoothScrollTo((int)movex+(int)-Data.screenWidth/2+widgetarray[4].getLayoutParams().width/2,(int)movey-800);
+        else{
+            layoutarray[4].smoothScrollTo((int)-Data.screenWidth/2+widgetarray[4].getLayoutParams().width/2,(int)movey-800);
+        }
     }
 
 
@@ -241,9 +256,12 @@ public class Moveviewfragment extends Fragment {
         final float startBearing =  Locationdestination.bearingTo(Locationhere);
         Data.bearing = Util.positiveModulo(startBearing - Data.currentAzimuth,
                 360);
+
+
     //    float realbearing=(-(Data.bearing-180)-Data.currentAzimuth)%360;
         float realbearing=(180-Data.bearing-Data.currentAzimuth+360)%360;
        Data.realbearing=realbearing;
+        //计算结果为目的地与指北针的夹角
         ValueAnimator animatorbearing = ValueAnimator.ofFloat(prebearing,realbearing);
         animatorbearing.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -301,13 +319,9 @@ public class Moveviewfragment extends Fragment {
             switch (msg.what) {
                 case UPDATE_VIEW:;
                     isee.removeAllViews();
-
-
                     break;
                 case SCROLL_VIEW:;
-                    getscrollviewxy(Data.q[0],Data.yangle);
-
-
+                    getscrollviewxy(Data.q[0],Data.q[1]+90);
                     break;
             }
             super.handleMessage(msg);

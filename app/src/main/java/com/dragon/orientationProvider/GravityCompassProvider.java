@@ -47,6 +47,7 @@ public class GravityCompassProvider extends OrientationProvider {
             magnitudeValues = event.values.clone();
         } else if (event.sensor.getType() == Sensor.TYPE_GRAVITY) {
             gravityValues = event.values.clone();
+            Data.provider = gravityValues.clone();
         }
 
         if (magnitudeValues != null && gravityValues != null) {
