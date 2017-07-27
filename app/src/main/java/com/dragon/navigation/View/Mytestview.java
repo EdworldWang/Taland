@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
 import com.dragon.navigation.Control.Data;
-import com.dragon.navigation.Activity.Moveviewfragment;
+import com.dragon.navigation.UI.Fragment.Moveviewfragment;
 
 /**
  * Created by EdwardPC on 2016/12/1.
@@ -37,8 +37,11 @@ public class Mytestview extends View {
 
             mPaint = new Paint();
         }
-
-        @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        mR = Math.min(mCx, mCy) / 4 * 3;
+    }
+    @Override
         //这个方法会在view的大小改变后被调用
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
@@ -49,6 +52,7 @@ public class Mytestview extends View {
             mCy = mH / 2;
             mR = Math.min(mCx, mCy) / 4 * 3;
         }
+
     public void setReccolor(int color){
         Reccolor = color;
     }
@@ -59,7 +63,7 @@ public class Mytestview extends View {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            mR=200;//单位为dip换成dp会好点
+        //    mR=200;//单位为dip换成dp会好点
             //这是半径大小
             //跟后面的distance进行换算，500即500以上
             mPaint.setColor(0xffffffff);

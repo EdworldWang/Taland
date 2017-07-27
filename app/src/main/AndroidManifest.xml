@@ -1,66 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.dragon.navigation">
-
-
-
-
     <!--添加对应有权限-->
-    <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera2.full" />
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
     <!--访问网络，网络定位需要上网-->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--写入扩展存储，向扩展卡写入数据，用于写入缓存定位数据-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 访问网络状态, 检测网络的可用性. 需要网络运营商相关信息用于网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- 访问网络的变化, 需要某些信息用于网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <!--用于访问GPS定位-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 通过网络得到粗略位置 -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!--用于读取手机当前状态-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <!--用于wifi定位-->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 访问WiFi状态. 需要WiFi信息用于网络定位 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- 修改WiFi状态. 发起WiFi扫描, 需要WiFi信息用于网络定位 -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <!-- 允许当前应用改变配置，如定位  -->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <!-- 允许读写系统设置项  -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- 允许程序在手机屏幕关闭后后台进程仍然运行  -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 允许程序管理AccountManager中的账户列表 -->
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <!-- 访问GMail账户列表 -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <!-- 允许程序录制音频,用于语音导航-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- 允许程序获取当前或最近运行的应用-->
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <!-- 修改声音设置 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <!-- 使手机振动的权限 -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- 开机启动获得一条广播信息，可用于自启动等 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <!-- 蓝牙分享所需的权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <!-- 允许程序进行发现和配对新的蓝牙设备 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
 
     <application
+        android:name=".app.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:launchMode="singleTask"
         android:theme="@style/AppTheme">
         <!--地图开发者key-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="ac5668645b366fbaf9b23ba03d57a4d4"/>
 
-        <activity android:name=".Activity.ActivitySplashScreen">
+        <activity android:name=".UI.Activity.ActivitySplashScreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.Main"
+        <activity android:name=".UI.Activity.Main"
                     android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar">
         </activity>
 
-        <activity android:name=".Activity.GuideActivity"
+        <activity android:name=".UI.Activity.GuideActivity"
                      android:theme="@style/GuideTheme">>
         </activity>
-        <activity android:name=".Activity.SplashActivity">
+        <activity android:name=".UI.Activity.SplashActivity">
         </activity>
-        <activity android:name=".Activity.UserActivity"
+        <activity
+            android:name=".UI.Activity.WXSplashActivity"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".UI.Activity.UserActivity"
                    android:theme="@style/SignTheme">
         </activity>
-        <activity android:name=".Activity.MySetting">
+        <activity android:name=".UI.Activity.MySetting">
 
         </activity>
         <!--定位服务-->
@@ -69,6 +100,263 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+
+        <meta-data
+            android:name="design_width"
+            android:value="720">
+        </meta-data>
+        <meta-data
+            android:name="design_height"
+            android:value="1280">
+        </meta-data>
+
+        <!--地图-->
+        <meta-data
+            android:name="TencentMapSDK"
+            android:value="TYQBZ-MRBKU-K7FVL-4JBW5-DOG5O-SZB4A"/>
+
+        <!-- imlib config begin p5tvi9dsp41e4  -->
+        <meta-data
+            android:name="RONG_CLOUD_APP_KEY"
+            android:value="p5tvi9dsp41e4"/>
+
+        <service
+            android:name="io.rong.imlib.ipc.RongService"
+            android:exported="true"
+            android:process=":ipc"/>
+
+        <service
+            android:name="io.rong.imlib.ReConnectService"
+            android:exported="true"/>
+
+        <receiver
+            android:name="io.rong.imlib.ConnectChangeReceiver"
+            android:exported="true"/>
+
+        <receiver
+            android:name="io.rong.imlib.HeartbeatReceiver"
+            android:process=":ipc"/>
+        <!-- imlib config end -->
+
+
+        <!--必选： SDK 核心功能-->
+        <!--第三方相关,向第三方推送服务请求 token 的服务 -->
+        <service
+            android:name="io.rong.push.core.PushRegistrationService"
+            android:exported="false">
+        </service>
+
+        <!-- 处理 push 消息相关的服务 -->
+        <service
+            android:name="io.rong.push.core.MessageHandleService"
+            android:exported="true">
+        </service>
+
+        <!-- push服务 -->
+        <service
+            android:name="io.rong.push.PushService"
+            android:exported="true"
+            android:process="io.rong.push">  <!-- push进程，可以改名 -->
+        </service>
+
+        <!-- push 相关事件接收器 -->
+        <receiver
+            android:name="io.rong.push.PushReceiver"
+            android:process="io.rong.push">   <!-- 此处进程可以改名，名称需要和PushService所在进程统一 -->
+            <!-- 心跳事件 -->
+            <intent-filter>
+                <action android:name="io.rong.push.intent.action.HEART_BEAT"/>
+            </intent-filter>
+            <!-- 网络变动事件 -->
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+            <!-- 部分用户事件 -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
+
+        <!--必选： SDK 核心功能-->
+
+        <!-- end -->
+
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.SessionActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.WebViewActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.MainActivity"
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.LoginActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.RegisterActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.NewFriendActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.AddFriendActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.ScanActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.SearchUserActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.UserInfoActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.PostScriptActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.SetAliasActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.MyInfoActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.QRCodeCardActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.ChangeMyNameActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.CreateGroupActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.TakePhotoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FullWindowTheme">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.GroupListActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.SessionInfoActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.RemoveGroupMemberActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.SetGroupNameActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.ShowBigImageActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.SettingActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.dragon.navigation.UI.Activity.AboutActivity"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <!--发红包页面-->
+        <activity
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPRedPacketActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateVisible"/>
+        <!--红包详情页面-->
+        <activity
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPDetailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <!--红包记录页面-->
+        <activity
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPRecordActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
+        <!--群成员列表页面-->
+        <activity
+            android:name="com.yunzhanghu.redpacketui.ui.activity.RPGroupMemberActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <!--支付宝H5支付页面-->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--支付宝H5授权页面-->
+        <activity
+            android:name="com.alipay.sdk.app.H5AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <!--支付宝版 end-->
+
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <!-- QQ和QQ空间分享 QQ登录的回调必须要配置的 -->
+            <intent-filter>
+                <data android:scheme="tencent100371282"/>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+
+            <!-- 新浪微博客户端分享回调必须配置 -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <!--微信分享回调 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <!-- 支付宝分享回调 -->
+        <activity
+            android:name=".apshare.ShareEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
     </application>
 
 </manifest>

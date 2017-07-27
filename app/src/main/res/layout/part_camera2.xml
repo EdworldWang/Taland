@@ -85,7 +85,7 @@
     </LinearLayout>
     <TextView
         android:id="@+id/merchant"
-        android:layout_width="@dimen/button_width"
+        android:layout_width="22dp"
         android:layout_height="wrap_content"
         android:textColor="@color/blue"
         android:text="商家:1"
@@ -97,7 +97,7 @@
         android:layout_alignTop="@+id/My"/>
 
     <Button
-        android:layout_width="@dimen/button_width"
+        android:layout_width="22dp"
         android:layout_height="wrap_content"
         android:textColor="@drawable/btn_style_01"
         android:text="我的"
@@ -127,8 +127,8 @@
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/merchant"/>
     <com.dragon.navigation.View.Mytestview
-        android:layout_width="150dip"
-        android:layout_height="150dip"
+        android:layout_width="128dip"
+        android:layout_height="128dip"
         android:id="@+id/Compass"
         android:background="@android:color/transparent"
         android:layout_below="@+id/search_bar_layout"

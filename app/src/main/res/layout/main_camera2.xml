@@ -19,7 +19,9 @@
     <!--布局重用-->
     <include
         android:id="@+id/part1"
-        layout="@layout/part_camera2"/>
+        layout="@layout/part_camera2"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/pic_stub" />
     <ViewStub
         android:id="@+id/pic_stub"
         android:layout_width="wrap_content"

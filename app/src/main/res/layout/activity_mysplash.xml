@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zhy.autolayout.AutoFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/myroad">
+
+      <include
+        layout="@layout/include_toolbar"
+        android:visibility="gone"
+        />
+
+
+    <com.zhy.autolayout.AutoRelativeLayout
+        android:id="@+id/rlButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+
+            android:id="@+id/btnLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginTop="240dp"
+            android:background="@drawable/shape_splash_login"
+            android:text="@string/login"
+            android:textColor="@color/white"
+            android:textSize="38px"/>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginTop="300dp"
+            android:background="@drawable/shape_splash_register"
+            android:text="@string/register"
+            android:textSize="38px"/>
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btn_Login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="320dp"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:background="@drawable/loginin"
+            android:text="Sign in" />
+
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btn_Register"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="400dp"
+            android:background="@drawable/regist"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
+            android:text="Sign up" />
+    </com.zhy.autolayout.AutoRelativeLayout>
+
+
+</com.zhy.autolayout.AutoFrameLayout>

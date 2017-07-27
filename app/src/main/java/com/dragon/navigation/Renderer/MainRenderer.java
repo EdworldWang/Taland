@@ -5,7 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.dragon.navigation.Activity.Main;
+import com.dragon.navigation.UI.Activity.Main;
 import com.dragon.navigation.Control.Data;
 import com.dragon.navigation.use.ArrowObject;
 import com.dragon.navigation.use.CubeObject;
