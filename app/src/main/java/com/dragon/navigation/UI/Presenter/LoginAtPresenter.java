@@ -31,13 +31,20 @@ public class LoginAtPresenter extends BasePresenter<ILoginAtView> {
 
         if (TextUtils.isEmpty(phone)) {
             UIUtils.showToast(UIUtils.getString(R.string.phone_not_empty));
+           // getView().getEtPhone().setShakeAnimation();
+            UIUtils.setShakeAnimation(getView().getTextInputPhone(),3);
             return;
         }
         if (TextUtils.isEmpty(pwd)) {
             UIUtils.showToast(UIUtils.getString(R.string.password_not_empty));
+            getView().getEtPwd().setShakeAnimation();
             return;
         }
-
+        if (pwd.contains(" ")) {
+            UIUtils.showToast(UIUtils.getString(R.string.password_not_contain_blank));
+            getView().getEtPwd().setShakeAnimation();
+            return;
+        }
         mContext.showWaitingDialog(UIUtils.getString(R.string.please_wait));
         ApiRetrofit.getInstance().login(AppConst.REGION, phone, pwd)
                 .subscribeOn(Schedulers.io())

@@ -1,22 +1,17 @@
 package com.dragon.navigation.UI.Presenter;
 
-import android.app.Application;
+import android.support.design.widget.TextInputLayout;
 import android.text.TextUtils;
-import android.util.Log;
 
 
 import com.dragon.navigation.Model.cache.UserCache;
 import com.dragon.navigation.Model.exception.ServerException;
-import com.dragon.navigation.Model.response.CheckPhoneResponse;
 import com.dragon.navigation.Model.response.LoginResponse;
 import com.dragon.navigation.Model.response.MobVerifyCodeResponse;
 import com.dragon.navigation.Model.response.RegisterResponse;
-import com.dragon.navigation.Model.response.SendCodeResponse;
-import com.dragon.navigation.Model.response.VerifyCodeResponse;
 import com.dragon.navigation.R;
 import com.dragon.navigation.UI.Activity.LoginActivity;
 import com.dragon.navigation.UI.Activity.MainActivity;
-import com.dragon.navigation.UI.Activity.RegisterActivity;
 import com.dragon.navigation.UI.Base.BaseActivity;
 import com.dragon.navigation.UI.Base.BasePresenter;
 import com.dragon.navigation.UI.View.IRegisterAtView;
@@ -43,11 +38,10 @@ public class RegisterAtPresenter extends BasePresenter<IRegisterAtView> {
     int time = 0;
     private Timer mTimer;
     private Subscription mSubscription;
-
+    private static TimerTask mTask;
     public RegisterAtPresenter(BaseActivity context) {
         super(context);
     }
-
     EventHandler eh=new EventHandler(){
         @Override
         public void afterEvent(int event, int result, Object data) {
@@ -139,14 +133,18 @@ public class RegisterAtPresenter extends BasePresenter<IRegisterAtView> {
     private void changeSendCodeBtn() {
         //开始1分钟倒计时
         //每一秒执行一次Task
+        //取消绑定，可以绑定多个
         mSubscription = Observable.create((Observable.OnSubscribe<Integer>) subscriber -> {
             time = 60;
-            final TimerTask mTask = new TimerTask() {
-                @Override
-                public void run() {
-                    subscriber.onNext(--time);
-                }
-            };
+            //修改源代码bug,在定时操作后会生成新的timertask使，时间下降得更快
+            if(mTask == null) {
+                mTask = new TimerTask() {
+                    @Override
+                    public void run() {
+                        subscriber.onNext(--time);
+                    }
+                };
+            }
             mTimer = new Timer();
             mTimer.schedule(mTask, 0, 1000);//每一秒执行一次Task
         }).subscribeOn(Schedulers.io())

@@ -1,6 +1,9 @@
 package com.dragon.navigation.UI.View;
 
+import android.support.design.widget.TextInputLayout;
 import android.widget.EditText;
+
+import com.dragon.navigation.widget.ClearWriteEditText;
 
 /**
  * @创建者 CSDN_LQR
@@ -8,7 +11,11 @@ import android.widget.EditText;
  */
 public interface ILoginAtView {
 
-    EditText getEtPhone();
+    ClearWriteEditText getEtPhone();
 
-    EditText getEtPwd();
+    ClearWriteEditText getEtPwd();
+
+    TextInputLayout getTextInputPhone();
+
+    TextInputLayout getTextInputPassword();
 }

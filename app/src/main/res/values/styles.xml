@@ -3,15 +3,17 @@
 
 
 
-    <style name="ARTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ARTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/grey</item>
-        <item name="colorPrimaryDark">#834169e1</item>
-        <item name="colorAccent">@color/blue</item>
-        <item name="android:navigationBarColor">#834169e1</item>
+        <item name="colorPrimary">@color/grey</item><!--工具栏toolbar-->
+        <item name="colorPrimaryDark">#ff002359</item><!--状态栏toolbar-->
+        <item name="colorAccent">#ff002359</item>
+        <item name="windowNoTitle">true</item>
+
     </style>
     <style name="MaterialDrawerTheme.Light.DarkToolbar" parent="MaterialTheme.Light.DarkToolbar">
         <!-- Here we setting appcompat’s actionBarStyle -->
+        <item name="android:navigationBarColor">#834169e1</item>
         <item name="drawerArrowStyle">@style/MaterialDrawer.DrawerArrowStyle</item>
         <!-- ...and here we setting appcompat’s color theming attrs -->
         <item name="colorPrimary">@color/material_drawer_primary</item>
@@ -66,8 +68,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryDark">@color/blue</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
@@ -76,8 +78,8 @@
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@drawable/myroad</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorPrimaryDark">@color/red</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
@@ -136,5 +138,16 @@
         <item name="android:layout_height">102px</item>
         <item name="android:background">@color/white</item>
     </style>
-
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="BaseAppTheme" parent="AppTheme.Base">
+        <item name="colorPrimary">@color/blue</item>    <!-- 状态栏 -->
+        <item name="colorPrimaryDark">@color/blue</item> <!-- toolbar -->
+        <item name="colorAccent">@color/colorAccent</item>  <!-- 重点 -->
+    </style>
+    <style name="TextTheme" parent="BaseAppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>
