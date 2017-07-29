@@ -72,11 +72,13 @@
 
     <!--登录-->
     <string name="login_error">登录失败</string>
+    <string name="login_success">登录成功</string>
     <string name="phone_format_error">手机格式有误</string>
     <string name="phone_not_empty">手机号不能为空</string>
     <string name="password_not_empty">密码不能为空</string>
     <string name="password_not_contain_blank">密码不能包含空格</string>
     <string name="nickname_not_empty">昵称不能为空</string>
+    <string name="nickname_not_contain_blank">昵称不能包含空格</string>
     <string name="vertify_code_not_empty">验证码不能为空</string>
     <string name="disconnect_server">与服务器失联</string>
     <string name="forgot_password">找回密码</string>
@@ -88,7 +90,8 @@
     <string name="password_en">Password</string>
     <string name="area">国家/地区</string>
     <string name="verification_code">验证码</string>
-
+    <string name="code">短信验证码</string>
+    <string name="send_code">发送验证码</string>
     <string name="phone_not_available">手机号不可用</string>
     <string name="send_code_error">发送验证码失败</string>
     <string name="vertify_code_error">验证码有误</string>

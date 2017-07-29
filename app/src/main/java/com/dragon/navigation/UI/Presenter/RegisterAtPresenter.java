@@ -172,19 +172,33 @@ public class RegisterAtPresenter extends BasePresenter<IRegisterAtView> {
 
         if (TextUtils.isEmpty(phone)) {
             UIUtils.showToast(UIUtils.getString(R.string.phone_not_empty));
+            UIUtils.setShakeAnimation(getView().getEtPhone(),3);
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
             UIUtils.showToast(UIUtils.getString(R.string.password_not_empty));
+            UIUtils.setShakeAnimation(getView().getEtPwd(),3);
+            return;
+        }
+        if (password.contains(" ")) {
+            UIUtils.showToast(UIUtils.getString(R.string.password_not_contain_blank));
+            UIUtils.setShakeAnimation(getView().getEtPwd(),3);
             return;
         }
         if (TextUtils.isEmpty(nickName)) {
             UIUtils.showToast(UIUtils.getString(R.string.nickname_not_empty));
+            UIUtils.setShakeAnimation(getView().getEtNickName(),3);
+            return;
+        }
+        if (nickName.contains(" ")) {
+            UIUtils.showToast(UIUtils.getString(R.string.nickname_not_contain_blank));
+            UIUtils.setShakeAnimation(getView().getEtNickName(),3);
             return;
         }
         if (TextUtils.isEmpty(code)) {
             UIUtils.showToast(UIUtils.getString(R.string.vertify_code_not_empty));
+            UIUtils.setShakeAnimation(getView().getEtVerifyCode(),3);
             return;
         }
       //  SMSSDK.submitVerificationCode(AppConst.REGION, phone,code);

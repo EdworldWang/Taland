@@ -1,11 +1,18 @@
 package com.dragon.navigation.UI.Activity;
 
+import android.graphics.Color;
+import android.os.Build;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -15,6 +22,7 @@ import com.dragon.navigation.UI.Base.BaseActivity;
 import com.dragon.navigation.UI.Presenter.RegisterAtPresenter;
 import com.dragon.navigation.UI.View.IRegisterAtView;
 import com.dragon.navigation.util.UIUtils;
+import com.dragon.navigation.widget.ClearWriteEditText;
 
 import java.util.HashMap;
 
@@ -27,31 +35,26 @@ import cn.smssdk.gui.RegisterPage;
 public class RegisterActivity extends BaseActivity<IRegisterAtView, RegisterAtPresenter> implements IRegisterAtView {
 
     @BindView(R.id.etNick)
-    EditText mEtNick;
-    @BindView(R.id.vLineNick)
-    View mVLineNick;
+    ClearWriteEditText mEtNick;
 
     @BindView(R.id.etPhone)
-    EditText mEtPhone;
-    @BindView(R.id.vLinePhone)
-    View mVLinePhone;
+    ClearWriteEditText mEtPhone;
 
     @BindView(R.id.etPwd)
-    EditText mEtPwd;
-    @BindView(R.id.ivSeePwd)
-    ImageView mIvSeePwd;
-    @BindView(R.id.vLinePwd)
-    View mVLinePwd;
+    ClearWriteEditText mEtPwd;
+   /* @BindView(R.id.ivSeePwd)
+    ImageView mIvSeePwd;*/
 
     @BindView(R.id.etVerifyCode)
-    EditText mEtVerifyCode;
+    ClearWriteEditText mEtVerifyCode;
     @BindView(R.id.btnSendCode)
     Button mBtnSendCode;
-    @BindView(R.id.vLineVertifyCode)
-    View mVLineVertifyCode;
 
     @BindView(R.id.btnRegister)
     Button mBtnRegister;
+
+    @BindView(R.id.register_img_backgroud)
+    ImageView mImg_Background;
 
     TextWatcher watcher = new TextWatcher() {
         @Override
@@ -67,61 +70,33 @@ public class RegisterActivity extends BaseActivity<IRegisterAtView, RegisterAtPr
         public void afterTextChanged(Editable s) {
         }
     };
+    @Override
+    public void initView(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        }
+        new Handler().postDelayed(new Runnable() {
 
+            @Override
+            public void run() {
+                Animation animation = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.translate_anim);
+                mImg_Background.startAnimation(animation);
+            }
+        }, 200);
+
+    }
     @Override
     public void initListener() {
-//        SMSSDK.initSDK(RegisterActivity.this, "1dbe108d9bf00", "480cdb08f1c1c6bd0dc351e1c3c505a5");
-//        //打开注册页面
-//        RegisterPage registerPage = new RegisterPage();
-//        registerPage.setRegisterCallback(new EventHandler() {
-//            public void afterEvent(int event, int result, Object data) {
-//// 解析注册结果
-//                if (result == SMSSDK.RESULT_COMPLETE) {
-//                    @SuppressWarnings("unchecked")
-//                    //回调完成
-//                            HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
-//                    String country = (String) phoneMap.get("country");
-//                    String phone = (String) phoneMap.get("phone");
-//                    //Log.i("success","回调完成");
-//
-//// 提交用户信息（此方法可以不调用）
-//                    //registerUser(country, phone);
-//                }else if(result == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE){
-//                    Log.i("success","提交验证码成功");
-//                }
-//            }
-//        });
-//        registerPage.show(RegisterActivity.this.getApplicationContext());
-//        EventHandler eh=new EventHandler(){
-//
-//            @Override
-//            public void afterEvent(int event, int result, Object data) {
-//
-//                if (result == SMSSDK.RESULT_COMPLETE) {
-//                    //回调完成
-//                    Log.i("success","注册回调成功");
-//                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-//                        //提交验证码成功
-//                        Log.i("success","提交验证码成功");
-//                    }else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
-//                        //获取验证码成功
-//                        Log.i("success","获取验证码成功");
-//                    }else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){
-//                        //返回支持发送验证码的国家列表
-//                        Log.i("支持的国家",data.toString());
-//                    }
-//                }else{
-//                    ((Throwable)data).printStackTrace();
-//                }
-//            }
-//        };
-//        SMSSDK.registerEventHandler(eh); //注册短信回调
         mEtNick.addTextChangedListener(watcher);
         mEtPwd.addTextChangedListener(watcher);
         mEtPhone.addTextChangedListener(watcher);
         mEtVerifyCode.addTextChangedListener(watcher);
 
-        mEtNick.setOnFocusChangeListener((v, hasFocus) -> {
+      /*  mEtNick.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 mVLineNick.setBackgroundColor(UIUtils.getColor(R.color.green0));
             } else {
@@ -159,7 +134,7 @@ public class RegisterActivity extends BaseActivity<IRegisterAtView, RegisterAtPr
             }
 
             mEtPwd.setSelection(mEtPwd.getText().toString().trim().length());
-        });
+        });*/
 
         mBtnSendCode.setOnClickListener(v -> {
             if (mBtnSendCode.isEnabled()) {
@@ -196,26 +171,26 @@ public class RegisterActivity extends BaseActivity<IRegisterAtView, RegisterAtPr
 
     @Override
     protected int provideContentViewId() {
-        return R.layout.activity_register;
+        return R.layout.activity_register_imstyle;
     }
 
     @Override
-    public EditText getEtNickName() {
+    public ClearWriteEditText getEtNickName() {
         return mEtNick;
     }
 
     @Override
-    public EditText getEtPhone() {
+    public ClearWriteEditText getEtPhone() {
         return mEtPhone;
     }
 
     @Override
-    public EditText getEtPwd() {
+    public ClearWriteEditText getEtPwd() {
         return mEtPwd;
     }
 
     @Override
-    public EditText getEtVerifyCode() {
+    public ClearWriteEditText getEtVerifyCode() {
         return mEtVerifyCode;
     }
 

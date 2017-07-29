@@ -51,9 +51,9 @@ public class LoginAtPresenter extends BasePresenter<ILoginAtView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginResponse -> {
                     int code = loginResponse.getCode();
-                    Log.i("test","能输出code = " + code + loginResponse.getResult().getId());
                     mContext.hideWaitingDialog();
                     if (code == 200) {
+                        UIUtils.showToast(UIUtils.getString(R.string.login_success));
                         UserCache.save(loginResponse.getResult().getId(), phone, loginResponse.getResult().getToken());
                         mContext.jumpToActivityAndClearTask(MainActivity.class);
                         mContext.finish();

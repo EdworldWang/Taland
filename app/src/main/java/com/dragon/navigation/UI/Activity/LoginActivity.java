@@ -1,6 +1,7 @@
 package com.dragon.navigation.UI.Activity;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.dragon.navigation.R;
 import com.dragon.navigation.UI.Base.BaseActivity;
@@ -34,7 +36,7 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity<ILoginAtView, LoginAtPresenter> implements ILoginAtView {
 
     private boolean  PasswordVisible = false;
-    @BindView(R.id.ed_img_backgroud)
+    @BindView(R.id.login_img_backgroud)
     ImageView mImg_Background;
 
     @BindView(R.id.ed_login_phone)
@@ -59,12 +61,19 @@ public class LoginActivity extends BaseActivity<ILoginAtView, LoginAtPresenter> 
     @BindView(R.id.ed_login_sign)
     Button mBtnLogin;
 
-
     @BindView(R.id.TextInputPhone)
     TextInputLayout mTextInputPhone;
 
     @BindView(R.id.TextInputPassword)
     TextInputLayout mTextInputPassword;
+
+    @BindView(R.id.ed_login_register)
+    TextView mTextRegister;
+    @OnClick(R.id.ed_login_register)
+    public void startRegisterActivity(){
+        jumpToActivity(RegisterActivity.class);
+        finish();
+    }
 
     TextWatcher watcher = new TextWatcher() {
         @Override

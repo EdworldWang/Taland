@@ -4,15 +4,17 @@ package com.dragon.navigation.UI.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.dragon.navigation.widget.ClearWriteEditText;
+
 public interface IRegisterAtView {
 
-    EditText getEtNickName();
+    ClearWriteEditText getEtNickName();
 
-    EditText getEtPhone();
+    ClearWriteEditText getEtPhone();
 
-    EditText getEtPwd();
+    ClearWriteEditText getEtPwd();
 
-    EditText getEtVerifyCode();
+    ClearWriteEditText getEtVerifyCode();
 
     Button getBtnSendCode();
 }
