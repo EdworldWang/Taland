@@ -25,20 +25,30 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,35 +64,19 @@ import com.dragon.navigation.UI.Presenter.MainFgPresenter;
 import com.dragon.navigation.UI.View.IMainFgView;
 import com.dragon.navigation.View.Mytestview;
 import com.dragon.navigation.use.Texture;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
+import com.dragon.navigation.widget.EdwardToolbar;
 import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.holder.BadgeStyle;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.ExpandableBadgeDrawerItem;
-import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileSettingDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondarySwitchDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryToggleDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
-import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
-import com.mikepenz.materialdrawer.model.ToggleDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mikepenz.octicons_typeface_library.Octicons;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 /**
  * Created by Administrator on 2017/6/22.
@@ -92,11 +86,25 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     @BindView(R.id.texture)
     TextureView mtextureView;
     @BindView(R.id.topview)
-    FrameLayout rootview;
+    DrawerLayout rootview;
     @BindView(R.id.part_camera2)
     RelativeLayout partCamera2;
-    @BindView(R.id.Compass)
+    @BindView(R.id.edtoolbar2)
+    EdwardToolbar edwardToolbar2;
+    /*@BindView(R.id.Compass)
     Mytestview Compass;
+    @OnClick(R.id.Compass)
+    public void setViewarround(){
+       // rootview.openDrawer(GravityCompat.START);
+        Log.i("toolbar","setViewarround");
+    }*/
+    @BindView(R.id.head_portrait)
+    CircleImageView head_portrait;
+    @OnClick(R.id.head_portrait)
+    public void openleft(){
+        rootview.openDrawer(GravityCompat.START);
+        Log.i("toolbar","open");
+    }
     private static final String TAG = "MainFragment";
     //    以下定义是摄像头相关和摄像头会话相关
     private String cameraId;
@@ -107,11 +115,15 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     private ImageReader imageReader;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+    private FrameLayout right;
+    private NavigationView left;
     //用SparseIntArray来代替hashMap，进行性能优化。
+    private DrawerLayout drawerlayout;
     private Mytestview viewarround;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
 
+    private boolean isDrawer=false;
 
 
     private AccountHeader headerResult = null;
@@ -141,6 +153,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
             }
         };
+
     }
 
 
@@ -159,26 +172,28 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         return new MainFgPresenter((MainActivity) getActivity());
     }
     public void init(){
-
     }
     @Override
     protected int provideContentViewId() {
 
-        return R.layout.background;
+        return R.layout.cameradrawer;
     }
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
         Log.e(TAG, "onCreateOptionsMenu()");
         menu.clear();
-        getActivity().getMenuInflater().inflate(R.menu.navigation,menu);
+       getActivity().getMenuInflater().inflate(R.menu.navigation,menu);
     }
-    @Override
+  @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         // don't look at this layout it's just a listView to show how to handle the keyboard
-      View father = inflater.inflate(R.layout.blanklayout2, container, false);
-      View view = inflater.inflate(R.layout.fg_background, container, false);
-     Toolbar toolbar = (Toolbar) view.findViewById(R.id.mytoolbar);
+      View view = inflater.inflate(R.layout.cameradrawer, container, false);
+      ButterKnife.bind(this, view);
+     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+      EdwardToolbar toolbar2 = (EdwardToolbar) view.findViewById(R.id.edtoolbar2);
      ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //不显示默认的标题
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -190,112 +205,70 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
       //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.drawer_item_fullscreen_drawer);
       viewarround = (Mytestview) view.findViewById(R.id.Compass);
       mtextureView =(TextureView)view.findViewById(R.id.texture);
+      drawerlayout = (DrawerLayout)view.findViewById(R.id.topview);
       mtextureView.setSurfaceTextureListener(textureListener);
       //textureview盖住了其他的view
-
-      final IProfile profile = new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460").withIdentifier(100);
-      final IProfile profile2 = new ProfileDrawerItem().withName("Bernat Borras").withEmail("alorma@github.com").withIcon(Uri.parse("https://avatars3.githubusercontent.com/u/887462?v=3&s=460")).withIdentifier(101);
-      final IProfile profile3 = new ProfileDrawerItem().withName("Max Muster").withEmail("max.mustermann@gmail.com").withIcon(R.drawable.profile2).withIdentifier(102);
-      final IProfile profile4 = new ProfileDrawerItem().withName("Felix House").withEmail("felix.house@gmail.com").withIcon(R.drawable.profile3).withIdentifier(103);
-      final IProfile profile5 = new ProfileDrawerItem().withName("Mr. X").withEmail("mister.x.super@gmail.com").withIcon(R.drawable.profile4).withIdentifier(104);
-      final IProfile profile6 = new ProfileDrawerItem().withName("Batman").withEmail("batman@gmail.com").withIcon(R.drawable.profile5).withIdentifier(105);
-      // Create the AccountHeader
-      headerResult = new AccountHeaderBuilder()
-              .withActivity(getActivity())
-              .withTranslucentStatusBar(true)
-              .withHeaderBackground(R.drawable.header)
-              .addProfiles(
-                      profile,
-                      profile2,
-                      profile3,
-                      profile4,
-                      profile5,
-                      profile6,
-                      //don't ask but google uses 14dp for the add account icon in gmail but 20dp for the normal icons (like manage account)
-                      new ProfileSettingDrawerItem().withName("Add Account").withDescription("Add new GitHub Account").withIcon(new IconicsDrawable(getActivity(), GoogleMaterial.Icon.gmd_plus).actionBar().paddingDp(5).colorRes(R.color.material_drawer_primary_text)).withIdentifier(PROFILE_SETTING),
-                      new ProfileSettingDrawerItem().withName("Manage Account").withIcon(GoogleMaterial.Icon.gmd_settings).withIdentifier(100001)
-              )
-              .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                  @Override
-                  public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                      //sample usage of the onProfileChanged listener
-                      //if the clicked item has the identifier 1 add a new profile ;)
-                      //例子为addcount
-                      if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING) {
-                          int count = 100 + headerResult.getProfiles().size() + 1;
-                          IProfile newProfile = new ProfileDrawerItem().withNameShown(true).withName("Batman" + count).withEmail("batman" + count + "@gmail.com").withIcon(R.drawable.profile5).withIdentifier(count);
-                          if (headerResult.getProfiles() != null) {
-                              //we know that there are 2 setting elements. set the new profile above them ;)
-                              headerResult.addProfile(newProfile, headerResult.getProfiles().size() - 2);
-                          } else {
-                              headerResult.addProfiles(newProfile);
-                          }
-                      }
-
-                      //false if you have not consumed the event and it should close the drawer
-                      return false;
-                  }
-              })
-              .withSavedInstance(savedInstanceState)
-              .build();
-
-      //Create the drawer
-      result = new DrawerBuilder()
-              .withActivity(getActivity())
-             .withToolbar(toolbar)
-              .withFullscreen(true)
-              .withHasStableIds(true)
-            //  .withDisplayBelowStatusBar(false)
-              .withRootView((ViewGroup)view.findViewById(R.id.rootviewfather))
-              // .withItemAnimator(new AlphaCrossFadeAnimator())
-              .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
-              .addDrawerItems(
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_compact_header).withDescription(R.string.drawer_item_compact_header_desc).withIcon(GoogleMaterial.Icon.gmd_sun).withIdentifier(1).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_action_bar_drawer).withDescription(R.string.drawer_item_action_bar_drawer_desc).withIcon(FontAwesome.Icon.faw_home).withIdentifier(2).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_multi_drawer).withDescription(R.string.drawer_item_multi_drawer_desc).withIcon(FontAwesome.Icon.faw_gamepad).withIdentifier(3).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_non_translucent_status_drawer).withDescription(R.string.drawer_item_non_translucent_status_drawer_desc).withIcon(FontAwesome.Icon.faw_eye).withIdentifier(4).withSelectable(false).withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700)),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_advanced_drawer).withDescription(R.string.drawer_item_advanced_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_adb).withIdentifier(5).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_embedded_drawer).withDescription(R.string.drawer_item_embedded_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_battery).withIdentifier(7).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_fullscreen_drawer).withDescription(R.string.drawer_item_fullscreen_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_labels).withIdentifier(8).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_custom_container_drawer).withDescription(R.string.drawer_item_custom_container_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_my_location).withIdentifier(9).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_menu_drawer).withDescription(R.string.drawer_item_menu_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_filter_list).withIdentifier(10).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_mini_drawer).withDescription(R.string.drawer_item_mini_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_battery_charging).withIdentifier(11).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_fragment_drawer).withDescription(R.string.drawer_item_fragment_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_disc_full).withIdentifier(12).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_collapsing_toolbar_drawer).withDescription(R.string.drawer_item_collapsing_toolbar_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_camera_rear).withIdentifier(13).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_persistent_compact_header).withDescription(R.string.drawer_item_persistent_compact_header_desc).withIcon(GoogleMaterial.Icon.gmd_brightness_5).withIdentifier(14).withSelectable(false),
-                      new PrimaryDrawerItem().withName(R.string.drawer_item_crossfade_drawer_layout_drawer).withDescription(R.string.drawer_item_crossfade_drawer_layout_drawer_desc).withIcon(GoogleMaterial.Icon.gmd_format_bold).withIdentifier(15).withSelectable(false),
-                      new SectionDrawerItem().withName(R.string.drawer_item_section_header),
-                      new ExpandableBadgeDrawerItem().withName("Collapsable Badge").withIcon(GoogleMaterial.Icon.gmd_collection_case_play).withIdentifier(18).withSelectable(false).withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700)).withBadge("100").withSubItems(
-                              new SecondaryDrawerItem().withName("CollapsableItem").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2000),
-                              new SecondaryDrawerItem().withName("CollapsableItem 2").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2001)
-                      ),
-                      new ExpandableDrawerItem().withName("Collapsable").withIcon(GoogleMaterial.Icon.gmd_collection_case_play).withIdentifier(19).withSelectable(false).withSubItems(
-                              new SecondaryDrawerItem().withName("CollapsableItem").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2002),
-                              new SecondaryDrawerItem().withName("CollapsableItem 2").withLevel(2).withIcon(GoogleMaterial.Icon.gmd_8tracks).withIdentifier(2003)
-                      ),
-                      new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github).withIdentifier(20).withSelectable(false),
-                      new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(GoogleMaterial.Icon.gmd_format_color_fill).withIdentifier(21).withTag("Bullhorn"),
-                      new DividerDrawerItem(),
-                      new SwitchDrawerItem().withName("Switch").withIcon(Octicons.Icon.oct_tools).withChecked(true),
-                      new SwitchDrawerItem().withName("Switch2").withIcon(Octicons.Icon.oct_tools).withChecked(true).withSelectable(false),
-                      new ToggleDrawerItem().withName("Toggle").withIcon(Octicons.Icon.oct_tools).withChecked(true),
-                      new DividerDrawerItem(),
-                      new SecondarySwitchDrawerItem().withName("Secondary switch").withIcon(Octicons.Icon.oct_tools).withChecked(true),
-                      new SecondarySwitchDrawerItem().withName("Secondary Switch2").withIcon(Octicons.Icon.oct_tools).withChecked(true).withSelectable(false),
-                      new SecondaryToggleDrawerItem().withName("Secondary toggle").withIcon(Octicons.Icon.oct_tools).withChecked(true)
-              ) // add the items we want to use with our Drawer
-              .withSavedInstance(savedInstanceState)
-              .withShowDrawerOnFirstLaunch(true)
-                .withDrawerGravity(Gravity.LEFT)
-//                .withShowDrawerUntilDraggedOpened(true)
-              .buildForFragment();
-        // result.getDrawerLayout().setFitsSystemWindows(false);
-      result.getSlider().setFitsSystemWindows(false);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
-          if (Build.VERSION.SDK_INT >= 19) {
-              result.getDrawerLayout().setFitsSystemWindows(false);
+      DrawerLayout drawer = (DrawerLayout) view.findViewById(R.id.topview);
+      right = (FrameLayout)  view.findViewById(R.id.maincontent);
+      left = (NavigationView)  view.findViewById(R.id.nav_view);
+     /* ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+              getActivity(), drawer, toolbar,  R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+      drawer.setDrawerListener(toggle);
+      toggle.syncState();*/
+      CircleImageView head_portrait = (CircleImageView)view.findViewById(R.id.head_portrait);
+      int toolbarheight = (int)(toolbar.getLayoutParams().height*0.8);
+      Log.i("toolbarheight",toolbarheight+" width");
+      Toolbar.LayoutParams layoutsquare = (Toolbar.LayoutParams)  head_portrait.getLayoutParams();
+      Log.i("toolbar",head_portrait.getLayoutParams().getClass()+" ");
+      layoutsquare.height = toolbarheight;
+      layoutsquare.width = toolbarheight;
+      head_portrait.setLayoutParams(layoutsquare);
+     // toggle.setDrawerIndicatorEnabled(false);
+      right.setOnTouchListener(new View.OnTouchListener() {
+          @Override
+          public boolean onTouch(View view, MotionEvent motionEvent) {
+              if(isDrawer){
+                  return left.dispatchTouchEvent(motionEvent);
+              }else{
+                  return false;
+              }
           }
+      });
+      drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
+          @Override
+          public void onDrawerSlide(View drawerView, float slideOffset) {
+              isDrawer=true;
+              //获取屏幕的宽高
+              WindowManager manager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+              Display display = manager.getDefaultDisplay();
+              //设置右面的布局位置  根据左面菜单的right作为右面布局的left   左面的right+屏幕的宽度（或者right的宽度这里是相等的）为右面布局的right
+              right.layout(left.getRight(), 0, left.getRight() + display.getWidth(), display.getHeight());
+          }
+          @Override
+          public void onDrawerOpened(View drawerView) {}
+          @Override
+          public void onDrawerClosed(View drawerView) {
+              isDrawer=false;
+          }
+          @Override
+          public void onDrawerStateChanged(int newState) {}
+      });
+        Mytestview compass = (Mytestview)view.findViewById(R.id.Compass);
+      compass.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              Log.i("toolbar","setViewarround");
+          }
+      });
+      head_portrait = (CircleImageView)view.findViewById(R.id.head_portrait);
+   /*   head_portrait.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              drawerlayout.openDrawer(GravityCompat.START);
+              Log.i("toolbar","open");
+          }
+      });*/
+
       return view;
      }
 

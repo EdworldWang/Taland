@@ -4,19 +4,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@color/gray5"
     android:orientation="vertical"
     android:fitsSystemWindows="false">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/mytoolbar2"
+    <com.dragon.navigation.widget.EdwardToolbar
+        android:id="@+id/edtoolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+        >
+    </com.dragon.navigation.widget.EdwardToolbar>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/mytoolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/head_portrait3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            app:civ_border_width="2dp"
+            android:src="@drawable/tlogo96"/>
         </android.support.v7.widget.Toolbar>
    <include layout="@layout/include_toolbar"/>
 

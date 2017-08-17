@@ -1,8 +1,12 @@
 <resources>
-    <string name="app_name">Navigation</string>
+    <string name="app_name">Taland</string>
     <string name="splash_screen_description">深圳大学ARGO研发小组</string>
     <string name="no_result">对不起，没有搜索到相关数据！</string>
 
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <!-- Drawer Items -->
     <string name="drawer_item_persistent_compact_header">PersistentHeader Drawer</string>
     <string name="drawer_item_persistent_compact_header_desc">Smaller persistent account header</string>

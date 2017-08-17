@@ -37,6 +37,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -45,11 +46,13 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -437,7 +440,6 @@ public class Main extends AppCompatActivity implements SensorEventListener,
                 })
                 .withSavedInstance(savedInstanceState)
                 .build();
-
         //Create the drawer
         result = new DrawerBuilder()
                 .withActivity(this)
@@ -484,6 +486,31 @@ public class Main extends AppCompatActivity implements SensorEventListener,
                 .withShowDrawerOnFirstLaunch(true)
 //                .withShowDrawerUntilDraggedOpened(true)
                 .build();
+            result.getDrawerLayout().setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                //获取屏幕的宽高
+                WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+                Display display = manager.getDefaultDisplay();
+                View view = findViewById(R.id.texture);
+                //设置右面的布局位置  根据左面菜单的right作为右面布局的left   左面的right+屏幕的宽度（或者right的宽度这里是相等的）为右面布局的right
+                Log.i("drawer","right:"+result.getDrawerLayout().getX()+" "+display.getWidth()+" "+ display.getHeight()+"/n"+
+                        "X="+result.getDrawerLayout().getParent().toString() + " "+result.getDrawerLayout().getScrollX()+"/n");
+                view.layout(result.getDrawerLayout().getRight(), 0, result.getDrawerLayout().getRight() + display.getWidth(), display.getHeight());
+            }
+            @Override
+            public void onDrawerOpened(View drawerView) {
+
+            }
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
 
 
 
@@ -1106,7 +1133,7 @@ public class Main extends AppCompatActivity implements SensorEventListener,
                 case 9:
                     if (Control.finishLocation == false) {
 
-                        ArPoiSearch Arnear = new ArPoiSearch(Main.this, "", "餐饮服务", "深圳市");
+                        ArPoiSearch Arnear = new ArPoiSearch(Main.this, "", "餐饮服务", "揭阳市");
                         Arnear.setHandler(this);
                         Arnear.setSearchtype(Servicetype.searchbound);
                         Arnear.doSearch();

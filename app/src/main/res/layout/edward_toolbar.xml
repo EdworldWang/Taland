@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1"
+  >
+    <View
+        android:id="@+id/edward_blankview_left"
+        android:layout_weight="0.05"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/edward_headview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/tlogo96">
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+    <View
+        android:id="@+id/edward_blankview"
+        android:layout_weight="0.8"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+    <android.support.v7.widget.SearchView
+        android:id="@+id/edward_searchview"
+        android:layout_weight="0.1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom">
+        </android.support.v7.widget.SearchView>
+    <View
+        android:id="@+id/edward_blankview_right"
+        android:layout_weight="0.05"
+        android:layout_width="0dp"
+        android:layout_height="match_parent" />
+</LinearLayout>

@@ -1,5 +1,4 @@
 package com.dragon.navigation.UI.Fragment;
-
 import android.animation.ValueAnimator;
 import android.app.Fragment;
 import android.location.Location;
@@ -24,7 +23,6 @@ import com.dragon.navigation.Model.SearchpoiEntity;
 import com.dragon.navigation.R;
 
 import java.util.ArrayList;
-
 /**
  * Created by EdwardPC on 2016/12/17.
  */

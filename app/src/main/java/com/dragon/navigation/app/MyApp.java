@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.alibaba.fastjson.JSONException;
+import com.baidu.mapapi.SDKInitializer;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.dragon.navigation.Model.cache.UserCache;
@@ -100,6 +101,8 @@ public class MyApp extends BaseApp implements RongIMClient.OnReceiveMessageListe
         LQREmotionKit.init(this, (context, path, imageView) -> Glide.with(context).load(path).centerCrop().diskCacheStrategy(DiskCacheStrategy.SOURCE).into(imageView));
         //初始化ShareSDK
         ShareSDK.initSDK(getContext());
+        //初始化百度地图SDK
+        SDKInitializer.initialize(getContext());
     }
 
     @Override

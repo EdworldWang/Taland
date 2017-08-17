@@ -9,10 +9,13 @@ import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -31,6 +34,7 @@ import com.dragon.navigation.app.AppConst;
 import com.dragon.navigation.manager.BroadcastManager;
 import com.dragon.navigation.util.PopupWindowUtils;
 import com.dragon.navigation.util.UIUtils;
+import com.dragon.navigation.widget.EdwardToolbar;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -114,7 +118,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     @BindView(R.id.tvDiscoveryTextPress)
     TextView mTvDiscoveryTextPress;
     @BindView(R.id.tvDiscoveryCount)
-    public TextView mTvDiscoveryCount;
+   TextView mTvDiscoveryCount;
 
     @BindView(R.id.llMe)
     LinearLayout mLlMe;
@@ -127,8 +131,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     @BindView(R.id.tvMeTextPress)
     TextView mTvMeTextPress;
     @BindView(R.id.tvMeCount)
-    public TextView mTvMeCount;
-
+    TextView mTvMeCount;
     @BindView(R.id.llAR)
     LinearLayout mLlAR;
     @BindView(R.id.tvARNormal)
@@ -140,8 +143,9 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     @BindView(R.id.tvARTextPress)
     TextView mTvARTextPress;
     @BindView(R.id.tvARCount)
-    public TextView mTvARCount;
-
+    TextView mTvARCount;
+    @BindView(R.id.edtoolbar)
+    EdwardToolbar edwardToolbar;
     private AccountHeader headerResult = null;
     private Drawer result = null;
     private static final int PROFILE_SETTING = 100000;
@@ -149,9 +153,14 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     public void init() {
         registerBR();
     }
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+      //  getMenuInflater().inflate(R.menu.navigation, menu);
+        return true;
+    }
     @Override
     public void initView() {
+       // setSupportActionBar(edwardToolbar);
         setToolbarTitle(UIUtils.getString(R.string.app_name));
         mIbAddMenu.setVisibility(View.VISIBLE);
 
@@ -222,7 +231,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
                 .build();
 
         //Create the drawer
-        result = new DrawerBuilder()
+  /*      result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar((Toolbar) findViewById(R.id.mytoolbar2))
                 .withHasStableIds(true)
@@ -266,7 +275,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
               //  .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
 //                .withShowDrawerUntilDraggedOpened(true)
-                .build();
+                .build();*/
 
     }
 
@@ -501,6 +510,29 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
                 hideWaitingDialog();
             }
         });
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        ViewTreeObserver vto = edwardToolbar.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public void onGlobalLayout() {
+                removeOnGlobalLayoutListener(edwardToolbar,this);
+                Log.i("myview","--->"+edwardToolbar.getWidth()+"*"+edwardToolbar.getHeight());
+            }
+        });
+        Log.i("myview","params "+edwardToolbar.getLayoutParams().width+"  getwidth "+ edwardToolbar.getScaleX() + edwardToolbar.getX()
+                +edwardToolbar.getMeasuredWidth());
+    }
+     public static void removeOnGlobalLayoutListener(View view,ViewTreeObserver.OnGlobalLayoutListener victim){
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN){
+            view.getViewTreeObserver().removeOnGlobalLayoutListener(victim);
+        }else{
+            view.getViewTreeObserver().removeGlobalOnLayoutListener(victim);
+        }
     }
 
     private void unRegisterBR() {

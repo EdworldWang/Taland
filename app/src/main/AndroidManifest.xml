@@ -55,10 +55,31 @@
     <application
         android:name=".app.MyApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/tlogo"
         android:label="@string/app_name"
+        android:hardwareAccelerated="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+            <intent-filter>
+                <action android:name="com.baidu.location.service_v2.2" >
+                </action>
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="nipUh32pScCbvz0vnd5etCmz4cCA0GEP" />  <!--http://lbsyun.baidu.com/apiconsole/key-->
+
+        <!-- meta-data需要写在application中 -->
+
+
+
+
+
         <!--高德地图开发者key-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
@@ -95,7 +116,9 @@
 
         </activity>
         <!--定位服务-->
-        <service android:name="com.amap.api.location.APSService"></service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+        <service android:name="com.amap.api.location.APSService">
+
+        </service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
             android:name="com.google.android.gms.version"

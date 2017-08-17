@@ -115,33 +115,35 @@ public class Moveviewfragment extends Fragment {
         //每次调用start都会先清除里面的view
         /*ican.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT));*/
-        for(int i=0;i<size;i++){
-            layoutarray[i]=new scrollerlayout(getActivity());
-            //  layoutarray[i].addView(widgetarray[i]);
-        }
-        for(int i=0;i<size;i++){
-            LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(
-                    200+30* Data.AroundpoiList.get(i).getPoiName().length(), 150);
-            widgetarray[i]=new NewWidget(getActivity());
-             widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
-         //   widgetarray[i].setContent(size+"");
-            widgetarray[i].setContentBackgroundColor(NoSelectContentColor);
-            //0x7ffff4500
-            widgetarray[i].setTitle(Data.AroundpoiList.get(i).getPoiName());
-            widgetarray[i].setTitleBackgroundColor(NoSelectTiTleColor);
-            widgetarray[i].setTextSize(40);
-            widgetarray[i].setTextColor(Color.WHITE);
-            widgetarray[i].setLayoutParams(blue);
-            widgetarray[i].setId(i);
-            widgetarray[i].setmType(Data.AroundpoiList.get(i).getPoiDes());
-          layoutarray[i].addView(widgetarray[i]);
-            //   Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
-            isee.addView(layoutarray[i],new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
-            layoutarray[i].smoothScrollBy((int)-Data.screenWidth/2+widgetarray[i].getLayoutParams().width/2,
-                    -100-i*90,1000);
-            widgetarray[i].setOnClickListener(new OnScrollerClick());
+        if(size!= 0) {
+            for (int i = 0; i < size; i++) {
+                layoutarray[i] = new scrollerlayout(getActivity());
+                //  layoutarray[i].addView(widgetarray[i]);
+            }
+            for (int i = 0; i < size; i++) {
+                LinearLayout.LayoutParams blue = new LinearLayout.LayoutParams(
+                        200 + 30 * Data.AroundpoiList.get(i).getPoiName().length(), 150);
+                widgetarray[i] = new NewWidget(getActivity());
+                widgetarray[i].setContent(String.valueOf(Data.AroundpoiList.get(i).getDistance()));
+                //   widgetarray[i].setContent(size+"");
+                widgetarray[i].setContentBackgroundColor(NoSelectContentColor);
+                //0x7ffff4500
+                widgetarray[i].setTitle(Data.AroundpoiList.get(i).getPoiName());
+                widgetarray[i].setTitleBackgroundColor(NoSelectTiTleColor);
+                widgetarray[i].setTextSize(40);
+                widgetarray[i].setTextColor(Color.WHITE);
+                widgetarray[i].setLayoutParams(blue);
+                widgetarray[i].setId(i);
+                widgetarray[i].setmType(Data.AroundpoiList.get(i).getPoiDes());
+                layoutarray[i].addView(widgetarray[i]);
+                //   Log.i("dfds",i+"    "+layoutarray[i].getId()+"   "+widgetarray[i].getId());
+                isee.addView(layoutarray[i], new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                layoutarray[i].smoothScrollBy((int) -Data.screenWidth / 2 + widgetarray[i].getLayoutParams().width / 2,
+                        -100 - i * 90, 1000);
+                widgetarray[i].setOnClickListener(new OnScrollerClick());
 
+            }
         }
       //
         //  isee.setVisibility(View.INVISIBLE);
