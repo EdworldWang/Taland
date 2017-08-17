@@ -1,21 +1,29 @@
 package com.dragon.navigation.UI.Activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -64,6 +72,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> implements ViewPager.OnPageChangeListener, IMainAtView {
@@ -144,11 +154,23 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     TextView mTvARTextPress;
     @BindView(R.id.tvARCount)
     TextView mTvARCount;
-    @BindView(R.id.edtoolbar)
-    EdwardToolbar edwardToolbar;
+    @BindView(R.id.drawerview)
+    DrawerLayout mDrawerview;
+    @BindView(R.id.nav_myinfo)
+    NavigationView mMyInfoview;
+    @BindView(R.id.mainview)
+    LinearLayout mMainview;
+    @BindView(R.id.head_portrait)
+    CircleImageView circleImageView;
+    @OnClick(R.id.head_portrait)
+    public void openleft(){
+        mDrawerview.openDrawer(GravityCompat.START);
+        Log.i("toolbar","open");
+    }
     private AccountHeader headerResult = null;
     private Drawer result = null;
     private static final int PROFILE_SETTING = 100000;
+    private boolean isDrawer=false;
     @Override
     public void init() {
         registerBR();
@@ -160,13 +182,46 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     }
     @Override
     public void initView() {
-       // setSupportActionBar(edwardToolbar);
+        mMainview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(isDrawer){
+                    return mMyInfoview.dispatchTouchEvent(motionEvent);
+                }else{
+                    return false;
+                }
+            }
+        });
+        mDrawerview.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                isDrawer=true;
+                //获取屏幕的宽高
+                WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+                Display display = manager.getDefaultDisplay();
+                //设置右面的布局位置  根据左面菜单的right作为右面布局的left   左面的right+屏幕的宽度（或者right的宽度这里是相等的）为右面布局的right
+                mMainview.layout(mMyInfoview.getRight(), 0, mMyInfoview.getRight() + display.getWidth(), display.getHeight());
+            }
+            @Override
+            public void onDrawerOpened(View drawerView) {}
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                isDrawer=false;
+            }
+            @Override
+            public void onDrawerStateChanged(int newState) {}
+        });
+
+
+
         setToolbarTitle(UIUtils.getString(R.string.app_name));
         mIbAddMenu.setVisibility(View.VISIBLE);
+        /*setSupportActionBar(edwardToolbar);
+        edwardToolbar.setActivity(this);*/
 
+       // this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //等待全局数据获取完毕
         showWaitingDialog(UIUtils.getString(R.string.please_wait));
-
         //默认选中第一个
         setTransparency();
         mTvARPress.getBackground().setAlpha(255);
@@ -514,7 +569,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     @Override
     public void onResume(){
         super.onResume();
-
+/*
         ViewTreeObserver vto = edwardToolbar.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressWarnings("deprecation")
@@ -525,7 +580,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
             }
         });
         Log.i("myview","params "+edwardToolbar.getLayoutParams().width+"  getwidth "+ edwardToolbar.getScaleX() + edwardToolbar.getX()
-                +edwardToolbar.getMeasuredWidth());
+                +edwardToolbar.getMeasuredWidth());*/
     }
      public static void removeOnGlobalLayoutListener(View view,ViewTreeObserver.OnGlobalLayoutListener victim){
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN){

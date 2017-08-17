@@ -89,8 +89,6 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     DrawerLayout rootview;
     @BindView(R.id.part_camera2)
     RelativeLayout partCamera2;
-    @BindView(R.id.edtoolbar2)
-    EdwardToolbar edwardToolbar2;
     /*@BindView(R.id.Compass)
     Mytestview Compass;
     @OnClick(R.id.Compass)
@@ -98,13 +96,13 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
        // rootview.openDrawer(GravityCompat.START);
         Log.i("toolbar","setViewarround");
     }*/
-    @BindView(R.id.head_portrait)
+/*    @BindView(R.id.head_portrait)
     CircleImageView head_portrait;
     @OnClick(R.id.head_portrait)
     public void openleft(){
         rootview.openDrawer(GravityCompat.START);
         Log.i("toolbar","open");
-    }
+    }*/
     private static final String TAG = "MainFragment";
     //    以下定义是摄像头相关和摄像头会话相关
     private String cameraId;
@@ -172,6 +170,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         return new MainFgPresenter((MainActivity) getActivity());
     }
     public void init(){
+
     }
     @Override
     protected int provideContentViewId() {
@@ -180,7 +179,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     }
 
 
-    @Override
+/*    @Override
     public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
         Log.e(TAG, "onCreateOptionsMenu()");
         menu.clear();
@@ -193,11 +192,11 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
       View view = inflater.inflate(R.layout.cameradrawer, container, false);
       ButterKnife.bind(this, view);
      Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-      EdwardToolbar toolbar2 = (EdwardToolbar) view.findViewById(R.id.edtoolbar2);
-     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         //不显示默认的标题
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
        //给予fragment menu的句柄
+      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setHasOptionsMenu(true);
         //设置沉浸式半透明的toolbar
       toolbar.setBackgroundColor(Color.BLACK);
@@ -211,10 +210,10 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
       DrawerLayout drawer = (DrawerLayout) view.findViewById(R.id.topview);
       right = (FrameLayout)  view.findViewById(R.id.maincontent);
       left = (NavigationView)  view.findViewById(R.id.nav_view);
-     /* ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+     *//* ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
               getActivity(), drawer, toolbar,  R.string.navigation_drawer_open, R.string.navigation_drawer_close);
       drawer.setDrawerListener(toggle);
-      toggle.syncState();*/
+      toggle.syncState();*//*
       CircleImageView head_portrait = (CircleImageView)view.findViewById(R.id.head_portrait);
       int toolbarheight = (int)(toolbar.getLayoutParams().height*0.8);
       Log.i("toolbarheight",toolbarheight+" width");
@@ -260,17 +259,8 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
               Log.i("toolbar","setViewarround");
           }
       });
-      head_portrait = (CircleImageView)view.findViewById(R.id.head_portrait);
-   /*   head_portrait.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              drawerlayout.openDrawer(GravityCompat.START);
-              Log.i("toolbar","open");
-          }
-      });*/
-
       return view;
-     }
+     }*/
 
 
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {

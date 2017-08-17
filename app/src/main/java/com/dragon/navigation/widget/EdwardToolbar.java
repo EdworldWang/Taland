@@ -1,7 +1,11 @@
 package com.dragon.navigation.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.TintTypedArray;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +35,9 @@ public class EdwardToolbar extends Toolbar {
     private int width;
     boolean hideblankview;
     private int toolbarheight;
+    private Context mContext;
+    private ActionBar mActionBar;
+    private Activity mActivity;
     private LinearLayout.LayoutParams layoutsquare;
     public EdwardToolbar(Context context) {
         this(context, null);
@@ -42,6 +49,7 @@ public class EdwardToolbar extends Toolbar {
 
     public EdwardToolbar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        mContext = context;
         view = LayoutInflater.from(getContext()).inflate(R.layout.edward_toolbar, null);
         mImageView = (CircleImageView) view.findViewById(R.id.edward_headview);
         mSearchView = (SearchView) view.findViewById(R.id.edward_searchview);
@@ -82,6 +90,8 @@ public class EdwardToolbar extends Toolbar {
         layoutsquare.width = toolbarheight;
         // layoutsquare.weight = 0.2f;
         mImageView.setLayoutParams(layoutsquare);
+        //修复最低的显示位置，布局上一些按钮的位置不居中的修复
+        this.setMinimumHeight(this.getLayoutParams().height);
     }
   /*  protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed,left,top,right,bottom);
@@ -125,6 +135,7 @@ public class EdwardToolbar extends Toolbar {
                     case R.id.edward_searchview:
                         hideblankview = true;
                         mBlankView.setVisibility(View.GONE);
+                        //DisplayHomeAsUpEnabled(true);
                             Log.i("myview","itemclick");
                         break;
                 }
@@ -149,6 +160,13 @@ public class EdwardToolbar extends Toolbar {
             public void onClick(View v) {
                 mBlankView.setVisibility(View.GONE);
                 mSearchView.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f));
+                try {
+                    ((AppCompatActivity)mActivity).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                }catch(Exception e){
+
+                }
+
+                //setDisplayHomeAsUpEnabled(true);
                 Toast.makeText(getContext(), "Open", Toast.LENGTH_SHORT).show();
             }
         });
@@ -166,5 +184,17 @@ public class EdwardToolbar extends Toolbar {
                 return false;
             }
         });
+
+
     }
+    public void setActivity(Activity mActivity){
+        this.mActivity = mActivity;
+        ((AppCompatActivity)mActivity).setSupportActionBar(this);
+    }
+   /* private class ToolbarBuilder{
+        Activity mActivity;
+        public void withActivity(Activity mActivity) {
+            this.mActivity = mActivity;
+        }
+    }*/
 }
