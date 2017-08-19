@@ -220,7 +220,7 @@
         </activity>
         <activity
             android:name="com.dragon.navigation.UI.Activity.MainActivity"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
         </activity>
         <activity

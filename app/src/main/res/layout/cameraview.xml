@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/part_camera2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal" >
+    <LinearLayout
+        android:id="@+id/fragmentone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        ></LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/search_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="@dimen/offset_title"
+        android:layout_marginRight="@dimen/offset_title"
+        android:layout_marginStart="@dimen/offset_title"
+        android:layout_marginTop="@dimen/offset_title"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:weightSum="1">
+
+            <AutoCompleteTextView
+                android:id="@+id/searchText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/search_input"
+                android:background="@color/transparent"
+                android:hint="查找周边美食、酒店、公交"
+                android:imeOptions="actionDone"
+                android:inputType="text|textAutoComplete"
+                android:completionThreshold="1"
+                android:dropDownVerticalOffset="1.0dip"
+                android:textColorHint="@color/darkgrey"
+                android:singleLine="true"
+                android:textColor="@color/blue"
+                android:textSize="18sp"
+                android:popupBackground="@drawable/autotext"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignBottom="@+id/search_bar_layout"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center"
+                android:paddingEnd="12dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingStart="12dp"
+                android:text="搜索"
+                android:textColor="@drawable/btn_style_01"
+                android:textSize="22sp"
+                android:layout_below="@+id/input_edittext"
+                android:layout_alignEnd="@+id/btn3"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/list_Lin"
+        android:orientation="vertical"
+        android:layout_below="@+id/search_bar_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="360dp">
+
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/merchant"
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/blue"
+        android:text="商家:1"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/My"
+        android:layout_alignTop="@+id/My"/>
+
+    <Button
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:textColor="@drawable/btn_style_01"
+        android:text="我的"
+        android:id="@+id/My"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="22sp"
+        android:background="@android:color/transparent"/>
+
+    <com.dragon.navigation.util.MyTextView
+        android:id="@+id/current_city"
+        android:layout_width="85dp"
+        android:clickable="false"
+        android:layout_height="wrap_content"
+        android:text="当前城市"
+        android:singleLine="true"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:scrollHorizontally="true"
+        android:focusableInTouchMode="true"
+        android:textColor="@color/blue"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/My"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/merchant"/>
+    <com.dragon.navigation.View.Mytestview
+        android:layout_width="128dip"
+        android:layout_height="128dip"
+        android:id="@+id/Compass"
+        android:background="@android:color/transparent"
+        android:layout_below="@+id/search_bar_layout"
+        android:layout_alignParentEnd="true"
+        />
+
+</RelativeLayout>

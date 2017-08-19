@@ -24,12 +24,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_btn_send.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable\\rc_bg_mentionlist_item.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_bg_mentionlist_item.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable\\rc_bg_sidebar.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_bg_sidebar.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable\\rc_bg_mentionlist_item.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_bg_mentionlist_item.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable\\rc_btn_input.xml",

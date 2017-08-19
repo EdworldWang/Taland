@@ -64,12 +64,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_fr_public_service_inf.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_fr_dialog_alter.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_fr_dialog_alter.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_icon_rt_location_marker.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_icon_rt_location_marker.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_fr_dialog_alter.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_fr_dialog_alter.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_picsel_original.xml",
@@ -108,12 +108,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_fr_conversationlist.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_cs_evaluate.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_cs_evaluate.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_mention_list_item.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_mention_list_item.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_cs_evaluate.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_cs_evaluate.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\layout\\rc_fr_file_list.xml",

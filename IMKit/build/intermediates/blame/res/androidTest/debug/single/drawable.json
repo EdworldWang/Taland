@@ -8,12 +8,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_btn_send.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_bg_item.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_bg_item.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_ext_plugin_image_selector.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_ext_plugin_image_selector.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_bg_item.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_bg_item.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_pb_file_download_progress.xml",
@@ -44,12 +44,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_selector_title_back_press.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_keyboard_selector.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_keyboard_selector.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_unread_msg_bg_style.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_unread_msg_bg_style.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_keyboard_selector.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable\\rc_keyboard_selector.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable\\rc_sel_picsel_toolbar_back.xml",

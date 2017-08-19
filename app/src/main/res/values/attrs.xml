@@ -6,6 +6,22 @@
     <attr name="titleBackgroundColor" format="color"/>
     <attr name="contentBackgroundColor" format="color"/>
     <attr name="textSize" format="dimension" />
+    <attr name="color_bkg_main" format="color" />
+
+    <attr name="color_action_bar" format="color" />
+    <attr name="color_action_bar_text" format="color" />
+    <attr name="colorPrimaryDark" format="color"/>
+    <attr name="color_primary" format="color" />
+    <attr name="color_primary_pressed" format="color" />
+    <attr name="color_primary_disabled" format="color" />
+
+    <attr name="color_text" format="color" />
+    <attr name="color_text_pressed" format="color" />
+    <attr name="color_text_disabled" format="color" />
+    <attr name="color_text_sub" format="color" />
+    <attr name="color_text_hint" format="color" />
+
+    <attr name="color_divider" format="color" />
     <declare-styleable name="CircleImageView">
         <attr name="civ_border_width" format="dimension" />
         <attr name="civ_border_color" format="color" />

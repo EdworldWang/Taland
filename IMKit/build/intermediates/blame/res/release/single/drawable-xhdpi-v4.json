@@ -28,24 +28,24 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_receive_voice_three.png"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_ed_pub_service_search_normal.9.png",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_ed_pub_service_search_normal.9.png"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_picsel_pictype_normal.png",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_picsel_pictype_normal.png"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f47d.png",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f47d.png"
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_ed_pub_service_search_normal.9.png",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_ed_pub_service_search_normal.9.png"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_cs_group_cancel_normal.png",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_cs_group_cancel_normal.png"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_ext_location_tip.png",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_ext_location_tip.png"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_cs_group_cancel_normal.png",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_cs_group_cancel_normal.png"
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f47d.png",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f47d.png"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f3a4.png",
@@ -80,12 +80,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_cs_button_bg_hover.png"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f46b.png",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f46b.png"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_btn_download_cancel.png",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_btn_download_cancel.png"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\u1f46b.png",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f46b.png"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable-xhdpi-v4\\rc_ic_notice_loading.png",

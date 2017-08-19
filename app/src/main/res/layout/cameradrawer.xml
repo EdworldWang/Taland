@@ -16,8 +16,17 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             />
-        <include
-            layout="@layout/part_camera2"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <com.dragon.navigation.View.Mytestview
+                android:layout_width="128dip"
+                android:layout_height="128dip"
+                android:id="@+id/Compass"
+                android:background="@android:color/transparent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight = "true"/>
+        </RelativeLayout>
     </FrameLayout>
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

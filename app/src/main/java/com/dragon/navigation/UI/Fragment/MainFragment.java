@@ -87,8 +87,6 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     TextureView mtextureView;
     @BindView(R.id.topview)
     DrawerLayout rootview;
-    @BindView(R.id.part_camera2)
-    RelativeLayout partCamera2;
     /*@BindView(R.id.Compass)
     Mytestview Compass;
     @OnClick(R.id.Compass)
