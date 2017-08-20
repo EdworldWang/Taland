@@ -60,6 +60,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.dragon.navigation.util.UIUtils.getContext;
+
 /**
  * ━━━━━━神兽出没━━━━━━
  * 　　　┏┓　　　┏┓

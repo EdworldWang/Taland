@@ -1,5 +1,4 @@
 package com.dragon.navigation.UI.Activity;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,7 +30,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.baidu.mapapi.SDKInitializer;
 import com.dragon.navigation.Adapter.CommonFragmentPagerAdapter;
 import com.dragon.navigation.R;
 import com.dragon.navigation.UI.Base.BaseActivity;
@@ -46,6 +45,7 @@ import com.dragon.navigation.util.CrossfadeWrapper;
 import com.dragon.navigation.util.PopupWindowUtils;
 import com.dragon.navigation.util.UIUtils;
 import com.dragon.navigation.widget.EdwardToolbar;
+import com.dragon.navigation.widget.MyViewPager;
 import com.mikepenz.crossfader.Crossfader;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -81,6 +81,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.dragon.navigation.util.UIUtils.getContext;
+
 
 public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> implements ViewPager.OnPageChangeListener, IMainAtView {
 
@@ -89,7 +91,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     @BindView(R.id.ibAddMenu)
     ImageButton mIbAddMenu;
     @BindView(R.id.vpContent)
-    ViewPager mVpContent;
+    MyViewPager mVpContent;
 
     @BindView(R.id.llButtom)
     LinearLayout mllButtom;
@@ -191,6 +193,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setSupportActionBar(toolbar);
+
         // Create a few sample profile
         // NOTE you have to define the loader logic too. See the CustomApplication for more details
         final IProfile profile = new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon("https://avatars3.githubusercontent.com/u/1476232?v=3&s=460");
@@ -264,33 +267,10 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
                         return false;
                     }
                 })
-                .withGenerateMiniDrawer(true)
                 .withSavedInstance(savedInstanceState)
                 // build only the view of the Drawer (don't inflate it automatically in our layout which is done with .build())
                 .buildView();
-
-        //the MiniDrawer is managed by the Drawer and we just get it to hook it into the Crossfader
-        miniResult = result.getMiniDrawer();
-
-        //get the widths in px for the first and second panel
-        int firstWidth = (int) com.mikepenz.crossfader.util.UIUtils.convertDpToPixel(300, this);
-        int secondWidth = (int) com.mikepenz.crossfader.util.UIUtils.convertDpToPixel(72, this);
-
-        //create and build our crossfader (see the MiniDrawer is also builded in here, as the build method returns the view to be used in the crossfader)
-        //the crossfader library can be found here: https://github.com/mikepenz/Crossfader
-        crossFader = new Crossfader()
-                .withContent(findViewById(R.id.crossfade_content))
-                .withFirst(result.getSlider(), firstWidth)
-                .withSecond(miniResult.build(this), secondWidth)
-                .withSavedInstance(savedInstanceState)
-                .build();
-
-        //define the crossfader to be used with the miniDrawer. This is required to be able to automatically toggle open / close
-        miniResult.withCrossFader(new CrossfadeWrapper(crossFader));
-
-        //define a shadow (this is only for normal LTR layouts if you have a RTL app you need to define the other one
-        crossFader.getCrossFadeSlidingPaneLayout().setShadowResourceLeft(R.drawable.material_drawer_shadow_left);
-      //  mMyInfoview.addHeaderView(result.getSlider());
+      mMyInfoview.addHeaderView(result.getSlider());
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -299,6 +279,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     }
     @Override
     public void initView() {
+        mAppBar.setVisibility(View.GONE);
          setSupportActionBar(toolbar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
@@ -360,7 +341,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
         // Inflate the layout for this fragment
 
 
-
+        mVpContent.setIsCanScroll(false);
     }
 
     @Override
@@ -524,7 +505,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
                 mTvARTextPress.setTextColor(Color.argb(diaphaneity_two, 69, 192, 26));
                 mTvMessageTextNormal.setTextColor(Color.argb(diaphaneity_two, 153, 153, 153));
                 mTvMessageTextPress.setTextColor(Color.argb(diaphaneity_one, 69, 192, 26));
-                mAppBar.setVisibility(View.GONE);
+              //  mAppBar.setVisibility(View.GONE);
                 if(positionOffset < 0.1)
                     mllButtom.setVisibility(View.GONE);
                 else
@@ -539,7 +520,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
                 mTvMessageTextPress.setTextColor(Color.argb(diaphaneity_two, 69, 192, 26));
                 mTvContactsTextNormal.setTextColor(Color.argb(diaphaneity_two, 153, 153, 153));
                 mTvContactsTextPress.setTextColor(Color.argb(diaphaneity_one, 69, 192, 26));
-                mAppBar.setVisibility(View.VISIBLE);
+               // mAppBar.setVisibility(View.VISIBLE);
                 mllButtom.setVisibility(View.VISIBLE);
                 break;
             case 2:

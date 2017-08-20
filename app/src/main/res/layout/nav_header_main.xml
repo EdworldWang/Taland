@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Edward"
+        android:drawableBottom="@drawable/amap_car"
         android:textStyle="bold"
         android:typeface="sans"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

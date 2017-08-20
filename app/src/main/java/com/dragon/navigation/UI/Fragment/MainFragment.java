@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
+import android.graphics.Point;
+import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
 import android.hardware.SensorManager;
 import android.hardware.camera2.CameraAccessException;
@@ -56,6 +58,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MapViewLayoutParams;
+import com.baidu.mapapi.map.TextureMapView;
+import com.baidu.mapapi.model.LatLng;
 import com.dragon.navigation.R;
 import com.dragon.navigation.UI.Activity.Main;
 import com.dragon.navigation.UI.Activity.MainActivity;
@@ -64,7 +73,8 @@ import com.dragon.navigation.UI.Presenter.MainFgPresenter;
 import com.dragon.navigation.UI.View.IMainFgView;
 import com.dragon.navigation.View.Mytestview;
 import com.dragon.navigation.use.Texture;
-import com.dragon.navigation.widget.EdwardToolbar;
+import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
+import com.github.rubensousa.floatingtoolbar.FloatingToolbarMenuBuilder;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -83,24 +93,49 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> implements IMainFgView {
+    /**
+     * MapView 是地图主控件
+     * TextureView 是摄像头界面
+     */
     @BindView(R.id.texture)
     TextureView mtextureView;
+    @BindView(R.id.map)
+   TextureMapView mMapView;
+    private BaiduMap mBaiduMap;
+    @BindView(R.id.maincontent)
+    FrameLayout maincontent;
+    //当前地点
+    private LatLng currentPt;
+
     @BindView(R.id.topview)
     DrawerLayout rootview;
-    /*@BindView(R.id.Compass)
+    @BindView(R.id.floatingToolbar)
+    FloatingToolbar mFloatingToolbar;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
+    @OnClick(R.id.fab)
+    public void clickfab(){
+        // rootview.openDrawer(GravityCompat.START);
+        if(mFloatingToolbar != null) {
+            Log.i("MainFragment", "fab");
+          //  mFloatingToolbar.show();
+        }
+
+    }
+    @BindView(R.id.Compass)
     Mytestview Compass;
     @OnClick(R.id.Compass)
     public void setViewarround(){
        // rootview.openDrawer(GravityCompat.START);
-        Log.i("toolbar","setViewarround");
-    }*/
-/*    @BindView(R.id.head_portrait)
-    CircleImageView head_portrait;
-    @OnClick(R.id.head_portrait)
-    public void openleft(){
-        rootview.openDrawer(GravityCompat.START);
-        Log.i("toolbar","open");
-    }*/
+        Log.i("MainFragment","setViewarround");
+    }
+    @OnClick(R.id.texture)
+    public void Textureonclick(){
+        // rootview.openDrawer(GravityCompat.START);
+        Log.i("MainFragment","texture");
+    }
+    @SuppressWarnings("unused")
+    private static final String LTAG = MainFragment.class.getSimpleName();
     private static final String TAG = "MainFragment";
     //    以下定义是摄像头相关和摄像头会话相关
     private String cameraId;
@@ -119,6 +154,11 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
 
+    private static final int OPEN_ID = 0;
+    private static final int CLOSE_ID = 1;
+    //用于设置个性化地图的样式文件
+    // 提供三种样式模板："custom_config_blue.txt"，"custom_config_dark.txt"，"custom_config_midnightblue.txt"
+    private static String PATH = "custom_config_dark.txt";
     private boolean isDrawer=false;
 
 
@@ -150,16 +190,54 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
             }
         };
 
+
+        MapStatus.Builder builder = new MapStatus.Builder();
+        LatLng center = new LatLng(39.915071, 116.403907); // 默认 天安门
+        float zoom = 11.0f; // 默认 11级
+        Intent intent = getActivity().getIntent();
+        if (null != intent) {
+            center = new LatLng(intent.getDoubleExtra("y", 39.915071),
+                    intent.getDoubleExtra("x", 116.403907));
+            zoom = intent.getFloatExtra("level", 11.0f);
+        }
+        builder.target(center).zoom(zoom);
+
+        //setMapCustomFile(this, PATH);
+//       mMapView = new MapView(getContext(), new BaiduMapOptions());
+
+       // initView(this);
+       // MapView.setMapCustomEnable(true);
+
+
     }
 
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        TextView mTextView;
+        mTextView = new TextView(getContext());
+        mTextView.setText(getText(R.string.password));
+        mTextView.setTextSize(15.0f);
+        mTextView.setGravity(Gravity.CENTER);
+        mTextView.setTextColor(Color.BLACK);
+        mTextView.setBackgroundColor(Color.parseColor("#AA00FF00"));
+
+        MapViewLayoutParams.Builder builder = new MapViewLayoutParams.Builder();
+        builder.layoutMode(MapViewLayoutParams.ELayoutMode.absoluteMode);
+        builder.width(mMapView.getWidth());
+        builder.height(200);
+        builder.point(new Point(0, mMapView.getHeight()));
+        //此处放置在下面不能显示的原因是被CoordinatorLayout高度高给盖住了，改为TOP就解决了
+        builder.align(MapViewLayoutParams.ALIGN_LEFT, MapViewLayoutParams.ALIGN_TOP);
+
+        mMapView.addView(mTextView, builder.build());
+        mTextView.bringToFront();
 
     }
         @Override
     public void onDestroy() {
         super.onDestroy();
+            mMapView.onDestroy();
     }
 
 
@@ -167,7 +245,18 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     protected MainFgPresenter createPresenter() {
         return new MainFgPresenter((MainActivity) getActivity());
     }
-    public void init(){
+
+    //initView在onCreateView时调用，此处为额外补充加载视图，进行view的初始化
+    @Override
+    public void initView(View rootview){
+        mBaiduMap = mMapView.getMap();
+        if(mBaiduMap == null){
+            Log.e(LTAG,"null");
+        }
+        mBaiduMap.setViewPadding(0,0,0,200);
+
+        mFloatingToolbar.attachFab(fab);
+        mtextureView.setVisibility(View.INVISIBLE);
 
     }
     @Override
@@ -291,20 +380,48 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
             cameraDevice = null;
         }
     };
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        // activity 暂停时同时暂停地图控件
+        // MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
+        mMapView.onPause();
+    }
     @Override
     public void onResume() {
+        Log.e(LTAG, "onResume");
         super.onResume();
-        //        注册监听事件
-        Log.e(TAG, "onResume");
+        //进行Framelayout的重绘，之前下面的button消失后会腾出一定的空白（黑色）空间出来，故进行重绘
+
+
+        maincontent.invalidate();
+    /*    mBaiduMap.setViewPadding(0,0,0,200);
+        TextView mTextView;
+        mTextView = new TextView(getContext());
+        mTextView.setText("整体上移");
+        mTextView.setTextSize(15.0f);
+        mTextView.setGravity(Gravity.CENTER);
+        mTextView.setTextColor(Color.BLACK);
+        mTextView.setBackgroundColor(Color.parseColor("#AA00FF00"));
+
+        MapViewLayoutParams.Builder builder = new MapViewLayoutParams.Builder();
+        builder.layoutMode(MapViewLayoutParams.ELayoutMode.absoluteMode);
+        builder.width(mMapView.getWidth());
+        builder.height(200);
+        builder.point(new Point(0, mMapView.getHeight()));
+        builder.align(MapViewLayoutParams.ALIGN_LEFT, MapViewLayoutParams.ALIGN_BOTTOM);
+
+        mMapView.addView(mTextView, builder.build());*/
+
         startBackgroundThread();
         if (mtextureView.isAvailable()) {
-            Log.e(TAG, "textureViewAvailable");
+            Log.e(LTAG, "textureViewAvailable");
 //            openCamera();
             initCamera2();
         } else {
              mtextureView.setSurfaceTextureListener(textureListener);
         }
+        mMapView.onResume();
     }
     protected void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("Camera Background");
