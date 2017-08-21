@@ -24,7 +24,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.dragon.navigation.View.Mytestview
+            <com.edward.navigation.View.Mytestview
                 android:layout_width="128dip"
                 android:layout_height="128dip"
                 android:id="@+id/Compass"

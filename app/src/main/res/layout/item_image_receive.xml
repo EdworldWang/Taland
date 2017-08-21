@@ -59,7 +59,7 @@
                 android:textSize="12sp"
                 android:visibility="visible"/>
 
-            <com.dragon.navigation.widget.BubbleImageView
+            <com.edward.navigation.widget.BubbleImageView
                 android:id="@+id/bivPic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

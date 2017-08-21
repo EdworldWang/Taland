@@ -31,7 +31,7 @@
 
          <include layout="@layout/logoview"/>
 
-        <com.dragon.navigation.widget.ClearWriteEditText
+        <com.edward.navigation.widget.ClearWriteEditText
             android:id="@+id/etNick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             android:textColor="#FFF"
             android:textColorHint="#FFFFFF" />
 
-        <com.dragon.navigation.widget.ClearWriteEditText
+        <com.edward.navigation.widget.ClearWriteEditText
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,7 +78,7 @@
             android:orientation="horizontal">
 
 
-            <com.dragon.navigation.widget.ClearWriteEditText
+            <com.edward.navigation.widget.ClearWriteEditText
                 android:id="@+id/etVerifyCode"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
 
         </LinearLayout>
 
-        <com.dragon.navigation.widget.ClearWriteEditText
+        <com.edward.navigation.widget.ClearWriteEditText
             android:id="@+id/etPwd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

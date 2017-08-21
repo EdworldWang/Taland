@@ -31,7 +31,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             />
-    <com.dragon.navigation.View.Mytestview
+    <com.edward.navigation.View.Mytestview
         android:layout_width="128dip"
         android:layout_height="128dip"
         android:id="@+id/Compass"

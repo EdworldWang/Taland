@@ -43,7 +43,7 @@
                     android:layout_marginRight="50dip"
                     android:textColorHint="@color/white">
 
-                    <com.dragon.navigation.widget.ClearWriteEditText
+                    <com.edward.navigation.widget.ClearWriteEditText
                         android:id="@+id/ed_login_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                     android:textColorHint="@color/white"
                     android:layout_weight="0.99">
 
-                    <com.dragon.navigation.widget.ClearWriteEditText
+                    <com.edward.navigation.widget.ClearWriteEditText
                         android:id="@+id/ed_login_password"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"

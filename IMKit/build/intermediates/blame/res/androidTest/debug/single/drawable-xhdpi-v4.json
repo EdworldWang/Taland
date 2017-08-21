@@ -356,12 +356,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\rc_cs_follow.png"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\u1f616.png",
-        "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\u1f616.png"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\rc_file_icon_pdf.png",
         "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\rc_file_icon_pdf.png"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\u1f616.png",
+        "source": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\u1f616.png"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\u1f602.png",

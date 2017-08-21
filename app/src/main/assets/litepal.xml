@@ -5,8 +5,8 @@
     <version value="1"></version>
 
     <list>
-        <mapping class="com.dragon.navigation.db.model.Friend"></mapping>
-        <mapping class="com.dragon.navigation.db.model.Groups"></mapping>
-        <mapping class="com.dragon.navigation.db.model.GroupMember"></mapping>
+        <mapping class="com.edward.navigation.db.model.Friend"></mapping>
+        <mapping class="com.edward.navigation.db.model.Groups"></mapping>
+        <mapping class="com.edward.navigation.db.model.GroupMember"></mapping>
     </list>
 </litepal>

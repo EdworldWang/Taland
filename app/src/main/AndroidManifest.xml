@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.dragon.navigation">
+          package="com.edward.navigation">
     <!--添加对应有权限-->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
@@ -53,7 +53,7 @@
 
 
     <application
-        android:name=".app.MyApp"
+        android:name="com.edward.navigation.app.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/tlogo"
         android:label="@string/app_name"
@@ -86,23 +86,23 @@
             android:name="com.amap.api.v2.apikey"
             android:value="e274ff496bd4682ff9ad7c9a5f8e1830"/>
 
-        <activity android:name=".UI.Activity.ActivitySplashScreen">
+        <activity android:name="com.edward.navigation.UI.Activity.ActivitySplashScreen">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".UI.Activity.Main"
+        <activity android:name="com.edward.navigation.UI.Activity.Main"
                     android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar">
         </activity>
 
-        <activity android:name=".UI.Activity.GuideActivity"
+        <activity android:name="com.edward.navigation.UI.Activity.GuideActivity"
                      android:theme="@style/GuideTheme">>
         </activity>
-        <activity android:name=".UI.Activity.SplashActivity">
+        <activity android:name="com.edward.navigation.UI.Activity.SplashActivity">
         </activity>
         <activity
-            android:name=".UI.Activity.WXSplashActivity"
+            android:name="com.edward.navigation.UI.Activity.WXSplashActivity"
             android:theme="@style/SplashTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -110,10 +110,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".UI.Activity.UserActivity"
+        <activity android:name="com.edward.navigation.UI.Activity.UserActivity"
                    android:theme="@style/SignTheme">
         </activity>
-        <activity android:name=".UI.Activity.MySetting">
+        <activity android:name="com.edward.navigation.UI.Activity.MySetting">
 
         </activity>
         <!--定位服务-->
@@ -212,102 +212,102 @@
         <!-- end -->
 
         <activity
-            android:name="com.dragon.navigation.UI.Activity.SessionActivity"
+            android:name="com.edward.navigation.UI.Activity.SessionActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.WebViewActivity"
+            android:name="com.edward.navigation.UI.Activity.WebViewActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.MainActivity"
+            android:name="com.edward.navigation.UI.Activity.MainActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.LoginActivity"
+            android:name="com.edward.navigation.UI.Activity.LoginActivity"
             android:theme="@style/ARTheme"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.RegisterActivity"
+            android:name="com.edward.navigation.UI.Activity.RegisterActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.NewFriendActivity"
+            android:name="com.edward.navigation.UI.Activity.NewFriendActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.AddFriendActivity"
+            android:name="com.edward.navigation.UI.Activity.AddFriendActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.ScanActivity"
+            android:name="com.edward.navigation.UI.Activity.ScanActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.SearchUserActivity"
+            android:name="com.edward.navigation.UI.Activity.SearchUserActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.UserInfoActivity"
+            android:name="com.edward.navigation.UI.Activity.UserInfoActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.PostScriptActivity"
+            android:name="com.edward.navigation.UI.Activity.PostScriptActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.SetAliasActivity"
+            android:name="com.edward.navigation.UI.Activity.SetAliasActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.MyInfoActivity"
+            android:name="com.edward.navigation.UI.Activity.MyInfoActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.QRCodeCardActivity"
+            android:name="com.edward.navigation.UI.Activity.QRCodeCardActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.ChangeMyNameActivity"
+            android:name="com.edward.navigation.UI.Activity.ChangeMyNameActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.CreateGroupActivity"
+            android:name="com.edward.navigation.UI.Activity.CreateGroupActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.TakePhotoActivity"
+            android:name="com.edward.navigation.UI.Activity.TakePhotoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/FullWindowTheme">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.GroupListActivity"
+            android:name="com.edward.navigation.UI.Activity.GroupListActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.SessionInfoActivity"
+            android:name="com.edward.navigation.UI.Activity.SessionInfoActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.RemoveGroupMemberActivity"
+            android:name="com.edward.navigation.UI.Activity.RemoveGroupMemberActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.SetGroupNameActivity"
+            android:name="com.edward.navigation.UI.Activity.SetGroupNameActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.ShowBigImageActivity"
+            android:name="com.edward.navigation.UI.Activity.ShowBigImageActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.SettingActivity"
+            android:name="com.edward.navigation.UI.Activity.SettingActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name="com.dragon.navigation.UI.Activity.AboutActivity"
+            android:name="com.edward.navigation.UI.Activity.AboutActivity"
             android:screenOrientation="portrait">
         </activity>
 
@@ -370,7 +370,7 @@
         </activity>
         <!--微信分享回调 -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="com.edward.navigation.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -378,7 +378,7 @@
 
         <!-- 支付宝分享回调 -->
         <activity
-            android:name=".apshare.ShareEntryActivity"
+            android:name="com.edward.navigation.apshare.ShareEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>

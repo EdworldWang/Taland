@@ -7,7 +7,7 @@
 
     <include layout="@layout/include_toolbar"/>
 
-    <com.dragon.navigation.widget.ProgressWebView
+    <com.edward.navigation.widget.ProgressWebView
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

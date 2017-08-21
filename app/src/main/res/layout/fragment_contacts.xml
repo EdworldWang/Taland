@@ -12,7 +12,7 @@
         app:rv_divider_color="@color/line"
         app:rv_divider_size="1px"/>
 
-    <com.dragon.navigation.widget.QuickIndexBar
+    <com.edward.navigation.widget.QuickIndexBar
         android:id="@+id/qib"
         android:layout_width="40px"
         android:layout_height="match_parent"

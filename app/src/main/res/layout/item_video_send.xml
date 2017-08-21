@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content">
 
                 <!-- 图片 -->
-                <com.dragon.navigation.widget.BubbleImageView
+                <com.edward.navigation.widget.BubbleImageView
                     android:id="@+id/bivPic"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
@@ -98,7 +98,7 @@
                     app:bubble_showText="false"
                     />
 
-                <com.dragon.navigation.widget.CircularProgressBar
+                <com.edward.navigation.widget.CircularProgressBar
                     android:id="@+id/cpbLoading"
                     android:layout_width="30dp"
                     android:layout_height="30dp"

@@ -107,7 +107,7 @@
         android:textSize="22sp"
         android:background="@android:color/transparent"/>
 
-    <com.dragon.navigation.util.MyTextView
+    <com.edward.navigation.util.MyTextView
         android:id="@+id/current_city"
         android:layout_width="85dp"
         android:clickable="false"
@@ -126,7 +126,7 @@
         android:layout_alignTop="@+id/My"
         android:layout_alignParentBottom="true"
         android:layout_toStartOf="@+id/merchant"/>
-    <com.dragon.navigation.View.Mytestview
+    <com.edward.navigation.View.Mytestview
         android:layout_width="128dip"
         android:layout_height="128dip"
         android:id="@+id/Compass"

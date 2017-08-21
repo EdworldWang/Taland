@@ -74,7 +74,7 @@
         </com.zhy.autolayout.AutoLinearLayout>
 
         <!--快速导航条-->
-        <com.dragon.navigation.widget.QuickIndexBar
+        <com.edward.navigation.widget.QuickIndexBar
             android:id="@+id/qib"
             android:layout_width="40px"
             android:layout_height="match_parent"
