@@ -2,8 +2,10 @@ package com.edward.navigation.app;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Service;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -24,6 +26,7 @@ import com.edward.navigation.db.model.Friend;
 import com.edward.navigation.db.model.Groups;
 import com.edward.navigation.manager.BroadcastManager;
 import com.edward.navigation.manager.JsonMananger;
+import com.edward.navigation.service.LocationService;
 import com.edward.navigation.util.LogUtils;
 import com.edward.navigation.util.PinyinUtils;
 import com.edward.navigation.util.RedPacketUtil;
@@ -61,35 +64,17 @@ import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * ━━━━━━神兽出没━━━━━━
- * 　　　┏┓　　　┏┓
- * 　　┏┛┻━━━┛┻┓
- * 　　┃　　　　　　　┃
- * 　　┃　　　━　　　┃
- * 　　┃　┳┛　┗┳　┃
- * 　　┃　　　　　　　┃
- * 　　┃　　　┻　　　┃
- * 　　┃　　　　　　　┃
- * 　　┗━┓　　　┏━┛
- * 　　　　┃　　　┃  神兽保佑
- * 　　　　┃　　　┃  代码无bug
- * 　　　　┃　　　┗━━━┓
- * 　　　　┃　　　　　　　┣┓
- * 　　　　┃　　　　　　　┏┛
- * 　　　　┗┓┓┏━┳┓┏┛
- * 　　　　　┃┫┫　┃┫┫
- * 　　　　　┗┻┛　┗┻┛
- * ━━━━━━感觉萌萌哒━━━━━━
- *
- * @创建者 CSDN_LQR
+ * @创建者 Edward
  * @描述 BaseApp的拓展，用于设置其他第三方的初始化
  */
 public class MyApp extends BaseApp implements RongIMClient.OnReceiveMessageListener {
-
+    //全局里面定位的服务只需要一个
+    public LocationService locationService;
+    //手机振动服务类
+    public Vibrator mVibrator;
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i("myapp", "onCreate: ");
         LitePal.initialize(this);
         //初始化融云
         initRongCloud();
@@ -102,6 +87,8 @@ public class MyApp extends BaseApp implements RongIMClient.OnReceiveMessageListe
         //初始化ShareSDK
         ShareSDK.initSDK(getContext());
         //初始化百度地图SDK
+        locationService = new LocationService(getApplicationContext());
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         SDKInitializer.initialize(getContext());
     }
 

@@ -7,23 +7,35 @@
     <FrameLayout
         android:id="@+id/maincontent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
+        android:clickable="true">
 
 
-        <TextureView
-            android:id="@+id/texture"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            />
+
+        <include layout="@layout/activity_indoor"/>
         <com.baidu.mapapi.map.TextureMapView
-            android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:id="@+id/map"
+          />
+        <TextureView
+        android:id="@+id/texture"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="bottom|right"
+        />
+        <TextureView
+            android:id="@+id/texture_transparent"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:background="@color/transparent"
+            android:layout_gravity="bottom|right"
+            />
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/layout_control">
             <com.edward.navigation.View.Mytestview
                 android:layout_width="128dip"
                 android:layout_height="128dip"
@@ -31,6 +43,7 @@
                 android:background="@android:color/transparent"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight = "true"/>
+
             <android.support.design.widget.CoordinatorLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"

@@ -21,6 +21,7 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -32,21 +33,48 @@ import android.view.Gravity;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ZoomControls;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.LogoPosition;
+import com.baidu.mapapi.map.MapBaseIndoorMapInfo;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MapViewLayoutParams;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.overlayutil.IndoorRouteOverlay;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.route.BikingRouteResult;
+import com.baidu.mapapi.search.route.DrivingRouteResult;
+import com.baidu.mapapi.search.route.IndoorPlanNode;
+import com.baidu.mapapi.search.route.IndoorRouteLine;
+import com.baidu.mapapi.search.route.IndoorRoutePlanOption;
+import com.baidu.mapapi.search.route.IndoorRouteResult;
+import com.baidu.mapapi.search.route.MassTransitRouteResult;
+import com.baidu.mapapi.search.route.OnGetRoutePlanResultListener;
+import com.baidu.mapapi.search.route.RoutePlanSearch;
+import com.baidu.mapapi.search.route.TransitRouteResult;
+import com.baidu.mapapi.search.route.WalkingRouteResult;
 import com.edward.navigation.R;
 import com.edward.navigation.UI.Activity.MainActivity;
 import com.edward.navigation.UI.Base.BaseFragment;
 import com.edward.navigation.UI.Presenter.MainFgPresenter;
 import com.edward.navigation.UI.View.IMainFgView;
 import com.edward.navigation.View.Mytestview;
+import com.edward.navigation.View.indoorview.BaseStripAdapter;
+import com.edward.navigation.View.indoorview.StripListView;
+import com.edward.navigation.util.UIUtils;
 import com.github.rubensousa.floatingtoolbar.FloatingToolbar;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.Drawer;
@@ -63,21 +91,65 @@ import butterknife.OnClick;
  * Created by Administrator on 2017/6/22.
  */
 
-public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> implements IMainFgView {
+public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> implements IMainFgView,OnGetRoutePlanResultListener {
     /**
      * MapView 是地图主控件
      * TextureView 是摄像头界面
      */
+    FrameLayout.LayoutParams biglayout = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT);
+    FrameLayout.LayoutParams smalllayout = new FrameLayout.LayoutParams(UIUtils.dip2Px(120),UIUtils.dip2Px(120),Gravity.BOTTOM|Gravity.RIGHT);
+    Boolean bigcamera = false;
     @BindView(R.id.texture)
     TextureView mtextureView;
+    @BindView(R.id.texture_transparent)
+    TextureView mblanktexture;
+/*    @OnClick(R.id.texture)
+    public void Textureonclick(){
+        Log.i(TAG,"texture");
+        if (!bigcamera) {//小摄像头说明地图大；那么地图变小
+            mtextureView.setLayoutParams(biglayout);
+            mTextureMapView.setLayoutParams(smalllayout);
+            mTextureMapView.bringToFront();
+            maincontent.invalidate();
+
+        }
+    }*/
     @BindView(R.id.map)
+   TextureMapView mTextureMapView;
+
+    @BindView(R.id.bmapView)
    TextureMapView mMapView;
-    private BaiduMap mBaiduMap;
+   BaiduMap mBaiduMap;
+    MapView mSmallMapView;
+    @BindView(R.id.isIndoor)
+    Button isIndoorBtn;
+    @BindView(R.id.indoorRoutePlane)
+    Button indoorRoutePlane;
+    Boolean isIndoor = true;
+    @BindView(R.id.Relayout_indoor)
+    RelativeLayout layout;
+
+    StripListView stripListView;
+    BaseStripAdapter mFloorListAdapter;
+    MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
+    RoutePlanSearch mSearch;
+    IndoorRouteLine mIndoorRouteline;
+    IndoorRouteOverlay mIndoorRoutelineOverlay = null;
+    int nodeIndex = -1;
+    private TextView popupText = null; // 泡泡view
+
+    @BindView(R.id.pre)
+    Button mBtnPre = null; // 上一个节点
+    @BindView(R.id.next)
+    Button mBtnNext = null; // 下一个节点
     @BindView(R.id.maincontent)
     FrameLayout maincontent;
-    //当前地点
-    private LatLng currentPt;
 
+    //当前地点
+    LatLng currentPt;
+    @BindView(R.id.layout_control)
+    RelativeLayout mRelayout_control;
     @BindView(R.id.topview)
     DrawerLayout rootview;
     @BindView(R.id.floatingToolbar)
@@ -86,12 +158,9 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     FloatingActionButton fab;
     @OnClick(R.id.fab)
     public void clickfab(){
-        // rootview.openDrawer(GravityCompat.START);
-        if(mFloatingToolbar != null) {
+        if(mFloatingToolbar != null)
             Log.i("MainFragment", "fab");
           //  mFloatingToolbar.show();
-        }
-
     }
     @BindView(R.id.Compass)
     Mytestview Compass;
@@ -100,11 +169,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
        // rootview.openDrawer(GravityCompat.START);
         Log.i("MainFragment","setViewarround");
     }
-    @OnClick(R.id.texture)
-    public void Textureonclick(){
-        // rootview.openDrawer(GravityCompat.START);
-        Log.i("MainFragment","texture");
-    }
+
     @SuppressWarnings("unused")
     private static final String LTAG = MainFragment.class.getSimpleName();
     private static final String TAG = "MainFragment";
@@ -162,26 +227,32 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         };
 
 
-        MapStatus.Builder builder = new MapStatus.Builder();
-        LatLng center = new LatLng(39.915071, 116.403907); // 默认 天安门
-        float zoom = 11.0f; // 默认 11级
-        Intent intent = getActivity().getIntent();
-        if (null != intent) {
-            center = new LatLng(intent.getDoubleExtra("y", 39.915071),
-                    intent.getDoubleExtra("x", 116.403907));
-            zoom = intent.getFloatExtra("level", 11.0f);
-        }
-        builder.target(center).zoom(zoom);
+    }
+    private void EnableIndoorMap() {
 
-        //setMapCustomFile(this, PATH);
-//       mMapView = new MapView(getContext(), new BaiduMapOptions());
+        indoorRoutePlane.setEnabled(true);
+        mBaiduMap.setIndoorEnable(true);
+        isIndoorBtn.setText("关闭室内图");
 
-       // initView(this);
-       // MapView.setMapCustomEnable(true);
-
-
+        Toast.makeText(getActivity(), "室内图已打开", Toast.LENGTH_SHORT).show();
     }
 
+    private void DisableIndoorMap() {
+        mBtnPre.setVisibility(View.INVISIBLE);
+        mBtnNext.setVisibility(View.INVISIBLE);
+
+        indoorRoutePlane.setEnabled(false);
+        if (null != mIndoorRoutelineOverlay) {
+            mIndoorRoutelineOverlay.removeFromMap();
+            mIndoorRoutelineOverlay = null;
+        }
+
+        mBaiduMap.clear();
+        mBaiduMap.setIndoorEnable(false);
+        isIndoorBtn.setText("打开室内图");
+
+        Toast.makeText(getActivity(), "室内图已关闭", Toast.LENGTH_SHORT).show();
+    }
 
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -220,15 +291,19 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     //initView在onCreateView时调用，此处为额外补充加载视图，进行view的初始化
     @Override
     public void initView(View rootview){
-        mBaiduMap = mMapView.getMap();
+                mBaiduMap = mMapView.getMap();
         if(mBaiduMap == null){
             Log.e(LTAG,"null");
         }
-        mBaiduMap.setViewPadding(0,0,0,200);
+        mBaiduMap.setViewPadding(0,0,0,-200);
 
         mFloatingToolbar.attachFab(fab);
-       // mMapView.setVisibility(View.INVISIBLE);
-       mtextureView.setVisibility(View.INVISIBLE);
+        //mTextureMapView.setVisibility(View.INVISIBLE);
+        mMapView.setVisibility(View.INVISIBLE);
+      // mtextureView.setVisibility(View.INVISIBLE);
+        layout.setVisibility(View.INVISIBLE);
+        mRelayout_control.setVisibility(View.INVISIBLE);
+
 
     }
     @Override
@@ -236,91 +311,6 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
 
         return R.layout.cameradrawer;
     }
-
-
-/*    @Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
-        Log.e(TAG, "onCreateOptionsMenu()");
-        menu.clear();
-       getActivity().getMenuInflater().inflate(R.menu.navigation,menu);
-    }
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // don't look at this layout it's just a listView to show how to handle the keyboard
-      View view = inflater.inflate(R.layout.cameradrawer, container, false);
-      ButterKnife.bind(this, view);
-     Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        //不显示默认的标题
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-       //给予fragment menu的句柄
-      ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setHasOptionsMenu(true);
-        //设置沉浸式半透明的toolbar
-      toolbar.setBackgroundColor(Color.BLACK);
-      toolbar.getBackground().setAlpha(90);
-      //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.drawer_item_fullscreen_drawer);
-      viewarround = (Mytestview) view.findViewById(R.id.Compass);
-      mtextureView =(TextureView)view.findViewById(R.id.texture);
-      drawerlayout = (DrawerLayout)view.findViewById(R.id.topview);
-      mtextureView.setSurfaceTextureListener(textureListener);
-      //textureview盖住了其他的view
-      DrawerLayout drawer = (DrawerLayout) view.findViewById(R.id.topview);
-      right = (FrameLayout)  view.findViewById(R.id.maincontent);
-      left = (NavigationView)  view.findViewById(R.id.nav_view);
-     *//* ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-              getActivity(), drawer, toolbar,  R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-      drawer.setDrawerListener(toggle);
-      toggle.syncState();*//*
-      CircleImageView head_portrait = (CircleImageView)view.findViewById(R.id.head_portrait);
-      int toolbarheight = (int)(toolbar.getLayoutParams().height*0.8);
-      Log.i("toolbarheight",toolbarheight+" width");
-      Toolbar.LayoutParams layoutsquare = (Toolbar.LayoutParams)  head_portrait.getLayoutParams();
-      Log.i("toolbar",head_portrait.getLayoutParams().getClass()+" ");
-      layoutsquare.height = toolbarheight;
-      layoutsquare.width = toolbarheight;
-      head_portrait.setLayoutParams(layoutsquare);
-     // toggle.setDrawerIndicatorEnabled(false);
-      right.setOnTouchListener(new View.OnTouchListener() {
-          @Override
-          public boolean onTouch(View view, MotionEvent motionEvent) {
-              if(isDrawer){
-                  return left.dispatchTouchEvent(motionEvent);
-              }else{
-                  return false;
-              }
-          }
-      });
-      drawer.setDrawerListener(new DrawerLayout.DrawerListener() {
-          @Override
-          public void onDrawerSlide(View drawerView, float slideOffset) {
-              isDrawer=true;
-              //获取屏幕的宽高
-              WindowManager manager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-              Display display = manager.getDefaultDisplay();
-              //设置右面的布局位置  根据左面菜单的right作为右面布局的left   左面的right+屏幕的宽度（或者right的宽度这里是相等的）为右面布局的right
-              right.layout(left.getRight(), 0, left.getRight() + display.getWidth(), display.getHeight());
-          }
-          @Override
-          public void onDrawerOpened(View drawerView) {}
-          @Override
-          public void onDrawerClosed(View drawerView) {
-              isDrawer=false;
-          }
-          @Override
-          public void onDrawerStateChanged(int newState) {}
-      });
-        Mytestview compass = (Mytestview)view.findViewById(R.id.Compass);
-      compass.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              Log.i("toolbar","setViewarround");
-          }
-      });
-      return view;
-     }*/
-
 
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
@@ -363,27 +353,10 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     public void onResume() {
         Log.e(LTAG, "onResume");
         super.onResume();
+        maincontent.invalidate();
         //进行Framelayout的重绘，之前下面的button消失后会腾出一定的空白（黑色）空间出来，故进行重绘
 
 
-        maincontent.invalidate();
-    /*    mBaiduMap.setViewPadding(0,0,0,200);
-        TextView mTextView;
-        mTextView = new TextView(getContext());
-        mTextView.setText("整体上移");
-        mTextView.setTextSize(15.0f);
-        mTextView.setGravity(Gravity.CENTER);
-        mTextView.setTextColor(Color.BLACK);
-        mTextView.setBackgroundColor(Color.parseColor("#AA00FF00"));
-
-        MapViewLayoutParams.Builder builder = new MapViewLayoutParams.Builder();
-        builder.layoutMode(MapViewLayoutParams.ELayoutMode.absoluteMode);
-        builder.width(mMapView.getWidth());
-        builder.height(200);
-        builder.point(new Point(0, mMapView.getHeight()));
-        builder.align(MapViewLayoutParams.ALIGN_LEFT, MapViewLayoutParams.ALIGN_BOTTOM);
-
-        mMapView.addView(mTextView, builder.build());*/
 
         startBackgroundThread();
         if (mtextureView.isAvailable()) {
@@ -486,7 +459,89 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
             e.printStackTrace();
         }
     }
+    @Override
+   public void onStart(){
+        super.onStart();
+       deletelogoview(mTextureMapView);
+       MapStatus.Builder builder = new MapStatus.Builder();
+       LatLng center = new LatLng(39.915071, 116.403907); // 默认 天安门
+       float zoom = 11.0f; // 默认 11级
+       Intent intent = getActivity().getIntent();
+       if (null != intent) {
+           center = new LatLng(intent.getDoubleExtra("y", 39.915071),
+                   intent.getDoubleExtra("x", 116.403907));
+           zoom = intent.getFloatExtra("level", 11.0f);
+       }
+       builder.target(center).zoom(zoom);
+       mBaiduMap = mMapView.getMap();
+       deletelogoview(mMapView);
+       LatLng centerpos = new LatLng(39.916958, 116.379278); // 西单大悦城
+       builder = new MapStatus.Builder();
+       builder.target(centerpos).zoom(19.0f);
+       mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+       mBaiduMap.setIndoorEnable(true);
 
+       mSearch = RoutePlanSearch.newInstance();
+       mSearch.setOnGetRoutePlanResultListener(this);
+
+       indoorRoutePlane.setOnClickListener( new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               // 发起室内路线规划检索
+               IndoorPlanNode startNode = new IndoorPlanNode(new LatLng(39.917380, 116.37978), "F1");
+               IndoorPlanNode endNode = new IndoorPlanNode(new LatLng(39.917239, 116.37955), "F6");
+               IndoorRoutePlanOption irpo = new IndoorRoutePlanOption().from(startNode).to(endNode);
+               mSearch.walkingIndoorSearch(irpo);
+           }
+       });
+
+       isIndoorBtn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               if (!isIndoor) {
+                   EnableIndoorMap();
+               } else {
+                   DisableIndoorMap();
+               }
+               isIndoor = !isIndoor;
+           }
+       });
+
+       stripListView = new StripListView(getContext());
+       layout.addView( stripListView );
+       //  setContentView(layout);
+       mFloorListAdapter = new BaseStripAdapter(getContext());
+
+
+       mBaiduMap.setOnBaseIndoorMapListener(new BaiduMap.OnBaseIndoorMapListener() {
+           @Override
+           public void onBaseIndoorMapMode(boolean b, MapBaseIndoorMapInfo mapBaseIndoorMapInfo) {
+               if (b == false || mapBaseIndoorMapInfo == null) {
+                   stripListView.setVisibility(View.INVISIBLE);
+                   return;
+               }
+               mFloorListAdapter.setmFloorList( mapBaseIndoorMapInfo.getFloors());
+               stripListView.setVisibility(View.VISIBLE);
+               stripListView.setStripAdapter(mFloorListAdapter);
+               mMapBaseIndoorMapInfo = mapBaseIndoorMapInfo;
+           }
+       });
+       stripListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           @Override
+           public void onItemClick(AdapterView<?> parent, View view,
+                                   int position, long id) {
+               if (mMapBaseIndoorMapInfo == null) {
+                   return;
+               }
+               String floor = (String) mFloorListAdapter.getItem(position);
+               mBaiduMap.switchBaseIndoorMapFloor(floor, mMapBaseIndoorMapInfo.getID());
+               mFloorListAdapter.setSelectedPostion(position);
+               mFloorListAdapter.notifyDataSetInvalidated();
+           }
+       });
+       mBtnPre.setVisibility(View.INVISIBLE);
+       mBtnNext.setVisibility(View.INVISIBLE);
+   }
     protected void createCameraPreview() {
         try {
             SurfaceTexture texture = mtextureView.getSurfaceTexture();
@@ -558,7 +613,18 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
             e.printStackTrace();
         }
     }
+    private void deletelogoview(TextureMapView mMapView){
+        // 隐藏logo
+        View child = mMapView.getChildAt(1);
+        if (child != null && (child instanceof ImageView || child instanceof ZoomControls)){
+            child.setVisibility(View.INVISIBLE);
+        }
 
+        //地图上比例尺
+        mMapView.showScaleControl(false);
+        // 隐藏缩放控件
+        mMapView.showZoomControls(false);
+    }
     private void closeCamera() {
         if (null != cameraDevice) {
             cameraDevice.close();
@@ -570,4 +636,124 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         }
     }
 
+    /**
+     * 节点浏览示例
+     *
+     * @param v
+     */
+    @OnClick({R.id.next,R.id.pre})
+    public void nodeClick(View v) {
+        if (mBaiduMap.isBaseIndoorMapMode()) {
+            LatLng nodeLocation = null;
+            String nodeTitle = null;
+            IndoorRouteLine.IndoorRouteStep step = null;
+
+
+            if (mIndoorRouteline == null || mIndoorRouteline.getAllStep() == null) {
+                return;
+            }
+            if (nodeIndex == -1 && v.getId() == R.id.pre) {
+                return;
+            }
+            // 设置节点索引
+            if (v.getId() == R.id.next) {
+                if (nodeIndex < mIndoorRouteline.getAllStep().size() - 1) {
+                    nodeIndex++;
+                } else {
+                    return;
+                }
+            } else if (v.getId() == R.id.pre) {
+                if (nodeIndex > 0) {
+                    nodeIndex--;
+                } else {
+                    return;
+                }
+            }
+            // 获取节结果信息
+            step = mIndoorRouteline.getAllStep().get(nodeIndex);
+            nodeLocation = step.getEntrace().getLocation();
+            nodeTitle = step.getInstructions();
+
+            if (nodeLocation == null || nodeTitle == null) {
+                return;
+            }
+
+            // 移动节点至中心
+            mBaiduMap.setMapStatus(MapStatusUpdateFactory.newLatLng(nodeLocation));
+            // show popup
+            popupText = new TextView(getContext());
+            popupText.setBackgroundResource(R.drawable.popup);
+            popupText.setTextColor(0xFF000000);
+            popupText.setText(step.getFloorId() + ":" + nodeTitle);
+            mBaiduMap.showInfoWindow(new InfoWindow(popupText, nodeLocation, 0));
+
+            // 让楼层对应变化
+            mBaiduMap.switchBaseIndoorMapFloor(step.getFloorId(), mMapBaseIndoorMapInfo.getID());
+//        mFloorListAdapter.setSelectedPostion();
+            mFloorListAdapter.notifyDataSetInvalidated();
+        }else{
+            Toast.makeText(getContext(),"请打开室内图或将室内图移入屏幕内",Toast.LENGTH_SHORT).show();
+        }
+    }
+    //以下为不同的路线规划的返回
+
+    @Override
+    public void onGetWalkingRouteResult(WalkingRouteResult walkingRouteResult) {
+
+    }
+
+    @Override
+    public void onGetTransitRouteResult(TransitRouteResult transitRouteResult) {
+
+    }
+
+    @Override
+    public void onGetMassTransitRouteResult(MassTransitRouteResult massTransitRouteResult) {
+
+    }
+
+    @Override
+    public void onGetDrivingRouteResult(DrivingRouteResult drivingRouteResult) {
+
+    }
+
+    @Override
+    public void onGetIndoorRouteResult(IndoorRouteResult indoorRouteResult) {
+
+        if (indoorRouteResult.error == SearchResult.ERRORNO.NO_ERROR) {
+            IndoorRouteOverlay overlay = new IndoorRouteOverlay(mBaiduMap);
+            mIndoorRouteline = indoorRouteResult.getRouteLines().get(0);
+            nodeIndex = -1;
+            mBtnPre.setVisibility(View.VISIBLE);
+            mBtnNext.setVisibility(View.VISIBLE);
+            overlay.setData(indoorRouteResult.getRouteLines().get(0));
+            overlay.addToMap();
+            overlay.zoomToSpan();
+        }
+    }
+
+    @Override
+    public void onGetBikingRouteResult(BikingRouteResult bikingRouteResult) {
+
+    }
+
+    @OnClick(R.id.texture_transparent)
+    public void exchangeplace(){
+        Log.i(TAG,"texture_transparent");
+        if (bigcamera) {//大摄像头；那么地图变大
+            mtextureView.setLayoutParams(smalllayout);
+            mTextureMapView.setLayoutParams(biglayout);
+
+            mtextureView.bringToFront();
+            mblanktexture.bringToFront();
+        }else{
+            mtextureView.setLayoutParams(biglayout);
+            mTextureMapView.setLayoutParams(smalllayout);
+
+            mTextureMapView.bringToFront();
+            mblanktexture.bringToFront();
+        }
+        maincontent.invalidate();
+        bigcamera = !bigcamera;
+    }
 }
