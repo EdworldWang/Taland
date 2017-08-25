@@ -20,12 +20,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_sp_grid_mask.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_send_toggle_selector.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_send_toggle_selector.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_cs_submit_comment.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_cs_submit_comment.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_send_toggle_selector.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_send_toggle_selector.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_progress_sending_style.xml",
@@ -40,12 +40,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_white_bg_shape.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_unread_msg_bg_style.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_unread_msg_bg_style.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_ic_star_selector.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_ic_star_selector.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_unread_msg_bg_style.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable\\rc_unread_msg_bg_style.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\drawable\\rc_voice_toggle_selector.xml",

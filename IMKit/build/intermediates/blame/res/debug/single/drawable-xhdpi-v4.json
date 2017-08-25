@@ -8,12 +8,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_real_time_location_hide.png"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u270c.png",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u270c.png"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\rc_audio_toggle_hover.png",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_audio_toggle_hover.png"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u270c.png",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u270c.png"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u1f6ab.png",
@@ -52,12 +52,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_file_icon_cancel.png"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u1f4a4.png",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f4a4.png"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\rc_rt_location_bar.png",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\rc_rt_location_bar.png"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\u1f4a4.png",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\drawable-xhdpi\\u1f4a4.png"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi-v4\\rc_select_check_sel.png",

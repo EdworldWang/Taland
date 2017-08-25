@@ -44,12 +44,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_ext_emoji_grid_view.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_location_preview_activity.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_location_preview_activity.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_plugin_location_activity.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_plugin_location_activity.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_location_preview_activity.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_location_preview_activity.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_picsel_grid_camera.xml",
@@ -64,12 +64,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_dialog_popup_options.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_location_message.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_item_location_message.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_cs_single_choice_layout.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_cs_single_choice_layout.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_item_location_message.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_item_location_message.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_cs_evaluate.xml",
@@ -176,12 +176,12 @@
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_wi_vo_popup.xml"
     },
     {
-        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_block.xml",
-        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_wi_block.xml"
-    },
-    {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ext_input_edit_text.xml",
         "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_ext_input_edit_text.xml"
+    },
+    {
+        "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_wi_block.xml",
+        "source": "D:\\asproject\\Navigation\\IMKit\\src\\main\\res\\layout\\rc_wi_block.xml"
     },
     {
         "merged": "D:\\asproject\\Navigation\\IMKit\\build\\intermediates\\res\\merged\\release\\layout\\rc_ac_albums.xml",
