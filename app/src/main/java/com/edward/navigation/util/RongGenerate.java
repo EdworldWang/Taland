@@ -29,6 +29,7 @@ public class RongGenerate {
     private static final String SCHEMA = "file://";
 
 
+    //生成头像，用名字生成
     public static String generateDefaultAvatar(String username, String userid) {
 
         String s = null;

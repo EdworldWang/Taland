@@ -6,7 +6,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -19,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -55,6 +58,7 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+import com.zhy.autolayout.AutoLinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +66,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import q.rorbin.badgeview.QBadgeView;
 
 
 public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> implements ViewPager.OnPageChangeListener, IMainAtView {
@@ -88,7 +93,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     @BindView(R.id.tvMessageTextPress)
     TextView mTvMessageTextPress;
     @BindView(R.id.tvMessageCount)
-    public TextView mTvMessageCount;
+    TextView mTvMessageCount;
 
     @BindView(R.id.llContacts)
     LinearLayout mLlContacts;
@@ -101,7 +106,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     @BindView(R.id.tvContactsTextPress)
     TextView mTvContactsTextPress;
     @BindView(R.id.tvContactCount)
-    public TextView mTvContactCount;
+    TextView mTvContactCount;
     @BindView(R.id.tvContactRedDot)
     public TextView mTvContactRedDot;
 
@@ -146,13 +151,17 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     DrawerLayout mDrawerview;
     @BindView(R.id.nav_myinfo)
     NavigationView mMyInfoview;
+    @BindView(R.id.coordinatorlayout)
+    CoordinatorLayout mMainview;
     @BindView(R.id.mainview)
-    LinearLayout mMainview;
+    AutoLinearLayout mContainview;
     @BindView(R.id.head_portrait)
     CircleImageView circleImageView;
     @OnClick(R.id.head_portrait)
     public void openleft(){
-        mDrawerview.openDrawer(GravityCompat.START);
+      //  getWindow().setStatusBarColor(ContextCompat.getColor(this,android.R.color.transparent));
+      mDrawerview.openDrawer(GravityCompat.START);
+      //result.openDrawer();
         Log.i("toolbar","open");
     }
 
@@ -182,12 +191,12 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
         final IProfile profile4 = new ProfileDrawerItem().withName("Felix House").withEmail("felix.house@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile3));
         final IProfile profile5 = new ProfileDrawerItem().withName("Mr. X").withEmail("mister.x.super@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile4)).withIdentifier(4);
         final IProfile profile6 = new ProfileDrawerItem().withName("Batman").withEmail("batman@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile5));
-
         // Create the AccountHeader
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
+                .withCompactStyle(true)
                 .withHeaderBackground(R.drawable.header)
-                .withTranslucentStatusBar(false)
+                .withTranslucentStatusBar(true)
                 .addProfiles(
                         profile,
                         profile2,
@@ -223,8 +232,12 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
 
         result = new DrawerBuilder()
                 .withActivity(this)
-                .withTranslucentStatusBar(false)
-                .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
+                .withTranslucentStatusBar(true)
+                //.withHasStableIds(true)
+              .withToolbar(toolbar)
+                .withFooter(new Button(this))
+                .withHeader(R.layout.drawer_header)
+               // .withAccountHeader(headerResult) //set the AccountHeader we created earlier for the header
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_compact_header).withIcon(GoogleMaterial.Icon.gmd_sun).withIdentifier(1),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_action_bar_drawer).withIcon(FontAwesome.Icon.faw_home).withBadge("22").withBadgeStyle(new BadgeStyle(Color.RED, Color.RED)).withIdentifier(2).withSelectable(false),
@@ -233,8 +246,8 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
                         new PrimaryDrawerItem().withDescription("A more complex sample").withName(R.string.drawer_item_advanced_drawer).withIcon(GoogleMaterial.Icon.gmd_adb).withIdentifier(5),
                         new SectionDrawerItem().withName(R.string.drawer_item_section_header),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(GoogleMaterial.Icon.gmd_format_color_fill).withTag("Bullhorn"),
-                        new DividerDrawerItem()
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(GoogleMaterial.Icon.gmd_format_color_fill).withTag("Bullhorn")
+                       // new DividerDrawerItem()
                       //  new SwitchDrawerItem().withName("Switch").withIcon(Octicons.Icon.oct_tools).withChecked(true).withOnCheckedChangeListener(onCheckedChangeListener),
                       //  new ToggleDrawerItem().withName("Toggle").withIcon(Octicons.Icon.oct_tools).withChecked(true).withOnCheckedChangeListener(onCheckedChangeListener)
                 ) // add the items we want to use with our Drawer
@@ -249,8 +262,9 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
                 })
                 .withSavedInstance(savedInstanceState)
                 // build only the view of the Drawer (don't inflate it automatically in our layout which is done with .build())
-                .buildView();
-      mMyInfoview.addHeaderView(result.getSlider());
+                .build();
+
+            //    mMyInfoview.addHeaderView(result.getSlider());
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -261,10 +275,12 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     public void initView() {
         mAppBar.setVisibility(View.GONE);
          setSupportActionBar(toolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        new QBadgeView(this).bindTarget(circleImageView).setBadgeNumber(5);
+        mContainview.setVisibility(View.INVISIBLE);
+      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-        }
+        }*/
         toolbar.setMinimumHeight(toolbar.getHeight());
         mMainview.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -291,6 +307,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
             @Override
             public void onDrawerClosed(View drawerView) {
                 isDrawer=false;
+              //  getWindow().setStatusBarColor(ContextCompat.getColor(getBaseContext(),R.color.colorPrimaryDark));
             }
             @Override
             public void onDrawerStateChanged(int newState) {}
@@ -321,7 +338,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
         // Inflate the layout for this fragment
 
 
-        mVpContent.setIsCanScroll(false);
+        mVpContent.setIsCanScroll(true);
     }
 
     @Override
@@ -455,7 +472,7 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
 
     @Override
     protected int provideContentViewId() {
-        return R.layout.activity_main2;
+        return R.layout.activity_main_taland;
     }
 
     @Override
@@ -583,9 +600,19 @@ public class MainActivity extends BaseActivity<IMainAtView, MainAtPresenter> imp
     private void unRegisterBR() {
         BroadcastManager.getInstance(this).unregister(AppConst.FETCH_COMPLETE);
     }
+    @Override
+    public void initData() {
+        mPresenter.loadUserInfo();
+    }
 
     @Override
     public TextView getTvMessageCount() {
         return mTvMessageCount;
+    }
+
+
+    @Override
+    public CircleImageView getToolHead() {
+        return circleImageView;
     }
 }

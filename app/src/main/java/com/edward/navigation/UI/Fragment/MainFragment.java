@@ -25,6 +25,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.util.Size;
@@ -47,10 +48,12 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.LogoPosition;
 import com.baidu.mapapi.map.MapBaseIndoorMapInfo;
+import com.baidu.mapapi.map.MapFragment;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MapViewLayoutParams;
+import com.baidu.mapapi.map.SupportMapFragment;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.overlayutil.IndoorRouteOverlay;
@@ -85,6 +88,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 /**
@@ -92,7 +96,7 @@ import butterknife.OnClick;
  */
 
 public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> implements IMainFgView,OnGetRoutePlanResultListener {
-    /**
+     /**
      * MapView 是地图主控件
      * TextureView 是摄像头界面
      */
@@ -225,8 +229,8 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
             public void onSurfaceTextureUpdated(SurfaceTexture surface) {
             }
         };
-
-
+        /*mMapView.onCreate(getContext(),savedInstanceState);
+        mTextureMapView.onCreate(getContext(),savedInstanceState);;*/
     }
     private void EnableIndoorMap() {
 
@@ -280,6 +284,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     public void onDestroy() {
         super.onDestroy();
             mMapView.onDestroy();
+            mTextureMapView.onDestroy();
     }
 
 
@@ -289,8 +294,13 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
     }
 
     //initView在onCreateView时调用，此处为额外补充加载视图，进行view的初始化
+
     @Override
     public void initView(View rootview){
+
+
+
+
                 mBaiduMap = mMapView.getMap();
         if(mBaiduMap == null){
             Log.e(LTAG,"null");
@@ -298,7 +308,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         mBaiduMap.setViewPadding(0,0,0,-200);
 
         mFloatingToolbar.attachFab(fab);
-        //mTextureMapView.setVisibility(View.INVISIBLE);
+      // mTextureMapView.setVisibility(View.INVISIBLE);
         mMapView.setVisibility(View.INVISIBLE);
       // mtextureView.setVisibility(View.INVISIBLE);
         layout.setVisibility(View.INVISIBLE);
@@ -348,6 +358,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         // activity 暂停时同时暂停地图控件
         // MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
         mMapView.onPause();
+        mTextureMapView.onPause();
     }
     @Override
     public void onResume() {
@@ -355,9 +366,6 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         super.onResume();
         maincontent.invalidate();
         //进行Framelayout的重绘，之前下面的button消失后会腾出一定的空白（黑色）空间出来，故进行重绘
-
-
-
         startBackgroundThread();
         if (mtextureView.isAvailable()) {
             Log.e(LTAG, "textureViewAvailable");
@@ -367,6 +375,7 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
              mtextureView.setSurfaceTextureListener(textureListener);
         }
         mMapView.onResume();
+        mTextureMapView.onResume();
     }
     protected void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("Camera Background");
@@ -756,4 +765,5 @@ public class MainFragment extends BaseFragment<IMainFgView, MainFgPresenter> imp
         maincontent.invalidate();
         bigcamera = !bigcamera;
     }
+
 }

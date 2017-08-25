@@ -221,7 +221,7 @@
         </activity>
         <activity
             android:name="com.edward.navigation.UI.Activity.MainActivity"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait">
         </activity>
         <activity

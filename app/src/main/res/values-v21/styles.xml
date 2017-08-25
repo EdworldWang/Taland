@@ -62,20 +62,28 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/mylogin</item>
         <item name="android:navigationBarColor">#00ffffff</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
     </style>
 
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowTranslucentStatus">false</item>
-        <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
-        <item name="android:statusBarColor">@color/blue</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
        <item name="android:colorPrimary">@color/blue</item>
         <item name="android:colorPrimaryDark">@color/blue</item>
-        <item name="android:actionBarSize">72dp</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
+
+
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->

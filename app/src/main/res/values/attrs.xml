@@ -49,4 +49,8 @@
         <attr name="head" format="reference"/>
         <attr name="searchview_visible"  format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomBottomSheetBehavior">
+        <attr name="anchorPoint" format="dimension"/>
+    </declare-styleable>
 </resources>

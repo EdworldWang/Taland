@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray5"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
-
     <com.zhy.autolayout.AutoLinearLayout
         android:id="@+id/llMyInfo"
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6px"
                 android:singleLine="true"
-                android:text="沧晓"
+                android:text="浪友"
                 android:textColor="@color/gray0"
                 android:textSize="30px"/>
 

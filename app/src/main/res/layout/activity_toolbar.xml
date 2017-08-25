@@ -2,17 +2,16 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
     <android.support.v7.widget.Toolbar
-        android:fitsSystemWindows="true"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:paddingTop="@dimen/toolbar_padding_top"
         android:background="?android:attr/colorPrimaryDark"
         android:elevation="4dp"
         app:theme="@style/AppTheme"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" >
+        app:popupTheme="@style/AppTheme.PopupOverlay">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -26,8 +25,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="0.18"
+                android:layout_weight="0.25"
                 app:civ_border_width="2dp"
+                app:civ_border_color="@color/wheat"
                 android:src="@drawable/tlogo96">
             </de.hdodenhof.circleimageview.CircleImageView>
         </LinearLayout>

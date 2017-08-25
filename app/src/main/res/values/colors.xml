@@ -197,9 +197,13 @@
     <color name="divider_2">#e6e6e6</color>
 
 
-    <color name="colorPrimary">#393A3F</color>
-    <color name="colorPrimaryDark">#303135</color>
-    <color name="colorAccent">#7e7e7e</color>
+    <color name="oldcolorPrimary">#393A3F</color>
+    <color name="oldcolorPrimaryDark">#303135</color>
+    <color name="oldcolorAccent">#7e7e7e</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 
     <color name="line">#D2D2D2</color>
 

@@ -27,6 +27,7 @@ public class FragmentFactory {
     private DiscoveryFragment mDiscoveryFragment;
     private MeFragment mMeFragment;
     private MainFragment mMainFragment;
+    private TestFragment mTestFragment;
 
     public RecentMessageFragment getRecentMessageFragment() {
         if (mRecentMessageFragment == null) {
@@ -81,5 +82,16 @@ public class FragmentFactory {
             }
         }
         return mMainFragment;
+    }
+
+    public TestFragment getTestFragment() {
+        if (mTestFragment == null) {
+            synchronized (FragmentFactory.class) {
+                if (mTestFragment == null) {
+                    mTestFragment = new TestFragment();
+                }
+            }
+        }
+        return mTestFragment;
     }
 }

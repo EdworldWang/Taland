@@ -146,6 +146,9 @@ dependencies {
     compile 'cn.bingoogolapple:bga-refreshlayout:1.1.7'
     compile(name: 'SMSSDK-2.1.4', ext: 'aar')
     compile(name: 'SMSSDKGUI-2.1.4', ext: 'aar')
+    //右上角红点显示
+    compile 'q.rorbin:badgeview:1.1.2'
+
     compile files('libs/MobCommons-2017.0321.1624.jar')
     compile files('libs/MobTools-2017.0321.1624.jar')
     compile files('libs/BaiduLBS_Android.jar')
@@ -153,4 +156,5 @@ dependencies {
     compile files('libs/IndoorscapeAlbumPlugin.jar')
 //用于图层切换的floatingactionbutton
     compile 'com.github.rubensousa:floatingtoolbar:1.5.1'
+
 }

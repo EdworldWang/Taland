@@ -537,7 +537,7 @@ public class DBManager {
     /*================== GroupMember end ==================*/
 
     /**
-     * app中获取用户头像的接口
+     * app中获取用户(自己)头像的接口
      * 这个方法不涉及读数据库,头像空时直接生成默认头像
      */
     public String getPortraitUri(UserInfo userInfo) {
